@@ -1,4 +1,19 @@
 services:
+  postgres:
+    image: postgres:16
+    container_name: postgres_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: changeready
+      POSTGRES_USER: changeready_user
+      POSTGRES_PASSWORD: changeready_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
   backend:
     build:
       context: ./backend
@@ -6,6 +21,14 @@ services:
     container_name: spring_backend
     ports:
       - "8080:8080"
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/changeready
+      SPRING_DATASOURCE_USERNAME: changeready_user
+      SPRING_DATASOURCE_PASSWORD: changeready_password
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.PostgreSQLDialect
     networks:
       - app-network
 
@@ -20,6 +43,9 @@ services:
       - backend
     networks:
       - app-network
+
+volumes:
+  postgres_data:
 
 networks:
   app-network:
