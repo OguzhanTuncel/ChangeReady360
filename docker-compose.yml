@@ -1,4 +1,23 @@
 services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres_db
+    environment:
+      POSTGRES_DB: changeready360
+      POSTGRES_USER: changeready
+      POSTGRES_PASSWORD: changeready
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U changeready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   backend:
     build:
       context: ./backend
@@ -6,6 +25,13 @@ services:
     container_name: spring_backend
     ports:
       - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/changeready360
+      SPRING_DATASOURCE_USERNAME: changeready
+      SPRING_DATASOURCE_PASSWORD: changeready
     networks:
       - app-network
 
@@ -24,3 +50,6 @@ services:
 networks:
   app-network:
     driver: bridge
+
+volumes:
+  postgres_data:
