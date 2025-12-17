@@ -141,12 +141,12 @@
   - [x] 7.10 Add @ExceptionHandler for generic Exception returning 500 status
   - [x] 7.11 Ensure all exception handlers return standardized ErrorResponse format
 
-- [ ] 8.0 Implement Initial Admin Setup
-  - [ ] 8.1 Create InitialAdminSetup class implementing CommandLineRunner
-  - [ ] 8.2 Inject UserRepository and PasswordEncoder into InitialAdminSetup
-  - [ ] 8.3 Read initial admin email and password from application.properties
-  - [ ] 8.4 Check if SYSTEM_ADMIN user already exists in InitialAdminSetup.run method
-  - [ ] 8.5 Create initial SYSTEM_ADMIN user with default company (or create a default company) if no SYSTEM_ADMIN exists
-  - [ ] 8.6 Hash password before saving initial admin user
-  - [ ] 8.7 Add logging to indicate initial admin creation or skip
+- [x] 8.0 Implement Initial Admin Setup
+  - [x] 8.1 Create InitialAdminSetup class implementing CommandLineRunner
+  - [x] 8.2 Inject UserRepository and PasswordEncoder into InitialAdminSetup
+  - [x] 8.3 Read initial admin email and password from application.properties
+  - [x] 8.4 Check if SYSTEM_ADMIN user already exists in InitialAdminSetup.run method
+  - [x] 8.5 Create initial SYSTEM_ADMIN user with default company (or create a default company) if no SYSTEM_ADMIN exists
+  - [x] 8.6 Hash password before saving initial admin user
+  - [x] 8.7 Add logging to indicate initial admin creation or skip
 
