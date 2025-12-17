@@ -128,18 +128,18 @@
   - [x] 6.13 Implement PUT /api/v1/admin/users/{id} endpoint in UserController with company isolation
   - [x] 6.14 Add proper HTTP status codes and error handling in UserController
 
-- [ ] 7.0 Implement Centralized Error Handling
-  - [ ] 7.1 Create ErrorResponse DTO with error, code, and timestamp fields
-  - [ ] 7.2 Create ResourceNotFoundException custom exception class
-  - [ ] 7.3 Create UnauthorizedException custom exception class
-  - [ ] 7.4 Create ValidationException custom exception class
-  - [ ] 7.5 Create GlobalExceptionHandler class with @ControllerAdvice annotation
-  - [ ] 7.6 Add @ExceptionHandler for ResourceNotFoundException returning 404 status
-  - [ ] 7.7 Add @ExceptionHandler for UnauthorizedException returning 401 status
-  - [ ] 7.8 Add @ExceptionHandler for ValidationException returning 400 status
-  - [ ] 7.9 Add @ExceptionHandler for MethodArgumentNotValidException (validation errors) returning 400 status
-  - [ ] 7.10 Add @ExceptionHandler for generic Exception returning 500 status
-  - [ ] 7.11 Ensure all exception handlers return standardized ErrorResponse format
+- [x] 7.0 Implement Centralized Error Handling
+  - [x] 7.1 Create ErrorResponse DTO with error, code, and timestamp fields
+  - [x] 7.2 Create ResourceNotFoundException custom exception class
+  - [x] 7.3 Create UnauthorizedException custom exception class
+  - [x] 7.4 Create ValidationException custom exception class
+  - [x] 7.5 Create GlobalExceptionHandler class with @ControllerAdvice annotation
+  - [x] 7.6 Add @ExceptionHandler for ResourceNotFoundException returning 404 status
+  - [x] 7.7 Add @ExceptionHandler for UnauthorizedException returning 401 status
+  - [x] 7.8 Add @ExceptionHandler for ValidationException returning 400 status
+  - [x] 7.9 Add @ExceptionHandler for MethodArgumentNotValidException (validation errors) returning 400 status
+  - [x] 7.10 Add @ExceptionHandler for generic Exception returning 500 status
+  - [x] 7.11 Ensure all exception handlers return standardized ErrorResponse format
 
 - [ ] 8.0 Implement Initial Admin Setup
   - [ ] 8.1 Create InitialAdminSetup class implementing CommandLineRunner
