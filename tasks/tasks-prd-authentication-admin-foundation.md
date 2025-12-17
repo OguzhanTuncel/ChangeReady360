@@ -84,17 +84,17 @@
   - [x] 3.12 Create custom AuthenticationEntryPoint for 401 responses
   - [x] 3.13 Create custom AccessDeniedHandler for 403 responses
 
-- [ ] 4.0 Implement Authentication Service and Controllers
-  - [ ] 4.1 Create LoginRequest DTO with email and password fields and validation annotations
-  - [ ] 4.2 Create LoginResponse DTO with token, tokenType, and userInfo fields
-  - [ ] 4.3 Create AuthService interface with login and logout methods
-  - [ ] 4.4 Implement AuthService.login method: validate credentials, check user/company active status, generate JWT token
-  - [ ] 4.5 Implement AuthService.logout method (client-side token removal; optional server-side blacklist)
-  - [ ] 4.6 Add password validation utility method in AuthService (min 8 chars, uppercase, lowercase, number)
-  - [ ] 4.7 Create AuthController with @RestController and @RequestMapping("/api/v1/auth")
-  - [ ] 4.8 Implement POST /api/v1/auth/login endpoint in AuthController
-  - [ ] 4.9 Implement POST /api/v1/auth/logout endpoint in AuthController
-  - [ ] 4.10 Add proper HTTP status codes and error handling in AuthController
+- [x] 4.0 Implement Authentication Service and Controllers
+  - [x] 4.1 Create LoginRequest DTO with email and password fields and validation annotations
+  - [x] 4.2 Create LoginResponse DTO with token, tokenType, and userInfo fields
+  - [x] 4.3 Create AuthService interface with login and logout methods
+  - [x] 4.4 Implement AuthService.login method: validate credentials, check user/company active status, generate JWT token
+  - [x] 4.5 Implement AuthService.logout method (client-side token removal; optional server-side blacklist)
+  - [x] 4.6 Add password validation utility method in AuthService (min 8 chars, uppercase, lowercase, number)
+  - [x] 4.7 Create AuthController with @RestController and @RequestMapping("/api/v1/auth")
+  - [x] 4.8 Implement POST /api/v1/auth/login endpoint in AuthController
+  - [x] 4.9 Implement POST /api/v1/auth/logout endpoint in AuthController
+  - [x] 4.10 Add proper HTTP status codes and error handling in AuthController
 
 - [ ] 5.0 Implement Company Management Service and Controllers
   - [ ] 5.1 Create CompanyRequest DTO with name and active fields and validation annotations
