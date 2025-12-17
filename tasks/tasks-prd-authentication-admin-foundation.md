@@ -69,20 +69,20 @@
   - [x] 2.11 Add custom query method findByEmail in UserRepository
   - [x] 2.12 Add custom query method findByCompanyId in UserRepository
 
-- [ ] 3.0 Implement Security Configuration and JWT Infrastructure
-  - [ ] 3.1 Create SecurityConfig class with @Configuration and @EnableWebSecurity annotations
-  - [ ] 3.2 Configure PasswordEncoder bean (BCryptPasswordEncoder) in SecurityConfig
-  - [ ] 3.3 Disable default Spring Security form login and CSRF for stateless JWT
-  - [ ] 3.4 Configure security filter chain to allow /api/v1/auth/** endpoints without authentication
-  - [ ] 3.5 Configure security filter chain to require authentication for /api/v1/admin/** endpoints
-  - [ ] 3.6 Create JwtTokenProvider class with methods: generateToken, validateToken, getUsernameFromToken, getRoleFromToken, getCompanyIdFromToken
-  - [ ] 3.7 Inject JWT secret and expiration from application.properties into JwtTokenProvider
-  - [ ] 3.8 Create JwtAuthenticationFilter class extending OncePerRequestFilter
-  - [ ] 3.9 Implement doFilterInternal in JwtAuthenticationFilter to extract and validate JWT tokens
-  - [ ] 3.10 Create UserPrincipal class implementing UserDetails for Spring Security integration
-  - [ ] 3.11 Configure JwtAuthenticationFilter in SecurityConfig filter chain before UsernamePasswordAuthenticationFilter
-  - [ ] 3.12 Create custom AuthenticationEntryPoint for 401 responses
-  - [ ] 3.13 Create custom AccessDeniedHandler for 403 responses
+- [x] 3.0 Implement Security Configuration and JWT Infrastructure
+  - [x] 3.1 Create SecurityConfig class with @Configuration and @EnableWebSecurity annotations
+  - [x] 3.2 Configure PasswordEncoder bean (BCryptPasswordEncoder) in SecurityConfig
+  - [x] 3.3 Disable default Spring Security form login and CSRF for stateless JWT
+  - [x] 3.4 Configure security filter chain to allow /api/v1/auth/** endpoints without authentication
+  - [x] 3.5 Configure security filter chain to require authentication for /api/v1/admin/** endpoints
+  - [x] 3.6 Create JwtTokenProvider class with methods: generateToken, validateToken, getUsernameFromToken, getRoleFromToken, getCompanyIdFromToken
+  - [x] 3.7 Inject JWT secret and expiration from application.properties into JwtTokenProvider
+  - [x] 3.8 Create JwtAuthenticationFilter class extending OncePerRequestFilter
+  - [x] 3.9 Implement doFilterInternal in JwtAuthenticationFilter to extract and validate JWT tokens
+  - [x] 3.10 Create UserPrincipal class implementing UserDetails for Spring Security integration
+  - [x] 3.11 Configure JwtAuthenticationFilter in SecurityConfig filter chain before UsernamePasswordAuthenticationFilter
+  - [x] 3.12 Create custom AuthenticationEntryPoint for 401 responses
+  - [x] 3.13 Create custom AccessDeniedHandler for 403 responses
 
 - [ ] 4.0 Implement Authentication Service and Controllers
   - [ ] 4.1 Create LoginRequest DTO with email and password fields and validation annotations
