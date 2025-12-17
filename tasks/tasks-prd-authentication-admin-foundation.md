@@ -96,21 +96,21 @@
   - [x] 4.9 Implement POST /api/v1/auth/logout endpoint in AuthController
   - [x] 4.10 Add proper HTTP status codes and error handling in AuthController
 
-- [ ] 5.0 Implement Company Management Service and Controllers
-  - [ ] 5.1 Create CompanyRequest DTO with name and active fields and validation annotations
-  - [ ] 5.2 Create CompanyResponse DTO with id, name, active, createdAt, updatedAt fields
-  - [ ] 5.3 Create CompanyService interface with create, findAll, findById, update methods
-  - [ ] 5.4 Implement CompanyService.create method: validate unique name, create and save company
-  - [ ] 5.5 Implement CompanyService.findAll method: return all companies (for SYSTEM_ADMIN)
-  - [ ] 5.6 Implement CompanyService.findById method: find company by ID
-  - [ ] 5.7 Implement CompanyService.update method: update company name and/or active status
-  - [ ] 5.8 Create CompanyController with @RestController and @RequestMapping("/api/v1/admin/companies")
-  - [ ] 5.9 Add @PreAuthorize("hasRole('SYSTEM_ADMIN')") to all CompanyController methods
-  - [ ] 5.10 Implement POST /api/v1/admin/companies endpoint in CompanyController
-  - [ ] 5.11 Implement GET /api/v1/admin/companies endpoint in CompanyController
-  - [ ] 5.12 Implement GET /api/v1/admin/companies/{id} endpoint in CompanyController
-  - [ ] 5.13 Implement PUT /api/v1/admin/companies/{id} endpoint in CompanyController
-  - [ ] 5.14 Add proper HTTP status codes and error handling in CompanyController
+- [x] 5.0 Implement Company Management Service and Controllers
+  - [x] 5.1 Create CompanyRequest DTO with name and active fields and validation annotations
+  - [x] 5.2 Create CompanyResponse DTO with id, name, active, createdAt, updatedAt fields
+  - [x] 5.3 Create CompanyService interface with create, findAll, findById, update methods
+  - [x] 5.4 Implement CompanyService.create method: validate unique name, create and save company
+  - [x] 5.5 Implement CompanyService.findAll method: return all companies (for SYSTEM_ADMIN)
+  - [x] 5.6 Implement CompanyService.findById method: find company by ID
+  - [x] 5.7 Implement CompanyService.update method: update company name and/or active status
+  - [x] 5.8 Create CompanyController with @RestController and @RequestMapping("/api/v1/admin/companies")
+  - [x] 5.9 Add @PreAuthorize("hasRole('SYSTEM_ADMIN')") to all CompanyController methods
+  - [x] 5.10 Implement POST /api/v1/admin/companies endpoint in CompanyController
+  - [x] 5.11 Implement GET /api/v1/admin/companies endpoint in CompanyController
+  - [x] 5.12 Implement GET /api/v1/admin/companies/{id} endpoint in CompanyController
+  - [x] 5.13 Implement PUT /api/v1/admin/companies/{id} endpoint in CompanyController
+  - [x] 5.14 Add proper HTTP status codes and error handling in CompanyController
 
 - [ ] 6.0 Implement User Management Service and Controllers
   - [ ] 6.1 Create UserRequest DTO with email, password, role, active fields and validation annotations
