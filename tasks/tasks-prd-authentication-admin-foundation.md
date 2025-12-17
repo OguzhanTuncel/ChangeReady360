@@ -112,21 +112,21 @@
   - [x] 5.13 Implement PUT /api/v1/admin/companies/{id} endpoint in CompanyController
   - [x] 5.14 Add proper HTTP status codes and error handling in CompanyController
 
-- [ ] 6.0 Implement User Management Service and Controllers
-  - [ ] 6.1 Create UserRequest DTO with email, password, role, active fields and validation annotations
-  - [ ] 6.2 Create UserResponse DTO with id, email, role, companyId, active, createdAt, updatedAt fields (no password)
-  - [ ] 6.3 Create UserService interface with create, findAllByCompany, findById, update methods
-  - [ ] 6.4 Implement UserService.create method: validate unique email, hash password, ensure company is active, prevent COMPANY_ADMIN from creating SYSTEM_ADMIN
-  - [ ] 6.5 Implement UserService.findAllByCompany method: return all users for authenticated user's company
-  - [ ] 6.6 Implement UserService.findById method: find user by ID with company isolation check
-  - [ ] 6.7 Implement UserService.update method: update user email, password (if provided), role, active status with company isolation
-  - [ ] 6.8 Create UserController with @RestController and @RequestMapping("/api/v1/admin/users")
-  - [ ] 6.9 Add @PreAuthorize("hasRole('COMPANY_ADMIN')") to all UserController methods
-  - [ ] 6.10 Implement POST /api/v1/admin/users endpoint in UserController
-  - [ ] 6.11 Implement GET /api/v1/admin/users endpoint in UserController (returns users for authenticated user's company)
-  - [ ] 6.12 Implement GET /api/v1/admin/users/{id} endpoint in UserController with company isolation
-  - [ ] 6.13 Implement PUT /api/v1/admin/users/{id} endpoint in UserController with company isolation
-  - [ ] 6.14 Add proper HTTP status codes and error handling in UserController
+- [x] 6.0 Implement User Management Service and Controllers
+  - [x] 6.1 Create UserRequest DTO with email, password, role, active fields and validation annotations
+  - [x] 6.2 Create UserResponse DTO with id, email, role, companyId, active, createdAt, updatedAt fields (no password)
+  - [x] 6.3 Create UserService interface with create, findAllByCompany, findById, update methods
+  - [x] 6.4 Implement UserService.create method: validate unique email, hash password, ensure company is active, prevent COMPANY_ADMIN from creating SYSTEM_ADMIN
+  - [x] 6.5 Implement UserService.findAllByCompany method: return all users for authenticated user's company
+  - [x] 6.6 Implement UserService.findById method: find user by ID with company isolation check
+  - [x] 6.7 Implement UserService.update method: update user email, password (if provided), role, active status with company isolation
+  - [x] 6.8 Create UserController with @RestController and @RequestMapping("/api/v1/admin/users")
+  - [x] 6.9 Add @PreAuthorize("hasRole('COMPANY_ADMIN')") to all UserController methods
+  - [x] 6.10 Implement POST /api/v1/admin/users endpoint in UserController
+  - [x] 6.11 Implement GET /api/v1/admin/users endpoint in UserController (returns users for authenticated user's company)
+  - [x] 6.12 Implement GET /api/v1/admin/users/{id} endpoint in UserController with company isolation
+  - [x] 6.13 Implement PUT /api/v1/admin/users/{id} endpoint in UserController with company isolation
+  - [x] 6.14 Add proper HTTP status codes and error handling in UserController
 
 - [ ] 7.0 Implement Centralized Error Handling
   - [ ] 7.1 Create ErrorResponse DTO with error, code, and timestamp fields
