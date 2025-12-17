@@ -31,16 +31,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		try {
 			String jwt = getJwtFromRequest(request);
 
-			if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
-				String email = tokenProvider.getEmailFromToken(jwt);
-				UserPrincipal userPrincipal = userDetailsService.loadUserByUsername(email);
+			if (StringUtils.hasText(jwt)) {
+				if (tokenProvider.validateToken(jwt)) {
+					String email = tokenProvider.getEmailFromToken(jwt);
+					UserPrincipal userPrincipal = userDetailsService.loadUserByUsername(email);
 
-				if (userPrincipal != null && userPrincipal.isEnabled()) {
-					UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-						userPrincipal, null, userPrincipal.getAuthorities());
-					authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-					SecurityContextHolder.getContext().setAuthentication(authentication);
+					if (userPrincipal != null && userPrincipal.isEnabled()) {
+						UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+							userPrincipal, null, userPrincipal.getAuthorities());
+						authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+						SecurityContextHolder.getContext().setAuthentication(authentication);
+						logger.debug("Successfully authenticated user: " + email);
+					} else {
+						logger.warn("User principal is null or disabled for email: " + email);
+					}
+				} else {
+					logger.debug("Invalid JWT token");
 				}
+			} else {
+				logger.debug("No JWT token found in request");
 			}
 		} catch (Exception ex) {
 			logger.error("Could not set user authentication in security context", ex);

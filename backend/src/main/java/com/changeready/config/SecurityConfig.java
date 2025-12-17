@@ -52,7 +52,13 @@ public class SecurityConfig {
 			.csrf(AbstractHttpConfigurer::disable)
 			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.authorizeHttpRequests(auth -> auth
+				.requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/index.html").permitAll() // Swagger UI - muss zuerst kommen
 				.requestMatchers("/api/v1/auth/**").permitAll()
+				.requestMatchers("/api/v1/company-access-requests").permitAll() // Öffentlicher POST-Endpoint
+				.requestMatchers("/api/v1/invites/validate/**").permitAll() // Öffentlicher Token-Validierungs-Endpoint
+				.requestMatchers("/api/v1/invites/accept").permitAll() // Öffentlicher Accept-Endpoint
+				.requestMatchers("/api/v1/company-access-requests/**").authenticated() // Geschützte GET/PUT-Endpoints
+				.requestMatchers("/api/v1/invites/**").authenticated() // Geschützte Invite-Endpoints
 				.requestMatchers("/api/v1/admin/**").authenticated()
 				.anyRequest().permitAll()
 			)
