@@ -55,19 +55,19 @@
   - [x] 1.7 Add initial admin credentials configuration properties to application.properties
   - [x] 1.8 Update docker-compose.yml to include PostgreSQL service (if not already present)
 
-- [ ] 2.0 Create Entity Models and Repositories
-  - [ ] 2.1 Create Role enum (SYSTEM_ADMIN, COMPANY_ADMIN, COMPANY_USER) in entity package
-  - [ ] 2.2 Create Company entity with fields: id, name, active, createdAt, updatedAt
-  - [ ] 2.3 Add JPA annotations to Company entity (@Entity, @Table, @Id, @GeneratedValue, etc.)
-  - [ ] 2.4 Add unique constraint on Company.name field
-  - [ ] 2.5 Create User entity with fields: id, email, passwordHash, role, company, active, createdAt, updatedAt
-  - [ ] 2.6 Add JPA annotations to User entity (@Entity, @Table, @Id, @GeneratedValue, etc.)
-  - [ ] 2.7 Add @ManyToOne relationship from User to Company with foreign key constraint
-  - [ ] 2.8 Add unique constraint on User.email field
-  - [ ] 2.9 Create CompanyRepository interface extending JpaRepository
-  - [ ] 2.10 Create UserRepository interface extending JpaRepository
-  - [ ] 2.11 Add custom query method findByEmail in UserRepository
-  - [ ] 2.12 Add custom query method findByCompanyId in UserRepository
+- [x] 2.0 Create Entity Models and Repositories
+  - [x] 2.1 Create Role enum (SYSTEM_ADMIN, COMPANY_ADMIN, COMPANY_USER) in entity package
+  - [x] 2.2 Create Company entity with fields: id, name, active, createdAt, updatedAt
+  - [x] 2.3 Add JPA annotations to Company entity (@Entity, @Table, @Id, @GeneratedValue, etc.)
+  - [x] 2.4 Add unique constraint on Company.name field
+  - [x] 2.5 Create User entity with fields: id, email, passwordHash, role, company, active, createdAt, updatedAt
+  - [x] 2.6 Add JPA annotations to User entity (@Entity, @Table, @Id, @GeneratedValue, etc.)
+  - [x] 2.7 Add @ManyToOne relationship from User to Company with foreign key constraint
+  - [x] 2.8 Add unique constraint on User.email field
+  - [x] 2.9 Create CompanyRepository interface extending JpaRepository
+  - [x] 2.10 Create UserRepository interface extending JpaRepository
+  - [x] 2.11 Add custom query method findByEmail in UserRepository
+  - [x] 2.12 Add custom query method findByCompanyId in UserRepository
 
 - [ ] 3.0 Implement Security Configuration and JWT Infrastructure
   - [ ] 3.1 Create SecurityConfig class with @Configuration and @EnableWebSecurity annotations
