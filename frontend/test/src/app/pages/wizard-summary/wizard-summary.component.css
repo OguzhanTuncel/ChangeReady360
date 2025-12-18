@@ -1,0 +1,38 @@
+.summary-page {
+  width: 100%;
+}
+
+.summary-selections {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+  background-color: var(--cream);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--spacing-xl);
+}
+
+.selection-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.selection-label {
+  font-weight: 600;
+  color: var(--gray-700);
+}
+
+.selection-value {
+  font-weight: 500;
+  color: var(--innovera-blue);
+}
+
+.summary-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--spacing-2xl);
+  padding-top: var(--spacing-xl);
+  border-top: 1px solid var(--gray-200);
+}
+

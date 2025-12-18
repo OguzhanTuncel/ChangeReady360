@@ -1,0 +1,23 @@
+<app-wizard-shell
+  [currentStep]="1"
+  [totalSteps]="7"
+  title="Welchen Analyse-Modus möchten Sie wählen?"
+  [nextDisabled]="!selectedMode"
+  (back)="onBack()"
+  (next)="onNext()"
+>
+  <div class="mode-selection">
+    <div class="mode-grid">
+      <app-option-card
+        *ngFor="let mode of analysisModes"
+        [id]="mode.id"
+        [title]="mode.title"
+        [description]="mode.description"
+        [icon]="mode.icon"
+        [selected]="selectedMode === mode.id"
+        (selectedChange)="onModeSelected($event)"
+      ></app-option-card>
+    </div>
+  </div>
+</app-wizard-shell>
+

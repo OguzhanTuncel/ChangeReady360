@@ -1,0 +1,33 @@
+<app-wizard-shell
+  [currentStep]="getTotalSteps()"
+  [totalSteps]="getTotalSteps()"
+  title="Zusammenfassung"
+  [showNext]="false"
+  (back)="onBack()"
+>
+  <div class="summary-page">
+    <div class="summary-selections">
+      <div class="selection-item">
+        <span class="selection-label">Analyse-Modus:</span>
+        <span class="selection-value">{{ analysisMode }}</span>
+      </div>
+      <div class="selection-item">
+        <span class="selection-label">Kontext:</span>
+        <span class="selection-value">{{ contextType }}</span>
+      </div>
+    </div>
+    
+    <app-score-preview
+      [overallScore]="overallScore"
+      [maxScore]="maxScore"
+      [categoryScores]="categoryScores"
+    ></app-score-preview>
+    
+    <div class="summary-actions">
+      <button class="btn btn-primary btn-large" (click)="onRestart()">
+        Neu starten
+      </button>
+    </div>
+  </div>
+</app-wizard-shell>
+

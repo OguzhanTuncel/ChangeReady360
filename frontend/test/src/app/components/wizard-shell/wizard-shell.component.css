@@ -1,0 +1,85 @@
+.wizard-shell {
+  min-height: 100vh;
+  background-color: var(--cream);
+  display: flex;
+  flex-direction: column;
+}
+
+.wizard-header {
+  background-color: var(--white);
+  border-bottom: 1px solid var(--gray-200);
+  padding: var(--spacing-lg) var(--spacing-xl);
+  box-shadow: var(--shadow-sm);
+}
+
+.logo-placeholder {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.logo-text {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--innovera-blue);
+  letter-spacing: -0.02em;
+}
+
+.wizard-content {
+  flex: 1;
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--spacing-2xl) var(--spacing-lg);
+}
+
+.wizard-title-section {
+  text-align: center;
+  margin-bottom: var(--spacing-2xl);
+}
+
+.wizard-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: var(--spacing-md);
+}
+
+.wizard-body {
+  background-color: var(--white);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-2xl);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--spacing-xl);
+  min-height: 400px;
+}
+
+.wizard-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid var(--gray-200);
+}
+
+.wizard-actions .btn {
+  min-width: 150px;
+}
+
+@media (max-width: 768px) {
+  .wizard-title {
+    font-size: 2rem;
+  }
+  
+  .wizard-body {
+    padding: var(--spacing-lg);
+  }
+  
+  .wizard-actions {
+    flex-direction: column;
+  }
+  
+  .wizard-actions .btn {
+    width: 100%;
+  }
+}
+

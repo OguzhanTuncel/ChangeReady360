@@ -1,0 +1,26 @@
+<app-wizard-shell
+  [currentStep]="getCurrentStep()"
+  [totalSteps]="getTotalSteps()"
+  [title]="category?.name || 'Kategorie'"
+  [nextDisabled]="!isAllQuestionsAnswered()"
+  [nextLabel]="categoryIndex === allCategories.length - 1 ? 'Zur Zusammenfassung' : 'Weiter'"
+  (back)="onBack()"
+  (next)="onNext()"
+>
+  <div class="category-page" *ngIf="category">
+    <p class="category-description" *ngIf="category.description">
+      {{ category.description }}
+    </p>
+    
+    <div class="questions-list">
+      <app-question-item
+        *ngFor="let question of category.questions"
+        [questionId]="question.id"
+        [questionText]="question.text"
+        [value]="getAnswer(question.id)"
+        (valueChange)="onAnswerChange(question.id, $event)"
+      ></app-question-item>
+    </div>
+  </div>
+</app-wizard-shell>
+

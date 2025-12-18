@@ -1,0 +1,38 @@
+<div class="score-preview">
+  <div class="overall-score">
+    <h2 class="score-title">Gesamtscore</h2>
+    <div class="score-value">
+      <span class="score-number">{{ overallScore }}</span>
+      <span class="score-separator">/</span>
+      <span class="score-max">{{ maxScore }}</span>
+    </div>
+    <div class="score-badge" [class]="'badge-' + getScoreBadge(overallScore, maxScore).color">
+      {{ getScoreBadge(overallScore, maxScore).label }}
+    </div>
+  </div>
+  
+  <div class="category-scores">
+    <h3 class="category-scores-title">Kategorie-Bewertungen</h3>
+    <div class="category-list">
+      <div *ngFor="let category of categoryScores" class="category-score-item">
+        <div class="category-header">
+          <span class="category-name">{{ category.categoryName }}</span>
+          <span class="category-score-value">
+            {{ category.score }}/{{ category.maxScore }}
+          </span>
+        </div>
+        <div class="score-bar-container">
+          <div 
+            class="score-bar" 
+            [style.width.%]="getScorePercentage(category.score, category.maxScore)"
+            [class]="'bar-' + getScoreBadge(category.score, category.maxScore).color"
+          ></div>
+        </div>
+        <div class="category-badge" [class]="'badge-' + getScoreBadge(category.score, category.maxScore).color">
+          {{ getScoreBadge(category.score, category.maxScore).label }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,29 @@
+<app-wizard-shell
+  [currentStep]="2"
+  [totalSteps]="7"
+  title="Welchen Kontext möchten Sie bewerten?"
+  [nextDisabled]="!selectedContext"
+  (back)="onBack()"
+  (next)="onNext()"
+>
+  <div class="context-selection">
+    <div class="context-info">
+      <p class="info-text">
+        <strong>Hinweis:</strong> Die Kategorien sind bei beiden Optionen gleich, 
+        die Fragen passen sich jedoch an den gewählten Kontext an.
+      </p>
+    </div>
+    <div class="context-grid">
+      <app-option-card
+        *ngFor="let context of contextTypes"
+        [id]="context.id"
+        [title]="context.title"
+        [description]="context.description"
+        [icon]="context.icon"
+        [selected]="selectedContext === context.id"
+        (selectedChange)="onContextSelected($event)"
+      ></app-option-card>
+    </div>
+  </div>
+</app-wizard-shell>
+

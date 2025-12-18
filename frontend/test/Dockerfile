@@ -12,9 +12,11 @@ RUN npm run build
 FROM nginx:alpine
 WORKDIR /usr/share/nginx/html
 
-# outputPath aus angular.json prüfen, z. B. "dist/test" oder "dist/frontend"
-# hier Beispiel: dist/test
-COPY --from=build /app/dist/test ./
+# Angular 21 Build-Ausgabe liegt im browser Unterverzeichnis
+COPY --from=build /app/dist/test/browser ./
+
+# Nginx-Konfiguration für Angular SPA Routing
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

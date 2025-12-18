@@ -1,0 +1,21 @@
+<div class="question-item">
+  <h4 class="question-text">{{ questionText }}</h4>
+  <div class="question-scale">
+    <div class="scale-labels">
+      <span class="scale-label-left">Stimme gar nicht zu</span>
+      <span class="scale-label-right">Stimme voll zu</span>
+    </div>
+    <div class="scale-buttons">
+      <button
+        *ngFor="let scaleValue of scaleValues"
+        type="button"
+        class="scale-button"
+        [class.active]="value === scaleValue"
+        (click)="onValueChange(scaleValue)"
+      >
+        {{ scaleValue }}
+      </button>
+    </div>
+  </div>
+</div>
+

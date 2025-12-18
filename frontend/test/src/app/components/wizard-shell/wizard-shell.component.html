@@ -1,0 +1,40 @@
+<div class="wizard-shell">
+  <header class="wizard-header">
+    <div class="logo-placeholder">
+      <span class="logo-text">ChangeReady360</span>
+    </div>
+  </header>
+  
+  <main class="wizard-content">
+    <app-progress-indicator [current]="currentStep" [total]="totalSteps"></app-progress-indicator>
+    
+    <div class="wizard-title-section">
+      <h1 class="wizard-title">{{ title }}</h1>
+    </div>
+    
+    <div class="wizard-body">
+      <ng-content></ng-content>
+    </div>
+    
+    <div class="wizard-actions">
+      <button 
+        *ngIf="showBack"
+        type="button"
+        class="btn btn-secondary"
+        (click)="onBack()"
+      >
+        ← Zurück
+      </button>
+      <button 
+        *ngIf="showNext"
+        type="button"
+        class="btn btn-primary"
+        [disabled]="nextDisabled"
+        (click)="onNext()"
+      >
+        {{ nextLabel }} →
+      </button>
+    </div>
+  </main>
+</div>
+
