@@ -1,0 +1,26 @@
+.category-section {
+  margin-bottom: 3rem;
+}
+
+.category-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: var(--primary-color, #1976d2);
+  border-bottom: 2px solid var(--primary-color, #1976d2);
+  padding-bottom: 0.5rem;
+}
+
+.subcategory-card {
+  margin-bottom: 1.5rem;
+}
+
+.subcategory-title {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--text-secondary, #666);
+}
+
+mat-card-content {
+  padding-top: 1rem;
+}

@@ -1,0 +1,92 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <h1>ChangeReady360</h1>
+      <p class="subtitle">Willkommen zurück</p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+      <!-- Error Message -->
+      @if (errorMessage()) {
+        <div class="error-message">
+          {{ errorMessage() }}
+        </div>
+      }
+
+      <!-- Email Field -->
+      <div class="form-group">
+        <label for="email">E-Mail-Adresse</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          class="form-control"
+          [class.error]="email?.invalid && email?.touched"
+          placeholder="ihre.email@beispiel.de"
+          autocomplete="email"
+        />
+        @if (email?.invalid && email?.touched) {
+          <span class="error-text">
+            @if (email?.errors?.['required']) {
+              E-Mail-Adresse ist erforderlich
+            } @else if (email?.errors?.['email']) {
+              Bitte geben Sie eine gültige E-Mail-Adresse ein
+            }
+          </span>
+        }
+      </div>
+
+      <!-- Password Field -->
+      <div class="form-group">
+        <label for="password">Passwort</label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          class="form-control"
+          [class.error]="password?.invalid && password?.touched"
+          placeholder="••••••••"
+          autocomplete="current-password"
+        />
+        @if (password?.invalid && password?.touched) {
+          <span class="error-text">
+            @if (password?.errors?.['required']) {
+              Passwort ist erforderlich
+            } @else if (password?.errors?.['minlength']) {
+              Passwort muss mindestens 6 Zeichen lang sein
+            }
+          </span>
+        }
+      </div>
+
+      <!-- Remember Me -->
+      <div class="form-group checkbox-group">
+        <label class="checkbox-label">
+          <input type="checkbox" formControlName="rememberMe" />
+          <span>Angemeldet bleiben</span>
+        </label>
+      </div>
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        class="btn btn-primary btn-block"
+        [disabled]="isLoading() || loginForm.invalid"
+      >
+        @if (isLoading()) {
+          <span class="spinner"></span>
+          <span>Wird angemeldet...</span>
+        } @else {
+          Anmelden
+        }
+      </button>
+    </form>
+
+    <div class="login-footer">
+      <p class="help-text">
+        Haben Sie Ihr Passwort vergessen?
+        <a href="#" class="link">Passwort zurücksetzen</a>
+      </p>
+    </div>
+  </div>
+</div>

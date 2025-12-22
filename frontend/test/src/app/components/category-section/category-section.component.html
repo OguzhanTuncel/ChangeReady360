@@ -1,0 +1,29 @@
+<div class="category-section">
+  <h2 class="category-title">{{ category.name }}</h2>
+  
+  @for (subcategory of category.subcategories; track subcategory.name) {
+    @if (getVisibleQuestions(subcategory).length > 0) {
+      <mat-card class="subcategory-card">
+        @if (subcategory.name) {
+          <mat-card-header>
+            <mat-card-title class="subcategory-title">{{ subcategory.name }}</mat-card-title>
+          </mat-card-header>
+        }
+        <mat-card-content>
+          @for (question of getVisibleQuestions(subcategory); track question.id) {
+            <div [id]="'question-' + question.id">
+              <app-likert-question
+                [questionId]="question.id"
+                [questionText]="question.text"
+                [value]="getAnswer(question.id)"
+                [reverse]="question.reverse"
+                [disabled]="disabled"
+                (valueChange)="onAnswerChange(question.id, $event)"
+              />
+            </div>
+          }
+        </mat-card-content>
+      </mat-card>
+    }
+  }
+</div>

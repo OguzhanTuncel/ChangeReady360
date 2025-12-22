@@ -1,0 +1,21 @@
+<div class="survey-success-page">
+  <mat-card>
+    <mat-card-content>
+      <div class="success-content">
+        <mat-icon class="success-icon">check_circle</mat-icon>
+        <h1>Fragebogen erfolgreich abgegeben!</h1>
+        <p>Ihre Antworten wurden gespeichert.</p>
+        @if (instance()?.submittedAt) {
+          <p class="submitted-date">
+            Abgegeben am: {{ instance()!.submittedAt | date:'medium':'de' }}
+          </p>
+        }
+        <div class="actions">
+          <button mat-raised-button color="primary" (click)="goToSurveys()">
+            Zurück zu Umfragen
+          </button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

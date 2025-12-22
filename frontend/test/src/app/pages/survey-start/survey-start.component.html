@@ -1,0 +1,54 @@
+<div class="survey-start-page">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Fragebogen starten</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      @if (error()) {
+        <div class="error-message">{{ error() }}</div>
+      }
+
+      <div class="participant-type-selection">
+        <h3>Bitte wählen Sie Ihre Rolle:</h3>
+        <div class="radio-group">
+          <label class="radio-option">
+            <input
+              type="radio"
+              name="participantType"
+              value="PMA"
+              [checked]="participantType() === 'PMA'"
+              (change)="onParticipantTypeChange('PMA')"
+            />
+            <span>PMA (Projektmitarbeiter aktiv an Implementierung)</span>
+          </label>
+          <label class="radio-option">
+            <input
+              type="radio"
+              name="participantType"
+              value="AFFECTED"
+              [checked]="participantType() === 'AFFECTED'"
+              (change)="onParticipantTypeChange('AFFECTED')"
+            />
+            <span>Betroffener Mitarbeiter</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button
+          mat-raised-button
+          color="primary"
+          [disabled]="!participantType() || isLoading()"
+          (click)="startSurvey()"
+        >
+          @if (isLoading()) {
+            Fragebogen wird geladen...
+          } @else {
+            Fragebogen starten
+          }
+        </button>
+        <button mat-button routerLink="/app/surveys">Abbrechen</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -239,3 +239,28 @@ a:hover {
     padding: 0 var(--spacing-md);
   }
 }
+
+/* Angular Material Theme Overrides */
+.mat-mdc-toolbar {
+  background-color: var(--innovera-blue) !important;
+  color: white !important;
+}
+
+.mat-mdc-button.mat-primary {
+  background-color: var(--innovera-blue);
+  color: white;
+}
+
+.mat-mdc-raised-button.mat-primary {
+  background-color: var(--innovera-blue);
+  color: white;
+}
+
+.mat-mdc-card {
+  box-shadow: var(--shadow-md) !important;
+  border-radius: var(--radius-lg) !important;
+}
+
+.mat-mdc-list-item:hover {
+  background-color: var(--gray-100) !important;
+}

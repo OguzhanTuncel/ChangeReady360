@@ -1,0 +1,36 @@
+<div class="survey-fill-page">
+  @if (isLoading()) {
+    <div class="loading">Lade Fragebogen...</div>
+  } @else if (error()) {
+    <div class="error">{{ error() }}</div>
+  } @else if (instance()) {
+    <div class="survey-header">
+      <h1>{{ instance()!.template.name }}</h1>
+      @if (instance()!.template.description) {
+        <p class="description">{{ instance()!.template.description }}</p>
+      }
+      <div class="progress-info">
+        <span>{{ getAnsweredCount() }} / {{ getTotalQuestions() }} Fragen beantwortet</span>
+        <mat-progress-bar mode="determinate" [value]="getProgress()"></mat-progress-bar>
+      </div>
+    </div>
+
+    <div class="survey-content">
+      @for (category of instance()!.template.categories; track category.name) {
+        <app-category-section
+          [category]="category"
+          [participantType]="instance()!.participantType!"
+          [answers]="answers()"
+          (answerChange)="onAnswerChange($event)"
+        />
+      }
+    </div>
+
+    <div class="survey-footer">
+      <button mat-raised-button color="primary" (click)="goToReview()">
+        <mat-icon>check_circle</mat-icon>
+        Zur Übersicht
+      </button>
+    </div>
+  }
+</div>

@@ -1,0 +1,60 @@
+<div class="survey-review-page">
+  @if (isLoading()) {
+    <div class="loading">Lade Übersicht...</div>
+  } @else if (error()) {
+    <div class="error">{{ error() }}</div>
+  } @else if (instance()) {
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Übersicht vor Abgabe</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        @if (getUnansweredQuestions().length > 0) {
+          <div class="warning-section">
+            <h3>
+              <mat-icon>warning</mat-icon>
+              Unbeantwortete Fragen
+            </h3>
+            <p>Sie haben noch {{ getUnansweredQuestions().length }} unbeantwortete Frage(n):</p>
+            <mat-list>
+              @for (question of getUnansweredQuestions(); track question.id) {
+                <mat-list-item>
+                  <span matListItemTitle>{{ question.text }}</span>
+                  <button mat-button (click)="scrollToQuestion(question.id)">
+                    <mat-icon>arrow_forward</mat-icon>
+                    Zur Frage
+                  </button>
+                </mat-list-item>
+              }
+            </mat-list>
+          </div>
+        } @else {
+          <div class="success-section">
+            <mat-icon>check_circle</mat-icon>
+            <p>Alle Fragen wurden beantwortet. Sie können den Fragebogen jetzt absenden.</p>
+          </div>
+        }
+
+        @if (error()) {
+          <div class="error-message">{{ error() }}</div>
+        }
+
+        <div class="actions">
+          <button mat-button (click)="goBack()">Zurück zum Fragebogen</button>
+          <button
+            mat-raised-button
+            color="primary"
+            [disabled]="isSubmitting()"
+            (click)="submit()"
+          >
+            @if (isSubmitting()) {
+              Wird abgesendet...
+            } @else {
+              Fragebogen absenden
+            }
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  }
+</div>

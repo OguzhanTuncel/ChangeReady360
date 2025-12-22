@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -25,15 +26,18 @@ public class SecurityConfig {
 	private final JwtAuthenticationFilter jwtAuthenticationFilter;
 	private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 	private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+	private final CorsConfigurationSource corsConfigurationSource;
 
 	public SecurityConfig(
 		JwtAuthenticationFilter jwtAuthenticationFilter,
 		JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
-		JwtAccessDeniedHandler jwtAccessDeniedHandler
+		JwtAccessDeniedHandler jwtAccessDeniedHandler,
+		CorsConfigurationSource corsConfigurationSource
 	) {
 		this.jwtAuthenticationFilter = jwtAuthenticationFilter;
 		this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
 		this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
+		this.corsConfigurationSource = corsConfigurationSource;
 	}
 
 	@Bean
@@ -49,11 +53,13 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http
+			.cors(cors -> cors.configurationSource(corsConfigurationSource))
 			.csrf(AbstractHttpConfigurer::disable)
 			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.authorizeHttpRequests(auth -> auth
 				.requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/index.html").permitAll() // Swagger UI - muss zuerst kommen
 				.requestMatchers("/api/v1/auth/**").permitAll()
+				.requestMatchers("/api/v1/admin-setup/**").permitAll() // Temporärer Endpoint zum Erstellen des Admin-Users
 				.requestMatchers("/api/v1/company-access-requests").permitAll() // Öffentlicher POST-Endpoint
 				.requestMatchers("/api/v1/invites/validate/**").permitAll() // Öffentlicher Token-Validierungs-Endpoint
 				.requestMatchers("/api/v1/invites/accept").permitAll() // Öffentlicher Accept-Endpoint

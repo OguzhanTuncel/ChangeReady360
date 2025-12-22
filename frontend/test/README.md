@@ -1,16 +1,42 @@
-# Test
+# ChangeReady360 Frontend
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.3.
 
-## Development server
+## 🚀 Quick Start
 
-To start a local development server, run:
+### Development Server (mit Hot Reload)
 
 ```bash
+# Dependencies installieren (einmalig)
+npm install
+
+# Development Server starten
+npm start
+# oder
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Öffne `http://localhost:4200` im Browser. Die Anwendung lädt automatisch neu bei Code-Änderungen.
+
+**Wichtig**: Das Backend muss auf `http://localhost:8080` laufen (siehe [DEV.md](./DEV.md)).
+
+## 📋 Development Workflow
+
+1. **Backend starten** (Docker Compose):
+   ```bash
+   # Im Projekt-Root
+   docker-compose up -d
+   ```
+
+2. **Frontend starten** (lokal):
+   ```bash
+   cd frontend/test
+   npm start
+   ```
+
+3. **Code ändern** → Browser aktualisiert automatisch! ✨
+
+Siehe [DEV.md](./DEV.md) für detaillierte Anleitung.
 
 ## Code scaffolding
 

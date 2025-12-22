@@ -1,0 +1,77 @@
+.surveys-page {
+  padding: 2rem;
+}
+
+.page-header {
+  margin-bottom: 2rem;
+}
+
+.page-header h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.section {
+  margin-bottom: 3rem;
+}
+
+.section h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--text-primary, #333);
+}
+
+.survey-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.survey-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.survey-card.completed {
+  opacity: 0.8;
+}
+
+.survey-info, .template-info {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+.status-chip {
+  padding: 0.25rem 0.75rem;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.status-chip.primary {
+  background-color: var(--primary-color, #1976d2);
+  color: white;
+}
+
+.status-chip.accent {
+  background-color: var(--accent-color, #ff9800);
+  color: white;
+}
+
+.participant-type {
+  font-size: 0.85rem;
+  color: var(--text-secondary, #666);
+}
+
+.loading {
+  text-align: center;
+  padding: 3rem;
+  font-size: 1.1rem;
+}
+
+mat-card-actions {
+  margin-top: auto;
+  padding-top: 1rem;
+}

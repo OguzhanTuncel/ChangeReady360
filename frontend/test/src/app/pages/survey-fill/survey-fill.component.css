@@ -1,0 +1,55 @@
+.survey-fill-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.loading, .error {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.1rem;
+}
+
+.error {
+  color: var(--error-color, #d32f2f);
+}
+
+.survey-header {
+  margin-bottom: 2rem;
+}
+
+.survey-header h1 {
+  margin-bottom: 0.5rem;
+  font-size: 1.8rem;
+}
+
+.description {
+  color: var(--text-secondary, #666);
+  margin-bottom: 1rem;
+}
+
+.progress-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.progress-info span {
+  font-size: 0.9rem;
+  color: var(--text-secondary, #666);
+}
+
+.survey-content {
+  margin-bottom: 3rem;
+}
+
+.survey-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--border-color, #e0e0e0);
+}
+
+.survey-footer button {
+  min-width: 150px;
+}

@@ -1,0 +1,108 @@
+<div class="surveys-page">
+  <div class="page-header">
+    <h1>Fragebögen</h1>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading">Lade Fragebögen...</div>
+  } @else {
+    <!-- Offene Fragebögen -->
+    @if (getOpenInstances().length > 0) {
+      <section class="section">
+        <h2>Offene Fragebögen</h2>
+        <div class="survey-grid">
+          @for (instance of getOpenInstances(); track instance.id) {
+            <mat-card class="survey-card">
+              <mat-card-header>
+                <mat-card-title>{{ instance.template.name }}</mat-card-title>
+                <mat-card-subtitle>{{ instance.template.description }}</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="survey-info">
+                  <span class="status-chip" [class]="getInstanceStatus(instance).color">
+                    {{ getInstanceStatus(instance).label }}
+                  </span>
+                  <span class="participant-type">
+                    {{ instance.participantType === 'PMA' ? 'PMA' : 'Betroffener MA' }}
+                  </span>
+                </div>
+              </mat-card-content>
+              <mat-card-actions>
+                <button mat-raised-button color="primary" [routerLink]="['/app/survey', instance.id, 'fill']">
+                  <mat-icon>edit</mat-icon>
+                  Weiter bearbeiten
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          }
+        </div>
+      </section>
+    }
+
+    <!-- Verfügbare Vorlagen -->
+    @if (activeTemplates().length > 0) {
+      <section class="section">
+        <h2>Verfügbare Fragebögen</h2>
+        <div class="survey-grid">
+          @for (template of activeTemplates(); track template.id) {
+            <mat-card class="survey-card">
+              <mat-card-header>
+                <mat-card-title>{{ template.name }}</mat-card-title>
+                <mat-card-subtitle>{{ template.description }}</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="template-info">
+                  <span>Version {{ template.version }}</span>
+                </div>
+              </mat-card-content>
+              <mat-card-actions>
+                <button mat-raised-button color="primary" [routerLink]="['/app/survey', template.id, 'start']">
+                  <mat-icon>play_arrow</mat-icon>
+                  Fragebogen starten
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          }
+        </div>
+      </section>
+    }
+
+    <!-- Abgeschlossene Fragebögen -->
+    @if (getCompletedInstances().length > 0) {
+      <section class="section">
+        <h2>Abgeschlossene Fragebögen</h2>
+        <div class="survey-grid">
+          @for (instance of getCompletedInstances(); track instance.id) {
+            <mat-card class="survey-card completed">
+              <mat-card-header>
+                <mat-card-title>{{ instance.template.name }}</mat-card-title>
+                <mat-card-subtitle>
+                  Abgeschlossen am {{ instance.submittedAt | date:'medium':'de' }}
+                </mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="survey-info">
+                  <span class="status-chip primary">Abgeschlossen</span>
+                </div>
+              </mat-card-content>
+              <mat-card-actions>
+                <button mat-raised-button color="primary" [routerLink]="['/app/survey', instance.id, 'summary']">
+                  <mat-icon>visibility</mat-icon>
+                  Zusammenfassung anzeigen
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          }
+        </div>
+      </section>
+    }
+
+    @if (getOpenInstances().length === 0 && activeTemplates().length === 0 && getCompletedInstances().length === 0) {
+      <mat-card>
+        <mat-card-content>
+          <p>Keine Fragebögen verfügbar.</p>
+        </mat-card-content>
+      </mat-card>
+    }
+  }
+</div>

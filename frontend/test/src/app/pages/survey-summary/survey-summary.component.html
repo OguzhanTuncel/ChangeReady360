@@ -1,0 +1,64 @@
+<div class="survey-summary-page">
+  @if (isLoading()) {
+    <div class="loading">Lade Zusammenfassung...</div>
+  } @else if (error()) {
+    <div class="error">{{ error() }}</div>
+  } @else if (instance()) {
+    <div class="summary-header">
+      <h1>{{ instance()!.template.name }}</h1>
+      @if (instance()!.template.description) {
+        <p class="description">{{ instance()!.template.description }}</p>
+      }
+      <div class="summary-info">
+        <span>Abgeschlossen am {{ instance()!.submittedAt | date:'medium':'de' }}</span>
+        <span class="participant-type">
+          {{ instance()!.participantType === 'PMA' ? 'PMA' : 'Betroffener MA' }}
+        </span>
+      </div>
+      <div class="progress-summary">
+        <span>{{ getAnsweredCount() }} / {{ getTotalCount() }} Fragen beantwortet</span>
+      </div>
+    </div>
+
+    <mat-card class="answers-card">
+      <mat-card-header>
+        <mat-card-title>Ihre Antworten</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        @for (category of instance()!.template.categories; track category.name) {
+          <div class="category-section">
+            <h3>{{ category.name }}</h3>
+            @for (subcategory of category.subcategories; track subcategory.name) {
+              @if (getVisibleQuestions(subcategory, instance()!.participantType!).length > 0) {
+                @if (subcategory.name) {
+                  <h4 class="subcategory-title">{{ subcategory.name }}</h4>
+                }
+                <mat-list>
+                  @for (question of getVisibleQuestions(subcategory, instance()!.participantType!); track question.id) {
+                    <mat-list-item>
+                      <div class="question-answer">
+                        <div class="question-text">{{ question.text }}</div>
+                        <div class="answer-value">
+                          <mat-chip [class]="getAnswerChipClass(question.id)">
+                            {{ getAnswerText(getAnswer(question.id)) }}
+                          </mat-chip>
+                        </div>
+                      </div>
+                    </mat-list-item>
+                  }
+                </mat-list>
+              }
+            }
+          </div>
+        }
+      </mat-card-content>
+    </mat-card>
+
+    <div class="actions">
+      <button mat-raised-button color="primary" routerLink="/app/surveys">
+        <mat-icon>arrow_back</mat-icon>
+        Zurück zu Umfragen
+      </button>
+    </div>
+  }
+</div>

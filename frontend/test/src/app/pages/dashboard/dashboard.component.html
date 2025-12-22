@@ -1,0 +1,129 @@
+<div class="dashboard-page">
+  <h1 class="page-header">Dashboard</h1>
+
+  @if (isLoading()) {
+    <div class="loading">Lade Dashboard...</div>
+  } @else {
+    <!-- Statistics Cards -->
+    <div class="stats-grid">
+      @for (card of statCards; track card.title) {
+        <mat-card class="stat-card" [class.clickable]="card.route" (click)="card.route && navigateToCard(card.route)">
+          <div class="stat-content">
+            <div class="stat-icon" [style.background-color]="getCardColor(card.color)">
+              <mat-icon>{{ card.icon }}</mat-icon>
+            </div>
+            <div class="stat-details">
+              <div class="stat-value">{{ card.value }}</div>
+              <div class="stat-title">{{ card.title }}</div>
+              @if (card.change) {
+                <div class="stat-change">{{ card.change }}</div>
+              }
+            </div>
+          </div>
+        </mat-card>
+      }
+    </div>
+
+  <!-- Main Content Grid -->
+  <div class="content-grid">
+    <!-- Open Surveys -->
+    <mat-card class="content-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>assignment</mat-icon>
+          Offene Umfragen
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        @if (openSurveys.length > 0) {
+          <mat-list>
+            @for (survey of openSurveys; track survey.id) {
+              <mat-list-item class="survey-item" (click)="navigateToSurvey(survey.route)">
+                <div class="survey-info">
+                  <div class="survey-title">{{ survey.title }}</div>
+                  <div class="survey-meta">
+                    <span class="participants">
+                      <mat-icon>people</mat-icon>
+                      {{ survey.participants }} Teilnehmer
+                    </span>
+                    <span class="status" [class]="'status-' + survey.status">
+                      {{ survey.status === 'in_progress' ? 'In Bearbeitung' : 'Ausstehend' }}
+                    </span>
+                  </div>
+                </div>
+                <button mat-icon-button (click)="navigateToSurvey(survey.route); $event.stopPropagation()">
+                  <mat-icon>arrow_forward</mat-icon>
+                </button>
+              </mat-list-item>
+            }
+          </mat-list>
+        } @else {
+          <div class="empty-state">
+            <mat-icon>inbox</mat-icon>
+            <p>Keine offenen Umfragen</p>
+            <button mat-raised-button color="primary" routerLink="/app/surveys">
+              Neue Umfrage erstellen
+            </button>
+          </div>
+        }
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Recent Activities -->
+    <mat-card class="content-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>history</mat-icon>
+          Letzte Aktivitäten
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        @if (recentActivities.length > 0) {
+          <mat-list>
+            @for (activity of recentActivities; track activity.id) {
+              <mat-list-item class="activity-item" [class.clickable]="activity.route" (click)="activity.route && navigateToActivity(activity.route)">
+                <mat-icon matListItemIcon [style.color]="getActivityColor(activity.type)">
+                  {{ getActivityIcon(activity.type) }}
+                </mat-icon>
+                <div matListItemTitle class="activity-content">
+                  <div class="activity-title">{{ activity.title }}</div>
+                  <div class="activity-description">{{ activity.description }}</div>
+                  <div class="activity-date">{{ activity.date }}</div>
+                </div>
+              </mat-list-item>
+            }
+          </mat-list>
+        } @else {
+          <div class="empty-state">
+            <mat-icon>history</mat-icon>
+            <p>Noch keine Aktivitäten</p>
+          </div>
+        }
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Quick Actions -->
+  <mat-card class="quick-actions-card">
+    <mat-card-header>
+      <mat-card-title>Schnellaktionen</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="quick-actions">
+        <button mat-raised-button color="primary" routerLink="/app/surveys">
+          <mat-icon>add</mat-icon>
+          Neue Umfrage starten
+        </button>
+        <button mat-raised-button routerLink="/app/results">
+          <mat-icon>bar_chart</mat-icon>
+          Ergebnisse anzeigen
+        </button>
+        <button mat-raised-button routerLink="/app/settings">
+          <mat-icon>settings</mat-icon>
+          Einstellungen
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  }
+</div>

@@ -1,0 +1,29 @@
+<div class="likert-question">
+  <div class="question-text">{{ questionText }}</div>
+  <div class="likert-options">
+    @for (option of getLikertLabels(); track option.value) {
+      <label class="likert-option" [class.disabled]="disabled">
+        <input
+          type="radio"
+          [name]="questionId"
+          [value]="option.value"
+          [checked]="selectedValue() === option.value"
+          [disabled]="disabled"
+          (change)="onValueChange(option.value)"
+        />
+        <span class="option-label">{{ option.label }}</span>
+      </label>
+    }
+    <label class="likert-option no-answer" [class.disabled]="disabled">
+      <input
+        type="radio"
+        [name]="questionId"
+        value=""
+        [checked]="selectedValue() === null"
+        [disabled]="disabled"
+        (change)="onValueChange(null)"
+      />
+      <span class="option-label">Keine Angabe</span>
+    </label>
+  </div>
+</div>
