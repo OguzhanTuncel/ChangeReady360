@@ -1,7 +1,7 @@
 <div class="survey-start-page">
   <mat-card>
     <mat-card-header>
-      <mat-card-title>Fragebogen starten</mat-card-title>
+      <mat-card-title>Umfrage starten</mat-card-title>
     </mat-card-header>
     <mat-card-content>
       @if (error()) {
@@ -42,13 +42,14 @@
           (click)="startSurvey()"
         >
           @if (isLoading()) {
-            Fragebogen wird geladen...
+            Umfrage wird geladen...
           } @else {
-            Fragebogen starten
+            Umfrage starten
           }
         </button>
-        <button mat-button routerLink="/app/surveys">Abbrechen</button>
+        <button mat-raised-button class="cancel-button" routerLink="/app/surveys">Abbrechen</button>
       </div>
     </mat-card-content>
   </mat-card>
 </div>
+

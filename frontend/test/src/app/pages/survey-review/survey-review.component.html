@@ -9,6 +9,13 @@
         <mat-card-title>Übersicht vor Abgabe</mat-card-title>
       </mat-card-header>
       <mat-card-content>
+        @if (error()) {
+          <div class="error-message">
+            <mat-icon>error</mat-icon>
+            {{ error() }}
+          </div>
+        }
+
         @if (getUnansweredQuestions().length > 0) {
           <div class="warning-section">
             <h3>
@@ -31,26 +38,23 @@
         } @else {
           <div class="success-section">
             <mat-icon>check_circle</mat-icon>
-            <p>Alle Fragen wurden beantwortet. Sie können den Fragebogen jetzt absenden.</p>
+            <p>Alle Fragen wurden beantwortet. Sie können die Umfrage jetzt absenden.</p>
           </div>
         }
 
-        @if (error()) {
-          <div class="error-message">{{ error() }}</div>
-        }
-
         <div class="actions">
-          <button mat-button (click)="goBack()">Zurück zum Fragebogen</button>
+          <button mat-raised-button class="back-button" (click)="goBack()">Zurück zur Umfrage</button>
           <button
             mat-raised-button
             color="primary"
+            class="submit-button"
             [disabled]="isSubmitting()"
             (click)="submit()"
           >
             @if (isSubmitting()) {
               Wird abgesendet...
             } @else {
-              Fragebogen absenden
+              Umfrage absenden
             }
           </button>
         </div>
@@ -58,3 +62,4 @@
     </mat-card>
   }
 </div>
+

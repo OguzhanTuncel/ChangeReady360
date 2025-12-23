@@ -34,3 +34,4 @@ export class CategorySectionComponent {
     return this.answers.get(questionId) || null;
   }
 }
+

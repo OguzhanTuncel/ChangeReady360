@@ -47,3 +47,4 @@ export class SurveySuccessComponent implements OnInit {
     this.router.navigate(['/app/surveys']);
   }
 }
+

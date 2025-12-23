@@ -1,6 +1,9 @@
 <div class="results-page">
   <div class="page-header">
     <h1>Ergebnisse</h1>
+    <p class="description-text">
+      Hier sehen Sie die Auswertung Ihrer abgeschlossenen Umfrage. Der Score zeigt die aktuelle Change-Readiness Ihres Unternehmens auf einen Blick.
+    </p>
   </div>
 
   @if (isLoading()) {
@@ -29,8 +32,73 @@
       </mat-card-content>
     </mat-card>
 
+    <!-- Gesamt-Score Donut-Diagramm (immer sichtbar) -->
+    <mat-card class="score-card">
+      <mat-card-content>
+        <div class="score-content">
+          <div class="donut-container">
+            <svg width="220" height="220" viewBox="0 0 200 200" class="donut-chart">
+              <!-- Hintergrund-Kreis (Creme) -->
+              <circle
+                cx="100"
+                cy="100"
+                r="75"
+                fill="none"
+                stroke="#F5F3F0"
+                stroke-width="28"
+              />
+              <!-- Score-Kreis (Innovera-Blau) -->
+              <circle
+                cx="100"
+                cy="100"
+                r="75"
+                fill="none"
+                stroke="#31749B"
+                stroke-width="28"
+                [attr.stroke-dasharray]="getDonutCircumference()"
+                [attr.stroke-dashoffset]="getDonutOffset()"
+                stroke-linecap="round"
+                transform="rotate(-90 100 100)"
+                class="score-circle"
+              />
+              <!-- Text in der Mitte -->
+              <text x="100" y="95" text-anchor="middle" class="score-value">{{ getOverallScore() }}%</text>
+              <text x="100" y="110" text-anchor="middle" class="score-label">Gesamt-Score</text>
+            </svg>
+          </div>
+          <div class="score-evaluation">
+            <h3>Bewertung</h3>
+            <ul class="evaluation-list">
+              @if (results().length > 0) {
+                <li>
+                  <strong>Aktueller Stand:</strong> {{ getEvaluationText().current }}
+                </li>
+                <li>
+                  <strong>Kritische Bereiche:</strong> {{ getEvaluationText().critical }}
+                </li>
+                <li>
+                  <strong>Positive Aspekte:</strong> {{ getEvaluationText().positive }}
+                </li>
+              } @else {
+                <li>
+                  <strong>Status:</strong> Noch keine Antworten vorhanden. Bitte füllen Sie zunächst einen Fragebogen aus.
+                </li>
+                <li>
+                  <strong>Nächster Schritt:</strong> Starten Sie einen Fragebogen, um Ihre Change-Readiness zu bewerten.
+                </li>
+                <li>
+                  <strong>Hinweis:</strong> Der Score wird automatisch aktualisiert, sobald Daten verfügbar sind.
+                </li>
+              }
+            </ul>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
     <!-- Ergebnisse -->
     @if (results().length > 0) {
+
       <mat-card>
         <mat-card-header>
           <mat-card-title>Auswertung nach Kategorien</mat-card-title>
@@ -93,3 +161,4 @@
     }
   }
 </div>
+

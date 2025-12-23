@@ -21,3 +21,4 @@ export interface AuthState {
   user: UserInfo | null;
   token: string | null;
 }
+

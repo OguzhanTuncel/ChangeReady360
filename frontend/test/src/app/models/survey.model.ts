@@ -65,3 +65,4 @@ export interface SurveyResult {
   totalCount: number;
   reverseItems: string[];
 }
+

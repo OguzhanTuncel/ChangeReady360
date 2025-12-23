@@ -114,13 +114,13 @@ export const STANDARD_SURVEY_TEMPLATE: SurveyTemplate = {
           ]
         },
         {
-          name: '4) Statusverlust (R)',
+          name: '4) Statusverlust',
           questions: [
             {
               id: 'B4.1',
-              text: 'Ich befürchte, dass ich bei nach dem Change einen Teil meines Status in der Organisation verlieren werde. (R)',
+              text: 'Ich befürchte, dass ich bei nach dem Change einen Teil meines Status in der Organisation verlieren werde.',
               category: 'B) Persönliche Vorteile/Nachteile',
-              subcategory: '4) Statusverlust (R)',
+              subcategory: '4) Statusverlust',
               onlyPMA: false,
               reverse: true,
               order: 9
@@ -128,13 +128,13 @@ export const STANDARD_SURVEY_TEMPLATE: SurveyTemplate = {
           ]
         },
         {
-          name: '5) Verlust von Beziehungen (R)',
+          name: '5) Verlust von Beziehungen',
           questions: [
             {
               id: 'B5.1',
-              text: 'Der Change wird viele der persönlichen Beziehungen beeinträchtigen, die ich aufgebaut habe. (R)',
+              text: 'Der Change wird viele der persönlichen Beziehungen beeinträchtigen, die ich aufgebaut habe.',
               category: 'B) Persönliche Vorteile/Nachteile',
-              subcategory: '5) Verlust von Beziehungen (R)',
+              subcategory: '5) Verlust von Beziehungen',
               onlyPMA: false,
               reverse: true,
               order: 10
@@ -142,13 +142,13 @@ export const STANDARD_SURVEY_TEMPLATE: SurveyTemplate = {
           ]
         },
         {
-          name: '6) Verlust von Job (R)',
+          name: '6) Verlust von Job',
           questions: [
             {
               id: 'B6.1',
-              text: 'Der Change stellt ein Risiko für meine Zukunft in diesem Job dar. (R)',
+              text: 'Der Change stellt ein Risiko für meine Zukunft in diesem Job dar.',
               category: 'B) Persönliche Vorteile/Nachteile',
-              subcategory: '6) Verlust von Job (R)',
+              subcategory: '6) Verlust von Job',
               onlyPMA: false,
               reverse: true,
               order: 11
@@ -367,3 +367,4 @@ export const STANDARD_SURVEY_TEMPLATE: SurveyTemplate = {
   createdAt: new Date(),
   updatedAt: new Date()
 };
+

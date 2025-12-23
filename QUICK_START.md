@@ -56,3 +56,4 @@ npm start
 ## 📋 Projektstruktur
 
 Siehe `PROJECT_STRUCTURE.md` für detaillierte Struktur-Übersicht.
+

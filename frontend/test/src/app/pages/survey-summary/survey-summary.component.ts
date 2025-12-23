@@ -128,3 +128,4 @@ export class SurveySummaryComponent implements OnInit {
     return 'negative';
   }
 }
+

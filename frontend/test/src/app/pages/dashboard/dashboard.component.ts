@@ -78,7 +78,7 @@ export class DashboardComponent implements OnInit {
     const openInstances = this.getOpenInstances();
     const completedInstances = this.getCompletedInstances();
     const totalResponses = this.responses().length;
-    const avgScore = this.calculateAverageScore();
+    const overallScore = this.calculateOverallScore();
 
     return [
       {
@@ -87,31 +87,31 @@ export class DashboardComponent implements OnInit {
         icon: 'assignment',
         color: 'primary',
         route: '/app/surveys',
-        change: openInstances.length > 0 ? `${openInstances.length} offen` : 'Keine offenen'
+        change: openInstances.length > 0 ? `${openInstances.length} offen` : 'Keine offenen Umfragen'
       },
       {
         title: 'Abgeschlossene Analysen',
         value: completedInstances.length,
         icon: 'check_circle',
-        color: 'success',
+        color: 'primary',
         route: '/app/surveys',
-        change: completedInstances.length > 0 ? `${completedInstances.length} abgeschlossen` : 'Keine'
+        change: completedInstances.length > 0 ? `${completedInstances.length} abgeschlossen` : 'Keine abgeschlossene Analyse'
       },
       {
         title: 'Durchschnittlicher Score',
-        value: avgScore.toFixed(1),
+        value: `${overallScore}%`,
         icon: 'trending_up',
-        color: 'accent',
+        color: 'primary',
         route: '/app/results',
         change: totalResponses > 0 ? `Basierend auf ${totalResponses} Antworten` : 'Noch keine Daten'
       },
       {
-        title: 'Meine Antworten',
+        title: 'Antworten',
         value: totalResponses,
         icon: 'people',
         color: 'primary',
         route: '/app/surveys',
-        change: totalResponses > 0 ? `${totalResponses} abgegeben` : 'Noch keine'
+        change: totalResponses > 0 ? `${totalResponses} abgegeben` : 'Keine offenen Antworten'
       }
     ];
   }
@@ -177,23 +177,29 @@ export class DashboardComponent implements OnInit {
     return this.instances().filter(i => i.submittedAt);
   }
 
-  calculateAverageScore(): number {
+  calculateOverallScore(): number {
     const responses = this.responses();
     if (responses.length === 0) return 0;
 
-    let total = 0;
-    let count = 0;
-
+    // Sammle alle Antwortwerte
+    const allAnswers: number[] = [];
     responses.forEach(response => {
       response.answers.forEach(answer => {
         if (answer.value !== null) {
-          total += answer.value;
-          count++;
+          allAnswers.push(answer.value);
         }
       });
     });
 
-    return count > 0 ? total / count : 0;
+    if (allAnswers.length === 0) return 0;
+
+    // Berechne den Durchschnitt aller Antworten (1-5 Skala)
+    const totalAverage = allAnswers.reduce((sum, val) => sum + val, 0) / allAnswers.length;
+    
+    // Skaliere von 1-5 auf 0-100% (gleiche Formel wie Results)
+    // 1 = 0%, 3 = 50%, 5 = 100%
+    const percentage = ((totalAverage - 1) / 4) * 100;
+    return Math.max(0, Math.min(100, Math.round(percentage)));
   }
 
   formatDate(date: Date): string {
@@ -273,4 +279,14 @@ export class DashboardComponent implements OnInit {
         return 'var(--gray-500)';
     }
   }
+
+  getActivityCount(type: 'survey' | 'result'): number {
+    const instances = this.instances();
+    if (type === 'survey') {
+      return instances.filter(i => !i.submittedAt).length;
+    } else {
+      return instances.filter(i => i.submittedAt).length;
+    }
+  }
 }
+

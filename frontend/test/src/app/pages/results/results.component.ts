@@ -77,4 +77,89 @@ export class ResultsComponent implements OnInit {
     if (total === 0) return 0;
     return Math.round((answered / total) * 100);
   }
+
+  /**
+   * Berechnet den Gesamt-Score als Prozent (0-100)
+   * Durchschnitt aller Kategorien, skaliert auf 0-100%
+   */
+  getOverallScore(): number {
+    const results = this.results();
+    if (results.length === 0) return 0;
+
+    // Durchschnitt aller Kategorien-Durchschnitte
+    const totalAverage = results.reduce((sum, result) => sum + result.average, 0) / results.length;
+    
+    // Skaliere von 1-5 auf 0-100%
+    // 1 = 0%, 3 = 50%, 5 = 100%
+    const percentage = ((totalAverage - 1) / 4) * 100;
+    return Math.max(0, Math.min(100, Math.round(percentage)));
+  }
+
+  /**
+   * Berechnet den Umfang des Donut-Kreises
+   */
+  getDonutCircumference(): number {
+    const radius = 75;
+    return 2 * Math.PI * radius;
+  }
+
+  /**
+   * Berechnet den Offset für den Score-Kreis
+   */
+  getDonutOffset(): number {
+    const score = this.getOverallScore();
+    const circumference = this.getDonutCircumference();
+    // Offset = Umfang minus (Score * Umfang / 100)
+    return circumference - (score / 100) * circumference;
+  }
+
+  /**
+   * Gibt textuelle Bewertung basierend auf Score zurück
+   */
+  getEvaluationText(): { current: string; critical: string; positive: string } {
+    const score = this.getOverallScore();
+    const results = this.results();
+
+    if (results.length === 0) {
+      return {
+        current: 'Noch keine Daten verfügbar',
+        critical: 'Bitte füllen Sie zunächst einen Fragebogen aus',
+        positive: 'Nach der Auswertung werden hier positive Aspekte angezeigt'
+      };
+    }
+
+    // Finde niedrigste und höchste Kategorien
+    const sortedResults = [...results].sort((a, b) => a.average - b.average);
+    const lowestCategory = sortedResults[0];
+    const highestCategory = sortedResults[sortedResults.length - 1];
+
+    let currentText = '';
+    let criticalText = '';
+    let positiveText = '';
+
+    if (score >= 75) {
+      currentText = 'Sehr gute Change-Readiness. Ihr Unternehmen ist gut vorbereitet für Veränderungen.';
+      criticalText = 'Keine kritischen Bereiche identifiziert.';
+      positiveText = `Stärken in "${highestCategory.category}" (Score: ${highestCategory.average.toFixed(1)}/5).`;
+    } else if (score >= 50) {
+      currentText = 'Moderate Change-Readiness. Es gibt Potenzial für Verbesserungen.';
+      criticalText = `Aufmerksamkeit erforderlich in "${lowestCategory.category}" (Score: ${lowestCategory.average.toFixed(1)}/5).`;
+      positiveText = `Stärken in "${highestCategory.category}" (Score: ${highestCategory.average.toFixed(1)}/5).`;
+    } else if (score >= 25) {
+      currentText = 'Verbesserungspotenzial vorhanden. Change-Readiness sollte gestärkt werden.';
+      criticalText = `Kritische Bereiche: "${lowestCategory.category}" (Score: ${lowestCategory.average.toFixed(1)}/5) benötigt Aufmerksamkeit.`;
+      positiveText = `Ansatzpunkte für Verbesserung in "${highestCategory.category}" (Score: ${highestCategory.average.toFixed(1)}/5).`;
+    } else {
+      currentText = 'Change-Readiness benötigt erhebliche Unterstützung.';
+      criticalText = `Mehrere kritische Bereiche identifiziert, insbesondere "${lowestCategory.category}" (Score: ${lowestCategory.average.toFixed(1)}/5).`;
+      positiveText = 'Fokussierte Maßnahmen können die Change-Readiness deutlich verbessern.';
+    }
+
+    return {
+      current: currentText,
+      critical: criticalText,
+      positive: positiveText
+    };
+  }
 }
+

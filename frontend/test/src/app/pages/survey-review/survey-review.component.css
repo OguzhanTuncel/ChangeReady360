@@ -16,16 +16,21 @@
 .warning-section {
   margin-bottom: 2rem;
   padding: 1rem;
-  background-color: var(--warning-bg, #fff3cd);
-  border-radius: 4px;
+  background-color: rgba(49, 116, 155, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(49, 116, 155, 0.2);
 }
 
 .warning-section h3 {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: var(--warning-color, #856404);
+  color: #31749B;
   margin-bottom: 0.5rem;
+}
+
+.warning-section mat-icon {
+  color: #31749B;
 }
 
 .success-section {
@@ -43,11 +48,20 @@
 }
 
 .error-message {
-  color: var(--error-color, #d32f2f);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #d32f2f;
   margin: 1rem 0;
-  padding: 0.75rem;
-  background-color: var(--error-bg, #ffebee);
-  border-radius: 4px;
+  padding: 1rem;
+  background-color: #ffebee;
+  border-radius: 8px;
+  border: 1px solid #d32f2f;
+  font-weight: 500;
+}
+
+.error-message mat-icon {
+  color: #d32f2f;
 }
 
 .actions {
@@ -57,6 +71,42 @@
   margin-top: 2rem;
 }
 
+.actions .back-button {
+  background-color: #31749B;
+  color: white;
+  border-radius: 24px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
+  border: none;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.actions .back-button:hover:not(:disabled) {
+  background-color: #2a6385;
+  transform: translateY(-1px);
+}
+
+.actions .submit-button {
+  background-color: #31749B;
+  color: white;
+  border-radius: 24px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
+  border: none;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.actions .submit-button:hover:not(:disabled) {
+  background-color: #2a6385;
+  transform: translateY(-1px);
+}
+
+.actions .submit-button:disabled {
+  background-color: rgba(49, 116, 155, 0.5);
+  cursor: not-allowed;
+}
+
 mat-list-item {
   border-bottom: 1px solid var(--border-color, #e0e0e0);
 }
+

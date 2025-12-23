@@ -159,3 +159,4 @@ export class SurveyFillComponent implements OnInit, OnDestroy {
     this.router.navigate(['/app/survey', instance.id, 'review']);
   }
 }
+

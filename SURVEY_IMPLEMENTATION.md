@@ -98,3 +98,4 @@ Der `SurveyService` kann einfach gegen echte API-Calls ausgetauscht werden:
 - `saveAnswer()` → `PUT /api/v1/surveys/instances/:id/answers`
 - `submitInstance()` → `POST /api/v1/surveys/instances/:id/submit`
 - `calculateResults()` → `GET /api/v1/surveys/templates/:id/results`
+

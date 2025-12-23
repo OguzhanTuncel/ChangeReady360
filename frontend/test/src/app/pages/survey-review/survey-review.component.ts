@@ -115,6 +115,14 @@ export class SurveyReviewComponent implements OnInit {
     const instance = this.instance();
     if (!instance) return;
 
+    // Prüfe ob alle Fragen beantwortet sind
+    const unansweredQuestions = this.getUnansweredQuestions();
+    if (unansweredQuestions.length > 0) {
+      this.error.set(`Offene Fragen vorhanden. Absenden nicht möglich.`);
+      this.isSubmitting.set(false);
+      return;
+    }
+
     this.isSubmitting.set(true);
     this.error.set(null);
 
@@ -129,3 +137,4 @@ export class SurveyReviewComponent implements OnInit {
     });
   }
 }
+

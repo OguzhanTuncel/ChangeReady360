@@ -30,3 +30,4 @@ import { AuthService } from '../../services/auth.service';
 export class SettingsComponent {
   constructor(public authService: AuthService) {}
 }
+

@@ -53,3 +53,19 @@
 .survey-footer button {
   min-width: 150px;
 }
+
+.survey-footer .overview-button {
+  background-color: #31749B;
+  color: white;
+  border-radius: 24px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
+  border: none;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.survey-footer .overview-button:hover:not(:disabled) {
+  background-color: #2a6385;
+  transform: translateY(-1px);
+}
+
