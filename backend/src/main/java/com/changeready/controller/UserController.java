@@ -16,7 +16,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/admin/users")
-@PreAuthorize("hasRole('COMPANY_ADMIN')")
 public class UserController {
 
 	private final UserService userService;
@@ -25,7 +24,11 @@ public class UserController {
 		this.userService = userService;
 	}
 
+	/**
+	 * COMPANY_ADMIN: Erstellt einen COMPANY_USER in der eigenen Company
+	 */
 	@PostMapping
+	@PreAuthorize("hasRole('COMPANY_ADMIN')")
 	public ResponseEntity<UserResponse> createUser(@Valid @RequestBody UserRequest request) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		UserPrincipal currentUser = (UserPrincipal) authentication.getPrincipal();
@@ -34,7 +37,25 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 
+	/**
+	 * SYSTEM_ADMIN: Erstellt einen COMPANY_ADMIN für eine bestehende Company
+	 * Die Rolle wird automatisch auf COMPANY_ADMIN gesetzt, unabhängig vom Request
+	 */
+	@PostMapping("/company-admin")
+	@PreAuthorize("hasRole('SYSTEM_ADMIN')")
+	public ResponseEntity<UserResponse> createCompanyAdmin(
+		@RequestParam Long companyId,
+		@Valid @RequestBody UserRequest request
+	) {
+		UserResponse response = userService.createCompanyAdmin(request, companyId);
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);
+	}
+
+	/**
+	 * COMPANY_ADMIN: Holt alle Users der eigenen Company
+	 */
 	@GetMapping
+	@PreAuthorize("hasRole('COMPANY_ADMIN')")
 	public ResponseEntity<List<UserResponse>> getAllUsers() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		UserPrincipal currentUser = (UserPrincipal) authentication.getPrincipal();
@@ -43,7 +64,11 @@ public class UserController {
 		return ResponseEntity.ok(users);
 	}
 
+	/**
+	 * COMPANY_ADMIN: Holt einen User der eigenen Company
+	 */
 	@GetMapping("/{id}")
+	@PreAuthorize("hasRole('COMPANY_ADMIN')")
 	public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		UserPrincipal currentUser = (UserPrincipal) authentication.getPrincipal();
@@ -52,7 +77,11 @@ public class UserController {
 		return ResponseEntity.ok(user);
 	}
 
+	/**
+	 * COMPANY_ADMIN: Aktualisiert einen User der eigenen Company
+	 */
 	@PutMapping("/{id}")
+	@PreAuthorize("hasRole('COMPANY_ADMIN')")
 	public ResponseEntity<UserResponse> updateUser(
 		@PathVariable Long id,
 		@Valid @RequestBody UserRequest request

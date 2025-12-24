@@ -46,9 +46,11 @@ public class UserServiceImpl implements UserService {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		com.changeready.security.UserPrincipal currentUser = (com.changeready.security.UserPrincipal) authentication.getPrincipal();
 
-		// Prevent COMPANY_ADMIN from creating SYSTEM_ADMIN users
-		if (currentUser.getRole() == Role.COMPANY_ADMIN && request.getRole() == Role.SYSTEM_ADMIN) {
-			throw new UnauthorizedException("COMPANY_ADMIN cannot create SYSTEM_ADMIN users");
+		// COMPANY_ADMIN can only create COMPANY_USER users
+		if (currentUser.getRole() == Role.COMPANY_ADMIN) {
+			if (request.getRole() != Role.COMPANY_USER) {
+				throw new UnauthorizedException("COMPANY_ADMIN can only create COMPANY_USER users");
+			}
 		}
 
 		// Validate company exists and is active
@@ -79,10 +81,64 @@ public class UserServiceImpl implements UserService {
 		}
 
 		// Create user
+		// Enforce role based on who is creating the user
+		Role enforcedRole = request.getRole();
+		if (currentUser.getRole() == Role.COMPANY_ADMIN) {
+			enforcedRole = Role.COMPANY_USER; // COMPANY_ADMIN can only create COMPANY_USER
+		}
+		
 		User user = new User();
 		user.setEmail(request.getEmail());
 		user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
-		user.setRole(request.getRole());
+		user.setRole(enforcedRole);
+		user.setCompany(company);
+		user.setActive(request.getActive() != null ? request.getActive() : true);
+
+		User savedUser = userRepository.save(user);
+		return mapToResponse(savedUser);
+	}
+
+	@Override
+	@Transactional
+	public UserResponse createCompanyAdmin(UserRequest request, Long companyId) {
+		// Get authenticated user to check role - only SYSTEM_ADMIN can create COMPANY_ADMIN
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		com.changeready.security.UserPrincipal currentUser = (com.changeready.security.UserPrincipal) authentication.getPrincipal();
+
+		if (currentUser.getRole() != Role.SYSTEM_ADMIN) {
+			throw new UnauthorizedException("Only SYSTEM_ADMIN can create COMPANY_ADMIN users");
+		}
+
+		// Validate company exists and is active
+		Company company = companyRepository.findById(companyId)
+			.orElseThrow(() -> new ResourceNotFoundException("Company not found with id: " + companyId));
+
+		if (!company.getActive()) {
+			throw new ValidationException("Cannot create users for deactivated company");
+		}
+
+		// Check if email already exists
+		if (userRepository.existsByEmail(request.getEmail())) {
+			throw new ValidationException("User with email '" + request.getEmail() + "' already exists");
+		}
+
+		// Validate password - required for COMPANY_ADMIN creation
+		if (request.getPassword() == null || request.getPassword().isBlank()) {
+			throw new ValidationException("Password is required");
+		}
+
+		if (!authService.validatePassword(request.getPassword())) {
+			throw new ValidationException("Password must be at least 8 characters long and contain uppercase, lowercase, and a number");
+		}
+
+		// Force role to COMPANY_ADMIN regardless of request
+		// This endpoint only creates COMPANY_ADMIN users
+		
+		// Create COMPANY_ADMIN user
+		User user = new User();
+		user.setEmail(request.getEmail());
+		user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
+		user.setRole(Role.COMPANY_ADMIN); // Role is enforced, not taken from request
 		user.setCompany(company);
 		user.setActive(request.getActive() != null ? request.getActive() : true);
 

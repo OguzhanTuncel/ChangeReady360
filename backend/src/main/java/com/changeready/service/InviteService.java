@@ -49,33 +49,16 @@ public class InviteService {
 	}
 
 	/**
-	 * Erstellt eine Einladung für einen COMPANY_ADMIN (nur SYSTEM_ADMIN)
-	 * Erstellt die Company falls sie noch nicht existiert
+	 * @deprecated Invite-System wurde deaktiviert. 
+	 * Verwenden Sie stattdessen UserService.createCompanyAdmin()
+	 * 
+	 * Diese Methode erstellt KEINE Company mehr automatisch.
+	 * Companies müssen manuell über CompanyService erstellt werden.
 	 */
+	@Deprecated
 	@Transactional
 	public InviteResponse createCompanyAdminInvite(InviteRequest request) {
-		UserPrincipal currentUser = getCurrentUser();
-		validateSystemAdmin(currentUser);
-
-		// Prüfe ob User mit dieser Email bereits existiert
-		if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-			throw new ValidationException("User with email " + request.getEmail() + " already exists");
-		}
-
-		// Finde oder erstelle Company
-		Company company = findOrCreateCompany(request.getCompanyName());
-
-		// Prüfe ob bereits eine ausstehende Einladung für diese Email in dieser Company existiert
-		if (inviteRepository.existsByEmailAndCompanyIdAndStatus(
-			request.getEmail(), company.getId(), Invite.InviteStatus.PENDING)) {
-			throw new ValidationException("Pending invite already exists for email " + request.getEmail() + " in company " + company.getName());
-		}
-
-		// Erstelle Invite
-		Invite invite = createInvite(request.getEmail(), Role.COMPANY_ADMIN, company, currentUser.getId());
-		Invite savedInvite = inviteRepository.save(invite);
-
-		return mapToResponse(savedInvite);
+		throw new ValidationException("Invite system has been disabled. Please use POST /api/v1/admin/users/company-admin?companyId={id} instead. Companies must be created manually via POST /api/v1/admin/companies");
 	}
 
 	/**
@@ -205,14 +188,13 @@ public class InviteService {
 		return Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
 	}
 
+	/**
+	 * @deprecated Automatische Company-Erstellung wurde entfernt.
+	 * Companies müssen manuell über CompanyService erstellt werden.
+	 */
+	@Deprecated
 	private Company findOrCreateCompany(String companyName) {
-		return companyRepository.findByName(companyName)
-			.orElseGet(() -> {
-				Company newCompany = new Company();
-				newCompany.setName(companyName);
-				newCompany.setActive(true);
-				return companyRepository.save(newCompany);
-			});
+		throw new ValidationException("Automatic company creation has been disabled. Companies must be created manually via POST /api/v1/admin/companies");
 	}
 
 	private UserPrincipal getCurrentUser() {

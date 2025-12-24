@@ -74,6 +74,7 @@ public class AuthServiceImpl implements AuthService {
 
 			return new LoginResponse(token, "Bearer", userInfo);
 
+
 		} catch (BadCredentialsException e) {
 			throw new UnauthorizedException("Invalid credentials");
 		}
