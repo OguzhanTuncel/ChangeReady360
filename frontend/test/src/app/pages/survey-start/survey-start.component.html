@@ -11,8 +11,9 @@
       <div class="department-selection">
         <h3>Bitte wählen Sie Ihre Abteilung:</h3>
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Abteilung</mat-label>
+          <mat-label>Abteilung auswählen</mat-label>
           <mat-select [value]="department()" (selectionChange)="onDepartmentChange($event.value)" required>
+            <mat-option [value]="null" disabled>Bitte wählen Sie eine Abteilung</mat-option>
             @for (dept of departments; track dept) {
               <mat-option [value]="dept">{{ departmentDisplayNames[dept] }}</mat-option>
             }

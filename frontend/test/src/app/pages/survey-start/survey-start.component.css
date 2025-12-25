@@ -12,6 +12,14 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+.survey-start-page mat-card-content {
+  background-color: white;
+}
+
+.survey-start-page ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+  background-color: white;
+}
+
 mat-card-title {
   color: #31749B;
   font-weight: 600;
@@ -27,6 +35,8 @@ mat-card-title {
 
 .department-selection {
   margin: 2rem 0;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(49, 116, 155, 0.2);
 }
 
 .department-selection h3 {
@@ -40,8 +50,39 @@ mat-card-title {
   width: 100%;
 }
 
+.department-selection ::ng-deep .mat-mdc-form-field {
+  width: 100%;
+  background-color: white;
+}
+
+.department-selection ::ng-deep .mat-mdc-form-field .mat-mdc-text-field-wrapper {
+  background-color: white;
+}
+
+.department-selection ::ng-deep .mat-mdc-select {
+  width: 100%;
+  background-color: white;
+}
+
+.department-selection ::ng-deep .mat-mdc-select-panel {
+  background-color: white;
+}
+
+.department-selection ::ng-deep .mat-mdc-option {
+  background-color: white;
+}
+
+.department-selection ::ng-deep .mat-mdc-option:hover {
+  background-color: rgba(49, 116, 155, 0.1);
+}
+
+.department-selection ::ng-deep .mat-mdc-option.mdc-list-item--selected {
+  background-color: rgba(49, 116, 155, 0.2);
+}
+
 .participant-type-selection {
   margin: 2rem 0;
+  padding-top: 1.5rem;
 }
 
 .participant-type-selection h3 {
@@ -66,7 +107,8 @@ mat-card-title {
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s;
-  background-color: white;
+  background-color: white !important;
+  opacity: 1;
 }
 
 .radio-option:hover {
