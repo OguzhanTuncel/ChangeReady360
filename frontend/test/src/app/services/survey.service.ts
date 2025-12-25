@@ -1,7 +1,8 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { Observable, of, delay } from 'rxjs';
-import { SurveyTemplate, SurveyInstance, SurveyResponse, ParticipantType, SurveyAnswer, SurveyResult } from '../models/survey.model';
+import { SurveyTemplate, SurveyInstance, SurveyResponse, ParticipantType, SurveyAnswer, SurveyResult, Department, DepartmentResult, CompanyResults } from '../models/survey.model';
 import { STANDARD_SURVEY_TEMPLATE } from '../data/survey-template.data';
+import { CompanyService } from './company.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +12,8 @@ export class SurveyService {
   private templates = signal<SurveyTemplate[]>([STANDARD_SURVEY_TEMPLATE]);
   private responses = signal<SurveyResponse[]>([]);
   private instances = signal<SurveyInstance[]>([]);
+
+  constructor(private companyService: CompanyService) {}
 
   // Computed
   activeTemplates = computed(() => 
@@ -42,10 +45,15 @@ export class SurveyService {
   /**
    * Create new survey instance (start survey)
    */
-  createInstance(templateId: string, participantType: ParticipantType): Observable<SurveyInstance> {
+  createInstance(templateId: string, participantType: ParticipantType, department: Department): Observable<SurveyInstance> {
     const template = this.templates().find(t => t.id === templateId);
     if (!template) {
       throw new Error('Template not found');
+    }
+
+    const companyId = this.companyService.getSelectedCompanyId();
+    if (!companyId) {
+      throw new Error('No company selected');
     }
 
     const instance: SurveyInstance = {
@@ -53,6 +61,8 @@ export class SurveyService {
       templateId,
       template,
       participantType,
+      department,
+      companyId,
       answers: [],
       createdAt: new Date()
     };
@@ -102,7 +112,7 @@ export class SurveyService {
    */
   submitInstance(instanceId: string): Observable<SurveyResponse> {
     const instance = this.instances().find(i => i.id === instanceId);
-    if (!instance || !instance.participantType) {
+    if (!instance || !instance.participantType || !instance.department || !instance.companyId) {
       throw new Error('Instance not found or incomplete');
     }
 
@@ -110,6 +120,8 @@ export class SurveyService {
       id: `response-${Date.now()}`,
       templateId: instance.templateId,
       participantType: instance.participantType,
+      department: instance.department,
+      companyId: instance.companyId,
       answers: instance.answers,
       submittedAt: new Date(),
       createdAt: instance.createdAt
@@ -150,10 +162,22 @@ export class SurveyService {
   }
 
   /**
-   * Calculate results for a template
+   * Calculate results for a template (filtered by company)
    */
-  calculateResults(templateId: string): Observable<SurveyResult[]> {
-    const responses = this.responses().filter(r => r.templateId === templateId);
+  calculateResults(templateId: string, companyId?: number): Observable<SurveyResult[]> {
+    let responses = this.responses().filter(r => r.templateId === templateId);
+    
+    // Filter by company if provided
+    if (companyId) {
+      responses = responses.filter(r => r.companyId === companyId);
+    } else {
+      // Use selected company if no companyId provided
+      const selectedCompanyId = this.companyService.getSelectedCompanyId();
+      if (selectedCompanyId) {
+        responses = responses.filter(r => r.companyId === selectedCompanyId);
+      }
+    }
+    
     const template = this.templates().find(t => t.id === templateId);
     
     if (!template) {
@@ -196,6 +220,117 @@ export class SurveyService {
     });
 
     return of(results).pipe(delay(200));
+  }
+
+  /**
+   * Calculate results by department for a template
+   */
+  calculateResultsByDepartment(templateId: string, companyId?: number): Observable<DepartmentResult[]> {
+    let responses = this.responses().filter(r => r.templateId === templateId);
+    
+    // Filter by company if provided
+    if (companyId) {
+      responses = responses.filter(r => r.companyId === companyId);
+    } else {
+      const selectedCompanyId = this.companyService.getSelectedCompanyId();
+      if (selectedCompanyId) {
+        responses = responses.filter(r => r.companyId === selectedCompanyId);
+      }
+    }
+
+    const template = this.templates().find(t => t.id === templateId);
+    if (!template) {
+      return of([]);
+    }
+
+    const departmentResults: DepartmentResult[] = [];
+    const departments: Department[] = ['EINKAUF', 'VERTRIEB', 'LAGER_LOGISTIK', 'IT', 'GESCHAEFTSFUEHRUNG'];
+
+    departments.forEach(department => {
+      const departmentResponses = responses.filter(r => r.department === department);
+      const participantCount = departmentResponses.length;
+
+      if (participantCount === 0) {
+        return; // Skip departments with no responses
+      }
+
+      const results: SurveyResult[] = [];
+
+      template.categories.forEach(category => {
+        category.subcategories.forEach(subcategory => {
+          const questions = subcategory.questions;
+          const answers: number[] = [];
+          const reverseItems: string[] = [];
+
+          questions.forEach(question => {
+            if (question.reverse) {
+              reverseItems.push(question.id);
+            }
+
+            const questionAnswers = departmentResponses
+              .flatMap(r => r.answers)
+              .filter(a => a.questionId === question.id && a.value !== null)
+              .map(a => a.value!);
+
+            answers.push(...questionAnswers);
+          });
+
+          if (answers.length > 0) {
+            const average = answers.reduce((sum, val) => sum + val, 0) / answers.length;
+            results.push({
+              category: category.name,
+              subcategory: subcategory.name || category.name,
+              average: Math.round(average * 100) / 100,
+              answeredCount: answers.length,
+              totalCount: questions.length * departmentResponses.length,
+              reverseItems
+            });
+          }
+        });
+      });
+
+      departmentResults.push({
+        department,
+        participantCount,
+        results
+      });
+    });
+
+    return of(departmentResults).pipe(delay(200));
+  }
+
+  /**
+   * Get company results (overall + by department)
+   */
+  getCompanyResults(templateId: string, companyId?: number): Observable<CompanyResults> {
+    const selectedCompanyId = companyId || this.companyService.getSelectedCompanyId();
+    if (!selectedCompanyId) {
+      throw new Error('No company selected');
+    }
+
+    return new Observable(observer => {
+      // Get company name
+      this.companyService.getCompany(selectedCompanyId).subscribe(company => {
+        if (!company) {
+          observer.error(new Error('Company not found'));
+          return;
+        }
+
+        // Get overall results
+        this.calculateResults(templateId, selectedCompanyId).subscribe(overallResults => {
+          // Get department results
+          this.calculateResultsByDepartment(templateId, selectedCompanyId).subscribe(departmentResults => {
+            observer.next({
+              companyId: selectedCompanyId,
+              companyName: company.name,
+              overallResults,
+              departmentResults
+            });
+            observer.complete();
+          });
+        });
+      });
+    });
   }
 }
 
