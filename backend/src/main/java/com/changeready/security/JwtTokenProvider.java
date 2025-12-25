@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.util.Date;
 
 @Component
@@ -40,23 +41,25 @@ public class JwtTokenProvider {
 
 	public String generateToken(Authentication authentication) {
 		UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-		Date now = new Date();
-		Date expiryDate = new Date(now.getTime() + expirationInMs);
+		Instant now = Instant.now();
+		Instant expiryDate = now.plusMillis(expirationInMs);
 
+		// SEC-005: Explicitly use HS256 algorithm for token signing
 		return Jwts.builder()
 			.subject(userPrincipal.getEmail())
 			.claim("id", userPrincipal.getId())
 			.claim("role", userPrincipal.getRole().name())
 			.claim("companyId", userPrincipal.getCompanyId())
-			.issuedAt(now)
-			.expiration(expiryDate)
-			.signWith(secretKey)
+			.issuedAt(Date.from(now))
+			.expiration(Date.from(expiryDate))
+			.signWith(secretKey, Jwts.SIG.HS256) // Explicitly set algorithm
 			.compact();
 	}
 
 	public String getEmailFromToken(String token) {
 		Claims claims = Jwts.parser()
 			.verifyWith(secretKey)
+			.clockSkewSeconds(60) // SEC-005: Allow 60 seconds clock skew for distributed systems
 			.build()
 			.parseSignedClaims(token)
 			.getPayload();
@@ -66,6 +69,7 @@ public class JwtTokenProvider {
 	public Role getRoleFromToken(String token) {
 		Claims claims = Jwts.parser()
 			.verifyWith(secretKey)
+			.clockSkewSeconds(60) // SEC-005: Allow 60 seconds clock skew
 			.build()
 			.parseSignedClaims(token)
 			.getPayload();
@@ -75,6 +79,7 @@ public class JwtTokenProvider {
 	public Long getCompanyIdFromToken(String token) {
 		Claims claims = Jwts.parser()
 			.verifyWith(secretKey)
+			.clockSkewSeconds(60) // SEC-005: Allow 60 seconds clock skew
 			.build()
 			.parseSignedClaims(token)
 			.getPayload();
@@ -85,6 +90,7 @@ public class JwtTokenProvider {
 		try {
 			Jwts.parser()
 				.verifyWith(secretKey)
+				.clockSkewSeconds(60) // SEC-005: Allow 60 seconds clock skew
 				.build()
 				.parseSignedClaims(token);
 			return true;
