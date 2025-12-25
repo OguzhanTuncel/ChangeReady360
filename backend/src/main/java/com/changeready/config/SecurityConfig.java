@@ -38,7 +38,9 @@ public class SecurityConfig {
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
+		// SEC-002: Use BCrypt with strength 12 (2^12 = 4096 iterations)
+		// Higher strength = more secure but slower. 12 is recommended for production.
+		return new BCryptPasswordEncoder(12);
 	}
 
 	@Bean
