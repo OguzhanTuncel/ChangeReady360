@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, signal } from '@angular/core';
+import { Component, Input, Output, EventEmitter, signal, OnInit, OnChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatRadioModule } from '@angular/material/radio';
@@ -12,7 +12,7 @@ import { LikertValue } from '../../models/survey.model';
   templateUrl: './likert-question.component.html',
   styleUrl: './likert-question.component.css'
 })
-export class LikertQuestionComponent {
+export class LikertQuestionComponent implements OnInit, OnChanges {
   @Input() questionId!: string;
   @Input() questionText!: string;
   @Input() value: LikertValue = null;
