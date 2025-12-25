@@ -1,7 +1,10 @@
 .survey-fill-page {
-  max-width: 900px;
+  max-width: 800px;
   margin: 0 auto;
   padding: 2rem;
+  min-height: calc(100vh - 200px);
+  display: flex;
+  flex-direction: column;
 }
 
 .loading, .error {
@@ -14,58 +17,166 @@
   color: var(--error-color, #d32f2f);
 }
 
-.survey-header {
+/* Fortschrittsanzeige */
+.progress-header {
   margin-bottom: 2rem;
-}
-
-.survey-header h1 {
-  margin-bottom: 0.5rem;
-  font-size: 1.8rem;
-}
-
-.description {
-  color: var(--text-secondary, #666);
-  margin-bottom: 1rem;
+  padding: 1.5rem;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .progress-info {
   display: flex;
   flex-direction: column;
+  gap: 0.75rem;
+}
+
+.progress-text {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.question-counter {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #31749B;
+}
+
+.progress-percentage {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #666;
+}
+
+.progress-bar {
+  height: 8px;
+  border-radius: 4px;
+}
+
+.progress-bar ::ng-deep .mdc-linear-progress__buffer {
+  background-color: #F5F3F0;
+}
+
+.progress-bar ::ng-deep .mdc-linear-progress__bar-inner {
+  background-color: #31749B;
+}
+
+/* Frage-Karte */
+.question-card {
+  flex: 1;
+  margin-bottom: 2rem;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.question-content {
+  padding: 1rem 0;
+}
+
+.question-text {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+/* Navigation Footer */
+.navigation-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 0;
+  border-top: 2px solid #F5F3F0;
+  gap: 1rem;
+}
+
+.back-button {
+  background-color: white;
+  color: #31749B;
+  border: 2px solid #31749B;
+  border-radius: 24px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
   gap: 0.5rem;
 }
 
-.progress-info span {
-  font-size: 0.9rem;
-  color: var(--text-secondary, #666);
+.back-button:hover:not(:disabled) {
+  background-color: rgba(49, 116, 155, 0.1);
+  transform: translateY(-1px);
 }
 
-.survey-content {
-  margin-bottom: 3rem;
+.back-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
-.survey-footer {
-  display: flex;
-  justify-content: flex-end;
-  padding: 1.5rem 0;
-  border-top: 1px solid var(--border-color, #e0e0e0);
-}
-
-.survey-footer button {
-  min-width: 150px;
-}
-
-.survey-footer .overview-button {
+.next-button,
+.submit-button {
   background-color: #31749B;
   color: white;
   border-radius: 24px;
   padding: 0.75rem 1.5rem;
   font-weight: 500;
   border: none;
-  transition: background-color 0.2s, transform 0.1s;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 150px;
+  justify-content: center;
 }
 
-.survey-footer .overview-button:hover:not(:disabled) {
+.next-button:hover:not(:disabled),
+.submit-button:hover:not(:disabled) {
   background-color: #2a6385;
   transform: translateY(-1px);
+}
+
+.next-button:disabled,
+.submit-button:disabled {
+  background-color: rgba(49, 116, 155, 0.5);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.submit-button {
+  background-color: #4caf50;
+}
+
+.submit-button:hover:not(:disabled) {
+  background-color: #45a049;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .survey-fill-page {
+    padding: 1rem;
+  }
+  
+  .progress-header {
+    padding: 1rem;
+  }
+  
+  .question-text {
+    font-size: 1.1rem;
+  }
+  
+  .navigation-footer {
+    flex-direction: column-reverse;
+  }
+  
+  .back-button,
+  .next-button,
+  .submit-button {
+    width: 100%;
+    justify-content: center;
+  }
 }
 

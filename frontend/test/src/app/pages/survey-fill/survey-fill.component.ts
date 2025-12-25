@@ -1,4 +1,4 @@
-import { Component, signal, OnInit, OnDestroy } from '@angular/core';
+import { Component, signal, OnInit, OnDestroy, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -8,7 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Subscription } from 'rxjs';
 import { SurveyService } from '../../services/survey.service';
 import { SurveyInstance, SurveyQuestion, LikertValue, ParticipantType } from '../../models/survey.model';
-import { CategorySectionComponent } from '../../components/category-section/category-section.component';
+import { LikertQuestionComponent } from '../../components/likert-question/likert-question.component';
 
 @Component({
   selector: 'app-survey-fill',
@@ -19,7 +19,7 @@ import { CategorySectionComponent } from '../../components/category-section/cate
     MatButtonModule,
     MatProgressBarModule,
     MatIconModule,
-    CategorySectionComponent
+    LikertQuestionComponent
   ],
   templateUrl: './survey-fill.component.html',
   styleUrl: './survey-fill.component.css'
@@ -29,6 +29,43 @@ export class SurveyFillComponent implements OnInit, OnDestroy {
   isLoading = signal(true);
   error = signal<string | null>(null);
   answers = signal<Map<string, LikertValue>>(new Map());
+  currentQuestionIndex = signal<number>(0);
+  isSubmitting = signal(false);
+  
+  // Liste aller Fragen (gefiltert nach participantType)
+  allQuestions = signal<SurveyQuestion[]>([]);
+  
+  // Computed properties
+  currentQuestion = computed(() => {
+    const questions = this.allQuestions();
+    const index = this.currentQuestionIndex();
+    return questions[index] || null;
+  });
+  
+  totalQuestions = computed(() => this.allQuestions().length);
+  
+  currentQuestionNumber = computed(() => this.currentQuestionIndex() + 1);
+  
+  progressPercentage = computed(() => {
+    const total = this.totalQuestions();
+    if (total === 0) return 0;
+    const answered = this.getAnsweredCount();
+    return Math.round((answered / total) * 100);
+  });
+  
+  isFirstQuestion = computed(() => this.currentQuestionIndex() === 0);
+  
+  isLastQuestion = computed(() => {
+    const index = this.currentQuestionIndex();
+    const total = this.totalQuestions();
+    return index === total - 1;
+  });
+  
+  canGoNext = computed(() => {
+    const question = this.currentQuestion();
+    if (!question) return false;
+    return this.answers().has(question.id);
+  });
   
   private subscription?: Subscription;
 
@@ -63,6 +100,10 @@ export class SurveyFillComponent implements OnInit, OnDestroy {
         const answersMap = new Map<string, LikertValue>();
         instance.answers.forEach(a => answersMap.set(a.questionId, a.value));
         this.answers.set(answersMap);
+        
+        // Erstelle Liste aller Fragen
+        this.buildQuestionsList(instance);
+        
         this.isLoading.set(false);
 
         // Scroll to question if fragment is present
@@ -88,75 +129,90 @@ export class SurveyFillComponent implements OnInit, OnDestroy {
     this.subscription?.unsubscribe();
   }
 
-  onAnswerChange(event: { questionId: string; value: LikertValue }) {
+  buildQuestionsList(instance: SurveyInstance) {
+    if (!instance.participantType) return;
+    
+    const questions: SurveyQuestion[] = [];
+    instance.template.categories.forEach(category => {
+      category.subcategories.forEach(subcategory => {
+        const visibleQuestions = instance.participantType === 'PMA'
+          ? subcategory.questions
+          : subcategory.questions.filter(q => !q.onlyPMA);
+        questions.push(...visibleQuestions);
+      });
+    });
+    
+    // Sortiere nach order falls vorhanden
+    questions.sort((a, b) => (a.order || 0) - (b.order || 0));
+    
+    this.allQuestions.set(questions);
+    
+    // Setze Index auf erste unbeantwortete Frage oder 0
+    const firstUnansweredIndex = questions.findIndex(q => !this.answers().has(q.id));
+    this.currentQuestionIndex.set(firstUnansweredIndex >= 0 ? firstUnansweredIndex : 0);
+  }
+
+  onAnswerChange(value: LikertValue) {
     const instance = this.instance();
-    if (!instance) return;
+    const question = this.currentQuestion();
+    if (!instance || !question) return;
 
     this.answers.update(answers => {
       const newAnswers = new Map(answers);
-      if (event.value === null) {
-        newAnswers.delete(event.questionId);
+      if (value === null) {
+        newAnswers.delete(question.id);
       } else {
-        newAnswers.set(event.questionId, event.value);
+        newAnswers.set(question.id, value);
       }
       return newAnswers;
     });
 
-    this.surveyService.saveAnswer(instance.id, event.questionId, event.value).subscribe();
+    this.surveyService.saveAnswer(instance.id, question.id, value).subscribe();
   }
-
-  getTotalQuestions(): number {
-    const instance = this.instance();
-    if (!instance || !instance.participantType) return 0;
-
-    let count = 0;
-    instance.template.categories.forEach(category => {
-      category.subcategories.forEach(subcategory => {
-        if (instance.participantType === 'PMA') {
-          count += subcategory.questions.length;
-        } else {
-          count += subcategory.questions.filter(q => !q.onlyPMA).length;
-        }
-      });
-    });
-    return count;
+  
+  getCurrentAnswer(): LikertValue {
+    const question = this.currentQuestion();
+    if (!question) return null;
+    return this.answers().get(question.id) || null;
   }
 
   getAnsweredCount(): number {
     return this.answers().size;
   }
-
-  getProgress(): number {
-    const total = this.getTotalQuestions();
-    if (total === 0) return 0;
-    return (this.getAnsweredCount() / total) * 100;
+  
+  goToNext() {
+    if (!this.canGoNext()) return;
+    
+    const currentIndex = this.currentQuestionIndex();
+    const total = this.totalQuestions();
+    
+    if (currentIndex < total - 1) {
+      this.currentQuestionIndex.set(currentIndex + 1);
+    }
   }
-
-  getUnansweredQuestions(): SurveyQuestion[] {
+  
+  goToPrevious() {
+    const currentIndex = this.currentQuestionIndex();
+    if (currentIndex > 0) {
+      this.currentQuestionIndex.set(currentIndex - 1);
+    }
+  }
+  
+  submitSurvey() {
     const instance = this.instance();
-    if (!instance || !instance.participantType) return [];
-
-    const unanswered: SurveyQuestion[] = [];
-    instance.template.categories.forEach(category => {
-      category.subcategories.forEach(subcategory => {
-        const questions = instance.participantType === 'PMA'
-          ? subcategory.questions
-          : subcategory.questions.filter(q => !q.onlyPMA);
-        
-        questions.forEach(question => {
-          if (!this.answers().has(question.id)) {
-            unanswered.push(question);
-          }
-        });
-      });
+    if (!instance || !this.canGoNext()) return;
+    
+    this.isSubmitting.set(true);
+    
+    this.surveyService.submitInstance(instance.id).subscribe({
+      next: () => {
+        this.router.navigate(['/app/survey', instance.id, 'success']);
+      },
+      error: () => {
+        this.error.set('Fehler beim Absenden der Umfrage');
+        this.isSubmitting.set(false);
+      }
     });
-    return unanswered;
-  }
-
-  goToReview() {
-    const instance = this.instance();
-    if (!instance) return;
-    this.router.navigate(['/app/survey', instance.id, 'review']);
   }
 }
 

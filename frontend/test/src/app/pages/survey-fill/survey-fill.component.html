@@ -3,34 +3,81 @@
     <div class="loading">Lade Fragebogen...</div>
   } @else if (error()) {
     <div class="error">{{ error() }}</div>
-  } @else if (instance()) {
-    <div class="survey-header">
-      <h1>{{ instance()!.template.name }}</h1>
-      @if (instance()!.template.description) {
-        <p class="description">{{ instance()!.template.description }}</p>
-      }
+  } @else if (instance() && currentQuestion()) {
+    <!-- Fortschrittsanzeige -->
+    <div class="progress-header">
       <div class="progress-info">
-        <span>{{ getAnsweredCount() }} / {{ getTotalQuestions() }} Fragen beantwortet</span>
-        <mat-progress-bar mode="determinate" [value]="getProgress()"></mat-progress-bar>
+        <div class="progress-text">
+          <span class="question-counter">Frage {{ currentQuestionNumber() }} von {{ totalQuestions() }}</span>
+          <span class="progress-percentage">{{ progressPercentage() }}%</span>
+        </div>
+        <mat-progress-bar 
+          mode="determinate" 
+          [value]="progressPercentage()"
+          class="progress-bar"
+        ></mat-progress-bar>
       </div>
     </div>
 
-    <div class="survey-content">
-      @for (category of instance()!.template.categories; track category.name) {
-        <app-category-section
-          [category]="category"
-          [participantType]="instance()!.participantType!"
-          [answers]="answers()"
-          (answerChange)="onAnswerChange($event)"
-        />
-      }
-    </div>
+    <!-- Aktuelle Frage -->
+    <mat-card class="question-card">
+      <mat-card-content>
+        @if (currentQuestion()) {
+          <div class="question-content">
+            <div class="question-text">{{ currentQuestion()!.text }}</div>
+            <app-likert-question
+              [questionId]="currentQuestion()!.id"
+              [questionText]="currentQuestion()!.text"
+              [value]="getCurrentAnswer()"
+              [reverse]="currentQuestion()!.reverse"
+              [disabled]="isSubmitting()"
+              (valueChange)="onAnswerChange($event)"
+            />
+          </div>
+        }
+      </mat-card-content>
+    </mat-card>
 
-    <div class="survey-footer">
-      <button mat-raised-button color="primary" class="overview-button" (click)="goToReview()">
-        <mat-icon>check_circle</mat-icon>
-        Zur Übersicht
+    <!-- Navigation Buttons -->
+    <div class="navigation-footer">
+      <button 
+        mat-raised-button 
+        class="back-button"
+        [disabled]="isFirstQuestion() || isSubmitting()"
+        (click)="goToPrevious()"
+      >
+        <mat-icon>arrow_back</mat-icon>
+        Zurück
       </button>
+      
+      @if (isLastQuestion()) {
+        <button 
+          mat-raised-button 
+          color="primary" 
+          class="submit-button"
+          [disabled]="!canGoNext() || isSubmitting()"
+          (click)="submitSurvey()"
+        >
+          @if (isSubmitting()) {
+            <mat-icon>hourglass_empty</mat-icon>
+            Wird gespeichert...
+          } @else {
+            <mat-icon>check_circle</mat-icon>
+            Absenden
+          }
+        </button>
+      } @else {
+        <button 
+          mat-raised-button 
+          color="primary" 
+          class="next-button"
+          [disabled]="!canGoNext() || isSubmitting()"
+          (click)="goToNext()"
+        >
+          Weiter
+          <mat-icon>arrow_forward</mat-icon>
+        </button>
+      }
     </div>
   }
 </div>
