@@ -1,5 +1,6 @@
 package com.changeready.service;
 
+import com.changeready.audit.AuditLogger;
 import com.changeready.dto.user.UserCreateRequest;
 import com.changeready.dto.user.UserUpdateRequest;
 import com.changeready.dto.user.UserResponse;
@@ -11,11 +12,14 @@ import com.changeready.exception.UnauthorizedException;
 import com.changeready.exception.ValidationException;
 import com.changeready.repository.CompanyRepository;
 import com.changeready.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,17 +31,20 @@ public class UserServiceImpl implements UserService {
 	private final CompanyRepository companyRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final AuthService authService;
+	private final AuditLogger auditLogger;
 
 	public UserServiceImpl(
 		UserRepository userRepository,
 		CompanyRepository companyRepository,
 		PasswordEncoder passwordEncoder,
-		AuthService authService
+		AuthService authService,
+		AuditLogger auditLogger
 	) {
 		this.userRepository = userRepository;
 		this.companyRepository = companyRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.authService = authService;
+		this.auditLogger = auditLogger;
 	}
 
 	@Override
@@ -97,6 +104,16 @@ public class UserServiceImpl implements UserService {
 		user.setActive(true);
 
 		User savedUser = userRepository.save(user);
+		
+		// SEC-012: Audit log user creation
+		auditLogger.logUserCreated(
+			currentUser.getId(),
+			currentUser.getRole().name(),
+			savedUser.getId(),
+			savedUser.getRole().name(),
+			getClientIpAddress()
+		);
+		
 		return mapToResponse(savedUser);
 	}
 
@@ -145,6 +162,20 @@ public class UserServiceImpl implements UserService {
 		user.setActive(request.getActive() != null ? request.getActive() : true);
 
 		User savedUser = userRepository.save(user);
+		
+		// SEC-012: Audit log company admin creation
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth != null && auth.getPrincipal() instanceof com.changeready.security.UserPrincipal) {
+			com.changeready.security.UserPrincipal principal = (com.changeready.security.UserPrincipal) auth.getPrincipal();
+			auditLogger.logUserCreated(
+				principal.getId(),
+				principal.getRole().name(),
+				savedUser.getId(),
+				savedUser.getRole().name(),
+				getClientIpAddress()
+			);
+		}
+		
 		return mapToResponse(savedUser);
 	}
 
@@ -232,6 +263,23 @@ public class UserServiceImpl implements UserService {
 
 		User updatedUser = userRepository.save(user);
 		return mapToResponse(updatedUser);
+	}
+
+	private String getClientIpAddress() {
+		try {
+			ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+			if (attributes != null) {
+				HttpServletRequest request = attributes.getRequest();
+				String xForwardedFor = request.getHeader("X-Forwarded-For");
+				if (xForwardedFor != null && !xForwardedFor.isEmpty()) {
+					return xForwardedFor.split(",")[0].trim();
+				}
+				return request.getRemoteAddr();
+			}
+		} catch (Exception e) {
+			// Ignore
+		}
+		return "unknown";
 	}
 
 	private UserResponse mapToResponse(User user) {
