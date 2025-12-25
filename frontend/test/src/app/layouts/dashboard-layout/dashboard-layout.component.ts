@@ -7,9 +7,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatCardModule } from '@angular/material/card';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { filter } from 'rxjs/operators';
 import { AuthService } from '../../services/auth.service';
+import { CompanyService } from '../../services/company.service';
+import { Company } from '../../models/survey.model';
 
 interface NavItem {
   label: string;
@@ -30,7 +34,9 @@ interface NavItem {
     MatButtonModule,
     MatIconModule,
     MatListModule,
-    MatCardModule
+    MatCardModule,
+    MatSelectModule,
+    MatFormFieldModule
   ],
   templateUrl: './dashboard-layout.component.html',
   styleUrl: './dashboard-layout.component.css'
@@ -39,18 +45,22 @@ export class DashboardLayoutComponent {
   isMobile = signal(false);
   sidenavOpened = signal(true);
   currentPageTitle = signal('Dashboard');
+  companies = signal<Company[]>([]);
+  selectedCompany = signal<Company | null>(null);
 
   navItems: NavItem[] = [
     { label: 'Dashboard', route: '/app/dashboard', icon: 'dashboard' },
     { label: 'Umfragen', route: '/app/surveys', icon: 'assignment' },
     { label: 'Ergebnisse', route: '/app/results', icon: 'bar_chart' },
+    { label: 'Stakeholder', route: '/app/stakeholder', icon: 'people' },
     { label: 'Einstellungen', route: '/app/settings', icon: 'settings' }
   ];
 
   constructor(
     private breakpointObserver: BreakpointObserver,
     private router: Router,
-    public authService: AuthService
+    public authService: AuthService,
+    private companyService: CompanyService
   ) {
     // Responsive Sidebar
     this.breakpointObserver.observe([Breakpoints.Handset])
@@ -68,6 +78,33 @@ export class DashboardLayoutComponent {
 
     // Initial title setzen
     this.updatePageTitle(this.router.url);
+
+    // Load companies and selected company
+    this.loadCompanies();
+    this.loadSelectedCompany();
+  }
+
+  loadCompanies() {
+    this.companyService.getCompanies().subscribe({
+      next: (companies) => {
+        this.companies.set(companies);
+      }
+    });
+  }
+
+  loadSelectedCompany() {
+    this.companyService.getSelectedCompany().subscribe({
+      next: (company) => {
+        this.selectedCompany.set(company);
+      }
+    });
+  }
+
+  onCompanyChange(companyId: number) {
+    this.companyService.setSelectedCompany(companyId);
+    this.loadSelectedCompany();
+    // Reload companies to update list
+    this.loadCompanies();
   }
 
   toggleSidenav(): void {
@@ -83,6 +120,8 @@ export class DashboardLayoutComponent {
     if (item) {
       this.currentPageTitle.set(item.label);
     } else if (url.includes('/wizard')) {
+      this.currentPageTitle.set('Umfrage');
+    } else if (url.includes('/survey')) {
       this.currentPageTitle.set('Umfrage');
     } else {
       this.currentPageTitle.set('Dashboard');

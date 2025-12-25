@@ -52,6 +52,10 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/results/results.component').then(m => m.ResultsComponent)
       },
       {
+        path: 'stakeholder',
+        loadComponent: () => import('./pages/stakeholder/stakeholder.component').then(m => m.StakeholderComponent)
+      },
+      {
         path: 'settings',
         loadComponent: () => import('./pages/settings/settings.component').then(m => m.SettingsComponent)
       },
