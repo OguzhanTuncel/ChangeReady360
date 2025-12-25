@@ -21,7 +21,20 @@ public class JwtTokenProvider {
 		@Value("${jwt.secret}") String secret,
 		@Value("${jwt.expiration}") long expirationInMs
 	) {
-		this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+		// SEC-001: Validate JWT secret length (must be at least 256 bits = 32 bytes)
+		if (secret == null || secret.isEmpty()) {
+			throw new IllegalArgumentException("JWT secret cannot be null or empty. Please set JWT_SECRET environment variable.");
+		}
+		
+		byte[] secretBytes = secret.getBytes(StandardCharsets.UTF_8);
+		if (secretBytes.length < 32) {
+			throw new IllegalArgumentException(
+				"JWT secret must be at least 32 bytes (256 bits) long for HS256. Current length: " + secretBytes.length + " bytes. " +
+				"Please set a stronger JWT_SECRET environment variable."
+			);
+		}
+		
+		this.secretKey = Keys.hmacShaKeyFor(secretBytes);
 		this.expirationInMs = expirationInMs;
 	}
 
