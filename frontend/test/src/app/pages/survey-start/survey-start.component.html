@@ -8,6 +8,18 @@
         <div class="error-message">{{ error() }}</div>
       }
 
+      <div class="department-selection">
+        <h3>Bitte wählen Sie Ihre Abteilung:</h3>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Abteilung</mat-label>
+          <mat-select [value]="department()" (selectionChange)="onDepartmentChange($event.value)" required>
+            @for (dept of departments; track dept) {
+              <mat-option [value]="dept">{{ departmentDisplayNames[dept] }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+
       <div class="participant-type-selection">
         <h3>Bitte wählen Sie Ihre Rolle:</h3>
         <div class="radio-group">
@@ -38,7 +50,7 @@
         <button
           mat-raised-button
           color="primary"
-          [disabled]="!participantType() || isLoading()"
+          [disabled]="!department() || !participantType() || isLoading()"
           (click)="startSurvey()"
         >
           @if (isLoading()) {

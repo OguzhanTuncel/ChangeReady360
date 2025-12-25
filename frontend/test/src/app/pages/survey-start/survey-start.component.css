@@ -25,6 +25,21 @@ mat-card-title {
   border-radius: 8px;
 }
 
+.department-selection {
+  margin: 2rem 0;
+}
+
+.department-selection h3 {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  color: #333;
+  font-weight: 500;
+}
+
+.department-selection .full-width {
+  width: 100%;
+}
+
 .participant-type-selection {
   margin: 2rem 0;
 }
