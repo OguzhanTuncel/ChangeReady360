@@ -68,8 +68,9 @@ public class InitialAdminSetup implements CommandLineRunner {
 		adminUser.setActive(true);
 
 		User savedUser = userRepository.save(adminUser);
-		logger.info("Initial SYSTEM_ADMIN user created successfully with email: {}", savedUser.getEmail());
-		logger.warn("Please change the default admin password after first login!");
+		// SEC-010: Log user ID instead of email for privacy
+		logger.info("Initial SYSTEM_ADMIN user created successfully with ID: {}", savedUser.getId());
+		logger.warn("SECURITY WARNING: Change the default admin password immediately after first login!");
 	}
 }
 

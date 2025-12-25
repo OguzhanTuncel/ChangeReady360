@@ -41,9 +41,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 							userPrincipal, null, userPrincipal.getAuthorities());
 						authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 						SecurityContextHolder.getContext().setAuthentication(authentication);
-						logger.debug("Successfully authenticated user: " + email);
+						// SEC-010: Log user ID instead of email for privacy
+						logger.debug("Successfully authenticated user with ID: {}", userPrincipal.getId());
 					} else {
-						logger.warn("User principal is null or disabled for email: " + email);
+						// SEC-010: Don't log email for security/privacy
+						logger.warn("User principal is null or disabled");
 					}
 				} else {
 					logger.debug("Invalid JWT token");
@@ -52,7 +54,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 				logger.debug("No JWT token found in request");
 			}
 		} catch (Exception ex) {
-			logger.error("Could not set user authentication in security context", ex);
+			// SEC-010: Don't log exception details that might contain tokens
+			logger.error("Could not set user authentication in security context");
 		}
 
 		filterChain.doFilter(request, response);
