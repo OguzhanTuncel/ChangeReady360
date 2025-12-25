@@ -6,7 +6,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatChipsModule } from '@angular/material/chips';
-import { DatePipe } from '@angular/common';
 import { SurveyService } from '../../services/survey.service';
 import { SurveyInstance, SurveyResponse } from '../../models/survey.model';
 
@@ -38,8 +37,7 @@ interface Activity {
     MatButtonModule,
     MatIconModule,
     MatListModule,
-    MatChipsModule,
-    DatePipe
+    MatChipsModule
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
