@@ -1,5 +1,6 @@
 export const environment = {
-  production: false,
-  apiBaseUrl: 'http://localhost:8080/api/v1'
+  production: true,
+  // Relative URL - funktioniert sowohl lokal als auch in Docker über Nginx Proxy
+  apiBaseUrl: '/api/v1'
 };
 

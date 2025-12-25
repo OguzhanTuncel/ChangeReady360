@@ -1,22 +1,29 @@
-FROM node:22 AS build
+# Build Stage
+FROM node:20-alpine AS build
+
 WORKDIR /app
 
+# Copy package files
 COPY package*.json ./
-RUN npm install --legacy-peer-deps
 
+# Install dependencies with legacy peer deps to handle Angular version conflicts
+RUN npm ci --legacy-peer-deps
+
+# Copy source code
 COPY . .
-# je nach Angular-Version:
-# npm run build --prod ODER npm run build --configuration production
+
+# Build Angular app
 RUN npm run build
 
+# Production Stage
 FROM nginx:alpine
-WORKDIR /usr/share/nginx/html
 
-# Angular 21 Build-Ausgabe liegt im browser Unterverzeichnis
-COPY --from=build /app/dist/test/browser ./
+# Copy built app to nginx
+COPY --from=build /app/dist/test /usr/share/nginx/html
 
-# Nginx-Konfiguration für Angular SPA Routing
+# Copy nginx configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
+
 CMD ["nginx", "-g", "daemon off;"]
