@@ -1,6 +1,7 @@
 package com.changeready.controller;
 
-import com.changeready.dto.user.UserRequest;
+import com.changeready.dto.user.UserCreateRequest;
+import com.changeready.dto.user.UserUpdateRequest;
 import com.changeready.dto.user.UserResponse;
 import com.changeready.security.UserPrincipal;
 import com.changeready.service.UserService;
@@ -26,10 +27,11 @@ public class UserController {
 
 	/**
 	 * COMPANY_ADMIN: Erstellt einen COMPANY_USER in der eigenen Company
+	 * SEC-009: Uses UserCreateRequest to prevent mass assignment
 	 */
 	@PostMapping
 	@PreAuthorize("hasRole('COMPANY_ADMIN')")
-	public ResponseEntity<UserResponse> createUser(@Valid @RequestBody UserRequest request) {
+	public ResponseEntity<UserResponse> createUser(@Valid @RequestBody UserCreateRequest request) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		UserPrincipal currentUser = (UserPrincipal) authentication.getPrincipal();
 
@@ -40,12 +42,13 @@ public class UserController {
 	/**
 	 * SYSTEM_ADMIN: Erstellt einen COMPANY_ADMIN für eine bestehende Company
 	 * Die Rolle wird automatisch auf COMPANY_ADMIN gesetzt, unabhängig vom Request
+	 * SEC-009: Uses UserCreateRequest to prevent mass assignment
 	 */
 	@PostMapping("/company-admin")
 	@PreAuthorize("hasRole('SYSTEM_ADMIN')")
 	public ResponseEntity<UserResponse> createCompanyAdmin(
 		@RequestParam Long companyId,
-		@Valid @RequestBody UserRequest request
+		@Valid @RequestBody UserCreateRequest request
 	) {
 		UserResponse response = userService.createCompanyAdmin(request, companyId);
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -79,12 +82,13 @@ public class UserController {
 
 	/**
 	 * COMPANY_ADMIN: Aktualisiert einen User der eigenen Company
+	 * SEC-009: Uses UserUpdateRequest to prevent role/active mass assignment
 	 */
 	@PutMapping("/{id}")
 	@PreAuthorize("hasRole('COMPANY_ADMIN')")
 	public ResponseEntity<UserResponse> updateUser(
 		@PathVariable Long id,
-		@Valid @RequestBody UserRequest request
+		@Valid @RequestBody UserUpdateRequest request
 	) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		UserPrincipal currentUser = (UserPrincipal) authentication.getPrincipal();

@@ -1,6 +1,7 @@
 package com.changeready.service;
 
-import com.changeready.dto.user.UserRequest;
+import com.changeready.dto.user.UserCreateRequest;
+import com.changeready.dto.user.UserUpdateRequest;
 import com.changeready.dto.user.UserResponse;
 import com.changeready.entity.Company;
 import com.changeready.entity.Role;
@@ -41,12 +42,12 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional
-	public UserResponse create(UserRequest request, Long companyId) {
+	public UserResponse create(UserCreateRequest request, Long companyId) {
 		// Get authenticated user to check role
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		com.changeready.security.UserPrincipal currentUser = (com.changeready.security.UserPrincipal) authentication.getPrincipal();
 
-		// COMPANY_ADMIN can only create COMPANY_USER users
+		// SEC-009: COMPANY_ADMIN can only create COMPANY_USER users
 		if (currentUser.getRole() == Role.COMPANY_ADMIN) {
 			if (request.getRole() != Role.COMPANY_USER) {
 				throw new UnauthorizedException("COMPANY_ADMIN can only create COMPANY_USER users");
@@ -92,7 +93,8 @@ public class UserServiceImpl implements UserService {
 		user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
 		user.setRole(enforcedRole);
 		user.setCompany(company);
-		user.setActive(request.getActive() != null ? request.getActive() : true);
+		// SEC-009: Active status is set to true by default, not from request
+		user.setActive(true);
 
 		User savedUser = userRepository.save(user);
 		return mapToResponse(savedUser);
@@ -100,7 +102,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional
-	public UserResponse createCompanyAdmin(UserRequest request, Long companyId) {
+	public UserResponse createCompanyAdmin(UserCreateRequest request, Long companyId) {
 		// Get authenticated user to check role - only SYSTEM_ADMIN can create COMPANY_ADMIN
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		com.changeready.security.UserPrincipal currentUser = (com.changeready.security.UserPrincipal) authentication.getPrincipal();
@@ -188,7 +190,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional
-	public UserResponse update(Long id, UserRequest request, Long companyId) {
+	public UserResponse update(Long id, UserUpdateRequest request, Long companyId) {
 		// Get authenticated user to check role
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		com.changeready.security.UserPrincipal currentUser = (com.changeready.security.UserPrincipal) authentication.getPrincipal();
@@ -206,10 +208,8 @@ public class UserServiceImpl implements UserService {
 			throw new UnauthorizedException("Cannot update users from other companies");
 		}
 
-		// Prevent COMPANY_ADMIN from creating SYSTEM_ADMIN users
-		if (currentUser.getRole() == Role.COMPANY_ADMIN && request.getRole() == Role.SYSTEM_ADMIN) {
-			throw new UnauthorizedException("COMPANY_ADMIN cannot assign SYSTEM_ADMIN role");
-		}
+		// SEC-009: UserUpdateRequest does not contain role or active fields
+		// This prevents mass assignment of sensitive fields
 
 		// Update email if provided and different
 		if (request.getEmail() != null && !request.getEmail().equals(user.getEmail())) {
@@ -227,15 +227,8 @@ public class UserServiceImpl implements UserService {
 			user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
 		}
 
-		// Update role if provided
-		if (request.getRole() != null) {
-			user.setRole(request.getRole());
-		}
-
-		// Update active status if provided
-		if (request.getActive() != null) {
-			user.setActive(request.getActive());
-		}
+		// SEC-009: role and active status are intentionally NOT updateable
+		// Separate privileged endpoints would be required for those operations
 
 		User updatedUser = userRepository.save(user);
 		return mapToResponse(updatedUser);
