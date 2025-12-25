@@ -159,7 +159,7 @@ public class UserServiceImpl implements UserService {
 		user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
 		user.setRole(Role.COMPANY_ADMIN); // Role is enforced, not taken from request
 		user.setCompany(company);
-		user.setActive(request.getActive() != null ? request.getActive() : true);
+		user.setActive(true); // Always active when created
 
 		User savedUser = userRepository.save(user);
 		

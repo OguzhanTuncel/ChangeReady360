@@ -42,7 +42,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 						authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 						SecurityContextHolder.getContext().setAuthentication(authentication);
 						// SEC-010: Log user ID instead of email for privacy
-						logger.debug("Successfully authenticated user with ID: {}", userPrincipal.getId());
+						if (logger.isDebugEnabled()) {
+							logger.debug("Successfully authenticated user with ID: " + userPrincipal.getId());
+						}
 					} else {
 						// SEC-010: Don't log email for security/privacy
 						logger.warn("User principal is null or disabled");

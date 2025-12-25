@@ -84,7 +84,7 @@ public class SecurityConfig {
 			// SEC-008: Security Headers
 			.headers(headers -> headers
 				// XSS Protection
-				.xssProtection(xss -> xss.headerValue("1; mode=block"))
+				.xssProtection(xss -> {})
 				
 				// Content Security Policy
 				.contentSecurityPolicy(csp -> csp.policyDirectives(
