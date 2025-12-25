@@ -1,0 +1,85 @@
+<div class="stakeholder-page">
+  <div class="page-header">
+    <h1>Stakeholder</h1>
+    <p class="description-text">
+      Verwalten Sie Unternehmen und wählen Sie das aktuelle Unternehmen für Umfragen und Auswertungen aus.
+    </p>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading">Lade Unternehmen...</div>
+  } @else {
+    <!-- Aktuell ausgewähltes Unternehmen -->
+    @if (selectedCompany()) {
+      <mat-card class="selected-company-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>business</mat-icon>
+            Aktuelles Unternehmen
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="selected-company-info">
+            <h2>{{ selectedCompany()!.name }}</h2>
+            <p class="company-status">Aktiv</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    }
+
+    <!-- Unternehmen-Liste -->
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Unternehmen verwalten</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="companies-list">
+          @for (company of companies(); track company.id) {
+            <div 
+              class="company-item" 
+              [class.selected]="selectedCompany()?.id === company.id"
+              (click)="selectCompany(company)"
+            >
+              <div class="company-info">
+                <h3>{{ company.name }}</h3>
+                <p class="company-meta">
+                  @if (selectedCompany()?.id === company.id) {
+                    <span class="badge-active">Aktuell ausgewählt</span>
+                  }
+                </p>
+              </div>
+              <mat-icon>chevron_right</mat-icon>
+            </div>
+          }
+        </div>
+
+        <!-- Neues Unternehmen hinzufügen -->
+        @if (showAddForm()) {
+          <div class="add-company-form">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Unternehmensname</mat-label>
+              <input 
+                matInput 
+                [(ngModel)]="newCompanyName"
+                (keyup.enter)="createCompany()"
+                placeholder="z.B. Beispiel GmbH"
+              />
+            </mat-form-field>
+            <div class="form-actions">
+              <button mat-raised-button color="primary" (click)="createCompany()" [disabled]="!newCompanyName.trim()">
+                Unternehmen erstellen
+              </button>
+              <button mat-button (click)="cancelAdd()">Abbrechen</button>
+            </div>
+          </div>
+        } @else {
+          <button mat-raised-button color="primary" class="add-button" (click)="toggleAddForm()">
+            <mat-icon>add</mat-icon>
+            Neues Unternehmen hinzufügen
+          </button>
+        }
+      </mat-card-content>
+    </mat-card>
+  }
+</div>
+
