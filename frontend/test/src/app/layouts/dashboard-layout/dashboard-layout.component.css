@@ -25,6 +25,31 @@
   flex: 1 1 auto;
 }
 
+.company-selector {
+  display: flex;
+  align-items: center;
+  margin-right: var(--spacing-lg);
+}
+
+.company-select-field {
+  min-width: 200px;
+  max-width: 300px;
+}
+
+::ng-deep .company-select-field .mat-mdc-form-field {
+  --mdc-filled-text-field-container-color: rgba(255, 255, 255, 0.2);
+  --mdc-filled-text-field-label-text-color: rgba(255, 255, 255, 0.9);
+  --mdc-filled-text-field-input-text-color: white;
+}
+
+::ng-deep .company-select-field .mat-mdc-select-value {
+  color: white !important;
+}
+
+::ng-deep .company-select-field .mat-mdc-select-arrow {
+  color: white !important;
+}
+
 .user-info {
   display: flex;
   align-items: center;

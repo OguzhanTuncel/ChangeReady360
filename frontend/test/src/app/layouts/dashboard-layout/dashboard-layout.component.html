@@ -9,6 +9,23 @@
     
     <span class="spacer"></span>
     
+    <!-- Company Selection -->
+    @if (companies().length > 0) {
+      <div class="company-selector">
+        <mat-form-field appearance="outline" class="company-select-field">
+          <mat-label>Unternehmen</mat-label>
+          <mat-select 
+            [value]="selectedCompany()?.id" 
+            (selectionChange)="onCompanyChange($event.value)"
+          >
+            @for (company of companies(); track company.id) {
+              <mat-option [value]="company.id">{{ company.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+    }
+    
     <div class="user-info">
       <span class="user-email">{{ authService.currentUser()?.email || 'Benutzer' }}</span>
       <button mat-icon-button (click)="logout()" class="user-menu-button" matTooltip="Abmelden">
