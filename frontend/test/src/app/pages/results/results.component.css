@@ -207,3 +207,87 @@ mat-card-title {
   font-size: 1.1rem;
 }
 
+/* Tab Content */
+.tab-content {
+  padding: 1.5rem 0;
+}
+
+/* Department Results Grid */
+.department-results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+  .department-results-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.department-card {
+  background-color: white;
+  border: 2px solid rgba(49, 116, 155, 0.2);
+  border-radius: 8px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.department-card:hover {
+  border-color: #31749B;
+  box-shadow: 0 4px 12px rgba(49, 116, 155, 0.15);
+}
+
+.department-card mat-card-title {
+  color: #31749B;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.department-card mat-card-subtitle {
+  color: #666;
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+}
+
+.department-score {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0;
+}
+
+.donut-chart-small {
+  display: block;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.score-value-small {
+  font-size: 2rem;
+  font-weight: 700;
+  fill: #31749B;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.score-label-small {
+  font-size: 0.8rem;
+  font-weight: 500;
+  fill: #666;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.department-results-table {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.department-results-table th {
+  font-weight: 600;
+  background-color: #F5F3F0;
+  color: #31749B;
+  font-size: 0.9rem;
+}
+
+.department-results-table td {
+  font-size: 0.9rem;
+}
+

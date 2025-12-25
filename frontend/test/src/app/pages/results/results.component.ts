@@ -4,8 +4,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTabsModule } from '@angular/material/tabs';
 import { SurveyService } from '../../services/survey.service';
-import { SurveyTemplate, SurveyResult } from '../../models/survey.model';
+import { SurveyTemplate, SurveyResult, DepartmentResult, DEPARTMENT_DISPLAY_NAMES } from '../../models/survey.model';
 
 @Component({
   selector: 'app-results',
@@ -15,7 +16,8 @@ import { SurveyTemplate, SurveyResult } from '../../models/survey.model';
     MatCardModule,
     MatTableModule,
     MatChipsModule,
-    MatIconModule
+    MatIconModule,
+    MatTabsModule
   ],
   templateUrl: './results.component.html',
   styleUrl: './results.component.css'
@@ -24,9 +26,12 @@ export class ResultsComponent implements OnInit {
   templates = signal<SurveyTemplate[]>([]);
   selectedTemplateId = signal<string>('');
   results = signal<SurveyResult[]>([]);
+  departmentResults = signal<DepartmentResult[]>([]);
   isLoading = signal(true);
+  selectedTab = signal<number>(0);
 
   displayedColumns: string[] = ['category', 'subcategory', 'average', 'answered', 'reverse'];
+  readonly departmentDisplayNames = DEPARTMENT_DISPLAY_NAMES;
 
   constructor(private surveyService: SurveyService) {}
 
@@ -51,6 +56,8 @@ export class ResultsComponent implements OnInit {
 
   loadResults(templateId: string) {
     this.isLoading.set(true);
+    
+    // Load overall results
     this.surveyService.calculateResults(templateId).subscribe({
       next: (results) => {
         this.results.set(results);
@@ -58,6 +65,16 @@ export class ResultsComponent implements OnInit {
       },
       error: () => {
         this.isLoading.set(false);
+      }
+    });
+
+    // Load department results
+    this.surveyService.calculateResultsByDepartment(templateId).subscribe({
+      next: (departmentResults) => {
+        this.departmentResults.set(departmentResults);
+      },
+      error: () => {
+        // Ignore errors for department results
       }
     });
   }
@@ -160,6 +177,24 @@ export class ResultsComponent implements OnInit {
       critical: criticalText,
       positive: positiveText
     };
+  }
+
+  /**
+   * Calculate overall score for department results
+   */
+  getDepartmentScore(results: SurveyResult[]): number {
+    if (results.length === 0) return 0;
+    const totalAverage = results.reduce((sum, result) => sum + result.average, 0) / results.length;
+    const percentage = ((totalAverage - 1) / 4) * 100;
+    return Math.max(0, Math.min(100, Math.round(percentage)));
+  }
+
+  /**
+   * Get donut offset for department score
+   */
+  getDepartmentDonutOffset(score: number): number {
+    const circumference = this.getDonutCircumference();
+    return circumference - (score / 100) * circumference;
   }
 }
 
