@@ -116,12 +116,17 @@ export class SurveysComponent implements OnInit {
     const templates = this.activeTemplates();
     if (templates.length === 0) return 0;
     
-    // Map ADKAR areas to category names (assuming categories match ADKAR structure)
+    // Map ADKAR areas to category names
+    // Survey templates should have categories matching ADKAR structure:
+    // - Knowledge (Wissen)
+    // - Ability (Fähigkeit)
+    // - Desire (Motivation)
+    // - Reinforcement (Kommunikation)
     const areaMap: Record<string, string[]> = {
-      'KNOWLEDGE': ['Wissen', 'Knowledge', 'Wissen (Knowledge)'],
-      'ABILITY': ['Fähigkeit', 'Ability', 'Fähigkeit (Ability)'],
-      'DESIRE': ['Motivation', 'Desire', 'Motivation (Desire)'],
-      'REINFORCEMENT': ['Kommunikation', 'Reinforcement', 'Kommunikation (Reinforcement)']
+      'KNOWLEDGE': ['Wissen', 'Knowledge', 'Wissen (Knowledge)', 'KNOWLEDGE'],
+      'ABILITY': ['Fähigkeit', 'Ability', 'Fähigkeit (Ability)', 'ABILITY'],
+      'DESIRE': ['Motivation', 'Desire', 'Motivation (Desire)', 'DESIRE'],
+      'REINFORCEMENT': ['Kommunikation', 'Reinforcement', 'Kommunikation (Reinforcement)', 'REINFORCEMENT']
     };
     
     const template = templates[0];
@@ -129,7 +134,11 @@ export class SurveysComponent implements OnInit {
     let count = 0;
     
     template.categories.forEach(category => {
-      if (categoryNames.some(name => category.name.includes(name))) {
+      // Check if category name matches any ADKAR area name
+      if (categoryNames.some(name => 
+        category.name.toUpperCase().includes(name.toUpperCase()) ||
+        category.name.toLowerCase().includes(name.toLowerCase())
+      )) {
         category.subcategories.forEach(subcategory => {
           count += subcategory.questions.length;
         });
@@ -137,6 +146,7 @@ export class SurveysComponent implements OnInit {
     });
     
     // If no exact match, distribute questions evenly across 4 areas
+    // This ensures the UI works even if categories don't exactly match ADKAR names
     if (count === 0) {
       return Math.ceil(this.getTotalQuestions() / 4);
     }
