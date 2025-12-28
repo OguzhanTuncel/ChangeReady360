@@ -1,4 +1,70 @@
 <div class="results-page">
+  <!-- Management Summary Section -->
+  <div class="management-summary-section">
+    <div class="summary-header">
+      <h1 class="summary-title">Management Summary</h1>
+      <p class="summary-date">Stand: {{ getCurrentDate() }}</p>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="kpi-cards-grid">
+      <mat-card class="kpi-card">
+        <div class="kpi-content">
+          <div class="kpi-header">
+            <span class="kpi-title">Gesamt-Readiness</span>
+          </div>
+          <div class="kpi-value">{{ managementSummary()?.overallReadiness || 0 }}%</div>
+        </div>
+      </mat-card>
+      @if (managementSummary() && managementSummary()!.readinessTrend !== 0) {
+        <mat-card class="kpi-card">
+          <div class="kpi-content">
+            <div class="kpi-header">
+              <span class="kpi-title">Trend (30 Tage)</span>
+            </div>
+            <div class="kpi-value" [class]="managementSummary()!.readinessTrend > 0 ? 'trend-positive' : 'trend-negative'">
+              {{ managementSummary()!.readinessTrend > 0 ? '+' : '' }}{{ managementSummary()!.readinessTrend }}%
+            </div>
+          </div>
+        </mat-card>
+      }
+      <mat-card class="kpi-card">
+        <div class="kpi-content">
+          <div class="kpi-header">
+            <span class="kpi-title">Stakeholder</span>
+          </div>
+          <div class="kpi-value">{{ managementSummary()?.stakeholderCount || 0 }}</div>
+        </div>
+      </mat-card>
+      @if (managementSummary() && managementSummary()!.activeMeasuresCount > 0) {
+        <mat-card class="kpi-card">
+          <div class="kpi-content">
+            <div class="kpi-header">
+              <span class="kpi-title">Aktive Maßnahmen</span>
+            </div>
+            <div class="kpi-value">{{ managementSummary()!.activeMeasuresCount }}</div>
+          </div>
+        </mat-card>
+      }
+    </div>
+
+    <!-- Department Cards -->
+    @if (departmentReadiness().length > 0) {
+      <div class="department-cards-grid">
+        @for (dept of departmentReadiness(); track dept.id) {
+          <mat-card class="department-card">
+            <div class="department-content">
+              <h3 class="department-name">{{ dept.name }}</h3>
+              <div class="department-readiness" [style.color]="getDepartmentColor(dept.readiness)">
+                {{ dept.readiness }}%
+              </div>
+            </div>
+          </mat-card>
+        }
+      </div>
+    }
+  </div>
+
   <div class="page-header">
     <h1>Ergebnisse</h1>
     <p class="description-text">
