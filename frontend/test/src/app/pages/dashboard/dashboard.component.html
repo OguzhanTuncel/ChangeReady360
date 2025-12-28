@@ -70,6 +70,58 @@
           }
         </mat-card-content>
       </mat-card>
+
+      <!-- Stakeholder-Gruppen Card -->
+      <mat-card class="stakeholder-groups-card">
+        <mat-card-header>
+          <mat-card-title>Stakeholder-Gruppen</mat-card-title>
+          <a routerLink="/app/stakeholder" class="view-all-link">Alle anzeigen →</a>
+        </mat-card-header>
+        <mat-card-content>
+          @if (stakeholderGroups().length > 0) {
+            <div class="groups-list">
+              @for (group of stakeholderGroups().slice(0, 5); track group.id) {
+                <div class="group-item">
+                  <div class="group-header">
+                    <div class="group-info">
+                      <mat-icon class="group-icon">{{ group.icon }}</mat-icon>
+                      <div class="group-details">
+                        <span class="group-name">{{ group.name }}</span>
+                        <span class="group-participants">{{ group.participantCount }} Personen</span>
+                      </div>
+                    </div>
+                    <span class="status-badge" [class]="getStatusBadgeClass(group.status)">
+                      {{ getStatusBadgeText(group.status) }}
+                    </span>
+                  </div>
+                  <div class="group-progress">
+                    <div class="progress-bar-container">
+                      <div 
+                        class="progress-bar" 
+                        [style.width.%]="group.readiness"
+                        [class]="getStatusBadgeClass(group.status)">
+                      </div>
+                    </div>
+                    <div class="group-metrics">
+                      <span class="readiness-value">{{ group.readiness }}%</span>
+                      <span class="trend-indicator" [class]="getTrendClass(group.trend)">
+                        <mat-icon class="trend-icon">{{ getTrendIcon(group.trend) }}</mat-icon>
+                        {{ formatTrend(group.trend) }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          } @else {
+            <div class="empty-groups">
+              <p>Noch keine Stakeholder-Gruppen verfügbar</p>
+            </div>
+          }
+        </mat-card-content>
+      </mat-card>
+    </div>
+
     <div class="content-grid">
       <!-- Open Surveys -->
       <mat-card class="content-card">
