@@ -17,22 +17,35 @@
 }
 
 .page-header {
-  margin-bottom: 2rem;
+  margin: 0 0 var(--spacing-xs) 0;
+  color: var(--gray-900);
+  font-size: 1.9rem;
+  font-weight: 700;
 }
 
-.page-header h1 {
-  font-size: 2rem;
-  margin-bottom: 0.75rem;
-  color: #31749B;
-  font-weight: 600;
-}
-
-.description-text {
-  color: #333;
-  font-size: 1rem;
-  line-height: 1.6;
+.page-subtitle {
   margin: 0;
-  max-width: 800px;
+  color: var(--gray-600);
+  font-size: 0.95rem;
+}
+
+.add-button {
+  background-color: var(--change-ready-green);
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm) var(--spacing-lg);
+}
+
+.add-button:hover {
+  background-color: #4a8d6f;
+}
+
+.add-button mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
 }
 
 .selected-company-card {
