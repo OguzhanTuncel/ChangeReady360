@@ -97,12 +97,12 @@
   - [x] 4.4 StakeholderServiceImpl erweitern: Bestehende GET-Methoden mit echten Daten füllen (getGroups, getKpis, getGroupDetail, getGroupPersons)
   - [x] 4.5 StakeholderController erweitern: POST /groups, PUT /groups/{id}, POST /groups/{id}/persons Endpoints hinzufügen
   - [x] 4.6 Security: @PreAuthorize für COMPANY_ADMIN bei Schreiboperationen
-- [ ] 5.0 Readiness-Berechnungslogik implementieren
+- [x] 5.0 Readiness-Berechnungslogik implementieren
   - [x] 5.1 ReadinessCalculationService Interface erstellen: calculateReadiness, calculatePromoterNeutralCritic, calculateTrend, calculateStatus
-  - [ ] 5.2 ReadinessCalculationServiceImpl implementieren: Readiness aus Survey-Antworten berechnen (Formel: ((Durchschnitt - 1) / 4) * 100)
-  - [ ] 5.3 Promoter/Neutral/Kritiker-Logik: Automatische Kategorisierung basierend auf Readiness-Werten (Promoter >=75%, Neutral 50-75%, Kritiker <50%)
-  - [ ] 5.4 Trend-Berechnung: Vergleich aktueller Wert mit Wert von vor 30 Tagen (Integer: positiv/negativ/0)
-  - [ ] 5.5 Status-Berechnung: ready (>=75%), attention (50-75%), critical (<50%)
+  - [x] 5.2 ReadinessCalculationServiceImpl implementieren: Readiness aus Survey-Antworten berechnen (Formel: ((Durchschnitt - 1) / 4) * 100)
+  - [x] 5.3 Promoter/Neutral/Kritiker-Logik: Automatische Kategorisierung basierend auf Readiness-Werten (Promoter >=75%, Neutral 50-75%, Kritiker <50%)
+  - [x] 5.4 Trend-Berechnung: Vergleich aktueller Wert mit Wert von vor 30 Tagen (Integer: positiv/negativ/0)
+  - [x] 5.5 Status-Berechnung: ready (>=75%), attention (50-75%), critical (<50%)
 - [ ] 6.0 Dashboard & Reporting Services mit echten Daten implementieren
   - [ ] 6.1 DashboardServiceImpl.getKpis implementieren: Echte Datenaggregation aus SurveyInstances, StakeholderGroups, Measures
   - [ ] 6.2 DashboardServiceImpl.getTrendData implementieren: Historische Readiness-Daten aus Survey-Ergebnissen
