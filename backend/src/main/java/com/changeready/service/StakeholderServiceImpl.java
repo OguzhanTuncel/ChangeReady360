@@ -346,8 +346,10 @@ public class StakeholderServiceImpl implements StakeholderService {
 
 	@Override
 	public List<StakeholderPersonResponse> getGroupPersons(Long groupId, UserPrincipal userPrincipal) {
+		Long companyId = userPrincipal.getCompanyId();
+		
 		// Prüfe ob Gruppe zur Company gehört
-		groupRepository.findByIdAndCompanyId(groupId, userPrincipal.getCompanyId())
+		StakeholderGroup group = groupRepository.findByIdAndCompanyId(groupId, companyId)
 			.orElseThrow(() -> new RuntimeException("Stakeholder group not found: " + groupId));
 		
 		List<StakeholderPerson> persons = personRepository.findByGroupId(groupId);
@@ -355,10 +357,58 @@ public class StakeholderServiceImpl implements StakeholderService {
 		return persons.stream()
 			.map(person -> {
 				StakeholderPersonResponse response = toPersonResponse(person);
-				// TODO: category (promoter/neutral/critic) wird in Task 5.0 aus Readiness berechnet
+				
+				// Berechne category (promoter/neutral/critic) basierend auf Readiness dieser Person
+				if (person.getEmail() != null && !person.getEmail().isEmpty()) {
+					double personReadiness = calculatePersonReadiness(person, companyId);
+					if (personReadiness > 0) {
+						String category = readinessCalculationService.calculatePromoterNeutralCritic(personReadiness);
+						response.setCategory(category);
+					} else {
+						response.setCategory("neutral"); // Default wenn keine Daten vorhanden
+					}
+				} else {
+					response.setCategory("neutral"); // Default wenn keine E-Mail vorhanden
+				}
+				
 				return response;
 			})
-			.collect(java.util.stream.Collectors.toList());
+			.collect(Collectors.toList());
+	}
+
+	/**
+	 * Berechnet Readiness für eine einzelne Stakeholder-Person
+	 */
+	private double calculatePersonReadiness(StakeholderPerson person, Long companyId) {
+		if (person.getEmail() == null || person.getEmail().isEmpty()) {
+			return 0.0;
+		}
+		
+		return userRepository.findByEmail(person.getEmail())
+			.map(user -> {
+				List<SurveyInstance> userInstances = surveyInstanceRepository
+					.findByUserIdAndCompanyId(user.getId(), companyId)
+					.stream()
+					.filter(instance -> instance.getStatus() == SurveyInstance.SurveyInstanceStatus.SUBMITTED)
+					.collect(Collectors.toList());
+				
+				if (userInstances.isEmpty()) {
+					return 0.0;
+				}
+				
+				List<SurveyAnswer> allAnswers = new ArrayList<>();
+				for (SurveyInstance instance : userInstances) {
+					List<SurveyAnswer> answers = surveyAnswerRepository.findByInstanceId(instance.getId());
+					allAnswers.addAll(answers);
+				}
+				
+				if (allAnswers.isEmpty()) {
+					return 0.0;
+				}
+				
+				return readinessCalculationService.calculateReadiness(allAnswers);
+			})
+			.orElse(0.0);
 	}
 
 	@Override
