@@ -1,0 +1,102 @@
+<svg [attr.width]="width" [attr.height]="height" [attr.viewBox]="viewBox" class="line-chart">
+  <!-- Y-Axis Grid Lines -->
+  @for (label of getYAxisLabels(); track label) {
+    <line
+      [attr.x1]="padding"
+      [attr.x2]="width - padding"
+      [attr.y1]="getYPosition(label)"
+      [attr.y2]="getYPosition(label)"
+      stroke="#E5E5E5"
+      stroke-width="1"
+      stroke-dasharray="4,4"
+      class="grid-line"
+    />
+    <!-- Y-Axis Labels -->
+    <text
+      [attr.x]="padding - 10"
+      [attr.y]="getYPosition(label) + 4"
+      text-anchor="end"
+      class="axis-label"
+    >
+      {{ label }}%
+    </text>
+  }
+
+  <!-- Area under actual line -->
+  @if (areaPath && dataPoints.length > 0) {
+    <path
+      [attr.d]="areaPath"
+      fill="url(#areaGradient)"
+      class="area-path"
+    />
+  }
+
+  <!-- Actual line (green) -->
+  @if (actualPath && dataPoints.length > 0) {
+    <path
+      [attr.d]="actualPath"
+      fill="none"
+      stroke="#56A080"
+      stroke-width="3"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      class="actual-line"
+    />
+  }
+
+  <!-- Target line (orange dashed) -->
+  @if (targetPath && showTarget && dataPoints.length > 0) {
+    <path
+      [attr.d]="targetPath"
+      fill="none"
+      stroke="#DFB55E"
+      stroke-width="2"
+      stroke-dasharray="8,4"
+      stroke-linecap="round"
+      class="target-line"
+    />
+  }
+
+  <!-- Data points for actual -->
+  @for (point of dataPoints; track point.date.getTime()) {
+    <circle
+      [attr.cx]="padding + ((point.date.getTime() - Math.min(...dataPoints.map(d => d.date.getTime()))) * xScale)"
+      [attr.cy]="padding + chartHeight - ((point.actualValue - Math.min(...dataPoints.map(d => d.actualValue))) * yScale)"
+      r="4"
+      fill="#56A080"
+      class="data-point"
+    />
+  }
+
+  <!-- Gradient definition for area -->
+  <defs>
+    <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#56A080;stop-opacity:0.3" />
+      <stop offset="100%" style="stop-color:#56A080;stop-opacity:0.05" />
+    </linearGradient>
+  </defs>
+</svg>
+
+<!-- Legend -->
+@if (dataPoints.length > 0) {
+  <div class="chart-legend">
+    <div class="legend-item">
+      <div class="legend-line actual"></div>
+      <span>Ist-Wert</span>
+    </div>
+    @if (showTarget && dataPoints.some(p => p.targetValue)) {
+      <div class="legend-item">
+        <div class="legend-line target"></div>
+        <span>Zielwert</span>
+      </div>
+    }
+  </div>
+}
+
+<!-- Insight Banner -->
+@if (insight) {
+  <div class="insight-banner">
+    {{ insight }}
+  </div>
+}
+
