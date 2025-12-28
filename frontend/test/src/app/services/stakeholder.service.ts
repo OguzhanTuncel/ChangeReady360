@@ -50,8 +50,8 @@ export class StakeholderService {
       promoters: 0,
       neutrals: 0,
       critics: 0,
-      status: 'ready',
-      impact: 'Hoch'
+      status: 'ready' as const,
+      impact: 'Hoch' as const
     }).pipe(
       catchError(error => {
         console.error('Error loading group detail:', error);

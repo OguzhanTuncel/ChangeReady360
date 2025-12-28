@@ -101,8 +101,8 @@
       </div>
 
       @if (isLoading()) {
-    <div class="loading">Lade Stakeholder-Daten...</div>
-  } @else {
+        <div class="loading">Lade Stakeholder-Daten...</div>
+      } @else {
     <!-- KPI Cards -->
     @if (stakeholderKpis()) {
       <div class="kpi-cards-grid">
@@ -137,13 +137,13 @@
           </div>
           <div class="kpi-value critic-value">{{ stakeholderKpis()!.critics }}</div>
         </div>
-      </mat-card>
-      </div>
-    } @else {
-      <div class="empty-kpis-message">
-        <p>Keine Stakeholder-KPI-Daten verfügbar</p>
-      </div>
-    }
+        </mat-card>
+        </div>
+      } @else {
+        <div class="empty-kpis-message">
+          <p>Keine Stakeholder-KPI-Daten verfügbar</p>
+        </div>
+      }
 
     <!-- Gruppen-Cards Grid -->
     <div class="groups-grid">
@@ -264,6 +264,8 @@
         }
       </mat-card-content>
     </mat-card>
+      }
+    </div>
   }
 </div>
 
