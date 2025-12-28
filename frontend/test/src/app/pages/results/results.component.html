@@ -7,46 +7,53 @@
     </div>
 
     <!-- KPI Cards -->
-    <div class="kpi-cards-grid">
-      <mat-card class="kpi-card">
-        <div class="kpi-content">
-          <div class="kpi-header">
-            <span class="kpi-title">Gesamt-Readiness</span>
-          </div>
-          <div class="kpi-value">{{ managementSummary()?.overallReadiness || 0 }}%</div>
-        </div>
-      </mat-card>
-      @if (managementSummary() && managementSummary()!.readinessTrend !== 0) {
+    @if (managementSummary()) {
+      <div class="kpi-cards-grid">
         <mat-card class="kpi-card">
           <div class="kpi-content">
             <div class="kpi-header">
-              <span class="kpi-title">Trend (30 Tage)</span>
+              <span class="kpi-title">Gesamt-Readiness</span>
             </div>
-            <div class="kpi-value" [class]="managementSummary()!.readinessTrend > 0 ? 'trend-positive' : 'trend-negative'">
-              {{ managementSummary()!.readinessTrend > 0 ? '+' : '' }}{{ managementSummary()!.readinessTrend }}%
-            </div>
+            <div class="kpi-value">{{ managementSummary()!.overallReadiness }}%</div>
           </div>
         </mat-card>
-      }
-      <mat-card class="kpi-card">
-        <div class="kpi-content">
-          <div class="kpi-header">
-            <span class="kpi-title">Stakeholder</span>
-          </div>
-          <div class="kpi-value">{{ managementSummary()?.stakeholderCount || 0 }}</div>
-        </div>
-      </mat-card>
-      @if (managementSummary() && managementSummary()!.activeMeasuresCount > 0) {
+        @if (managementSummary()!.readinessTrend !== 0) {
+          <mat-card class="kpi-card">
+            <div class="kpi-content">
+              <div class="kpi-header">
+                <span class="kpi-title">Trend (30 Tage)</span>
+              </div>
+              <div class="kpi-value" [class]="managementSummary()!.readinessTrend > 0 ? 'trend-positive' : 'trend-negative'">
+                {{ managementSummary()!.readinessTrend > 0 ? '+' : '' }}{{ managementSummary()!.readinessTrend }}%
+              </div>
+            </div>
+          </mat-card>
+        }
         <mat-card class="kpi-card">
           <div class="kpi-content">
             <div class="kpi-header">
-              <span class="kpi-title">Aktive Maßnahmen</span>
+              <span class="kpi-title">Stakeholder</span>
             </div>
-            <div class="kpi-value">{{ managementSummary()!.activeMeasuresCount }}</div>
+            <div class="kpi-value">{{ managementSummary()!.stakeholderCount }}</div>
           </div>
         </mat-card>
-      }
-    </div>
+        @if (managementSummary()!.activeMeasuresCount > 0) {
+          <mat-card class="kpi-card">
+            <div class="kpi-content">
+              <div class="kpi-header">
+                <span class="kpi-title">Aktive Maßnahmen</span>
+              </div>
+              <div class="kpi-value">{{ managementSummary()!.activeMeasuresCount }}</div>
+            </div>
+          </mat-card>
+        }
+      </div>
+    } @else {
+      <div class="empty-summary">
+        <mat-icon>bar_chart</mat-icon>
+        <p>Keine Management Summary-Daten verfügbar</p>
+      </div>
+    }
 
     <!-- Department Cards -->
     @if (departmentReadiness().length > 0) {

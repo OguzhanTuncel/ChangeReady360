@@ -149,6 +149,33 @@
   font-size: 1rem;
 }
 
+.empty-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-2xl);
+  background-color: white;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  text-align: center;
+  color: var(--gray-600);
+  min-height: 200px;
+}
+
+.empty-summary mat-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  color: var(--gray-400);
+  margin-bottom: var(--spacing-md);
+}
+
+.empty-summary p {
+  margin: 0;
+  font-size: 1rem;
+}
+
 .page-header {
   margin-bottom: 2rem;
 }
