@@ -88,7 +88,7 @@
 - [ ] 3.0 Stakeholder Entities & Repositories erstellen
   - [x] 3.1 StakeholderGroup Entity erstellen: Felder (id, name, icon String, companyId FK, impact enum, description optional, timestamps)
   - [x] 3.2 StakeholderPerson Entity erstellen: Felder (id, groupId FK, name, role String, email optional, createdAt)
-  - [ ] 3.3 StakeholderGroupRepository erstellen: findByCompanyId, findByIdAndCompanyId
+  - [x] 3.3 StakeholderGroupRepository erstellen: findByCompanyId, findByIdAndCompanyId
   - [ ] 3.4 StakeholderPersonRepository erstellen: findByGroupId
 - [ ] 4.0 Stakeholder Service erweitern & Controller erweitern
   - [ ] 4.1 Stakeholder Request DTOs erstellen: StakeholderGroupCreateRequest, StakeholderGroupUpdateRequest, StakeholderPersonCreateRequest
