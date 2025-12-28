@@ -9,7 +9,8 @@ import { FormsModule } from '@angular/forms';
 import { CompanyService } from '../../services/company.service';
 import { Company } from '../../models/survey.model';
 import { StakeholderService } from '../../services/stakeholder.service';
-import { StakeholderGroup, StakeholderKpis } from '../../models/stakeholder.model';
+import { StakeholderGroup, StakeholderKpis, StakeholderGroupDetail, StakeholderPerson } from '../../models/stakeholder.model';
+import { DonutChartComponent } from '../../components/donut-chart/donut-chart.component';
 
 @Component({
   selector: 'app-stakeholder',
@@ -21,7 +22,8 @@ import { StakeholderGroup, StakeholderKpis } from '../../models/stakeholder.mode
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
-    FormsModule
+    FormsModule,
+    DonutChartComponent
   ],
   templateUrl: './stakeholder.component.html',
   styleUrl: './stakeholder.component.css'
@@ -35,6 +37,9 @@ export class StakeholderComponent implements OnInit {
   
   stakeholderGroups = signal<StakeholderGroup[]>([]);
   stakeholderKpis = signal<StakeholderKpis | null>(null);
+  selectedGroup = signal<StakeholderGroupDetail | null>(null);
+  groupPersons = signal<StakeholderPerson[]>([]);
+  showDetailView = signal(false);
 
   constructor(
     private companyService: CompanyService,
@@ -174,8 +179,27 @@ export class StakeholderComponent implements OnInit {
   }
 
   navigateToGroupDetail(groupId: string) {
-    // TODO: Navigate to group detail page
-    console.log('Navigate to group:', groupId);
+    this.stakeholderService.getGroupDetail(groupId).subscribe({
+      next: (detail) => {
+        this.selectedGroup.set(detail);
+        this.showDetailView.set(true);
+        this.loadGroupPersons(groupId);
+      }
+    });
+  }
+
+  loadGroupPersons(groupId: string) {
+    this.stakeholderService.getGroupPersons(groupId).subscribe({
+      next: (persons) => {
+        this.groupPersons.set(persons);
+      }
+    });
+  }
+
+  backToOverview() {
+    this.showDetailView.set(false);
+    this.selectedGroup.set(null);
+    this.groupPersons.set([]);
   }
 }
 

@@ -73,7 +73,7 @@
   - [x] 3.3 Stakeholder-Übersicht Header: Titel, Untertitel, "+ Stakeholder hinzufügen" Button
   - [x] 3.4 KPI-Cards oben: Gesamt, Promoter, Neutral, Kritiker (aus Backend)
   - [x] 3.5 Gruppen-Cards Grid: Cards mit Icon, Status-Badge, Titel, Subtitle, Dots, Readiness-%, Trend
-  - [ ] 3.6 Stakeholder-Detailansicht: Zurück-Button, Gruppen-Header, Statistiken, Readiness-Gauge
+  - [x] 3.6 Stakeholder-Detailansicht: Zurück-Button, Gruppen-Header, Statistiken, Readiness-Gauge
   - [ ] 3.7 Trend-Indikatoren: Berechnung und Anzeige von Trends (+X%/-X%/0%)
   - [ ] 3.8 Empty States für Stakeholder: Wenn keine Gruppen oder Daten vorhanden
 - [ ] 4.0 Assessment-Seite neu gestalten
