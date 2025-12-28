@@ -179,19 +179,38 @@ public class StakeholderServiceImpl implements StakeholderService {
 
 	@Override
 	public StakeholderKpisResponse getKpis(UserPrincipal userPrincipal) {
-		List<StakeholderGroup> groups = groupRepository.findByCompanyId(userPrincipal.getCompanyId());
+		Long companyId = userPrincipal.getCompanyId();
+		List<StakeholderGroup> groups = groupRepository.findByCompanyId(companyId);
 		
 		int total = 0;
+		int promoters = 0;
+		int neutrals = 0;
+		int critics = 0;
+		
 		for (StakeholderGroup group : groups) {
-			total += personRepository.findByGroupId(group.getId()).size();
+			List<StakeholderPerson> persons = personRepository.findByGroupId(group.getId());
+			int participantCount = persons.size();
+			total += participantCount;
+			
+			// Berechne Readiness für diese Gruppe
+			double readiness = calculateGroupReadiness(group, persons, companyId);
+			
+			// Kategorisiere basierend auf Readiness
+			String category = readinessCalculationService.calculatePromoterNeutralCritic(readiness);
+			if ("promoter".equals(category)) {
+				promoters += participantCount;
+			} else if ("neutral".equals(category)) {
+				neutrals += participantCount;
+			} else {
+				critics += participantCount;
+			}
 		}
 		
 		StakeholderKpisResponse response = new StakeholderKpisResponse();
 		response.setTotal(total);
-		// TODO: promoters, neutrals, critics werden in Task 5.0 aus Readiness-Berechnung abgeleitet
-		response.setPromoters(0);
-		response.setNeutrals(0);
-		response.setCritics(0);
+		response.setPromoters(promoters);
+		response.setNeutrals(neutrals);
+		response.setCritics(critics);
 		return response;
 	}
 
