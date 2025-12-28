@@ -91,7 +91,7 @@
   - [x] 3.3 StakeholderGroupRepository erstellen: findByCompanyId, findByIdAndCompanyId
   - [x] 3.4 StakeholderPersonRepository erstellen: findByGroupId
 - [ ] 4.0 Stakeholder Service erweitern & Controller erweitern
-  - [ ] 4.1 Stakeholder Request DTOs erstellen: StakeholderGroupCreateRequest, StakeholderGroupUpdateRequest, StakeholderPersonCreateRequest
+  - [x] 4.1 Stakeholder Request DTOs erstellen: StakeholderGroupCreateRequest, StakeholderGroupUpdateRequest, StakeholderPersonCreateRequest
   - [ ] 4.2 StakeholderService Interface erweitern: createGroup, updateGroup, addPerson Methoden hinzufügen
   - [ ] 4.3 StakeholderServiceImpl erweitern: CRUD-Operationen implementieren (createGroup, updateGroup, addPerson)
   - [ ] 4.4 StakeholderServiceImpl erweitern: Bestehende GET-Methoden mit echten Daten füllen (getGroups, getKpis, getGroupDetail, getGroupPersons)
