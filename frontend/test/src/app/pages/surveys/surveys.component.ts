@@ -83,5 +83,30 @@ export class SurveysComponent implements OnInit {
     });
     return count;
   }
+
+  getTotalQuestions(): number {
+    // Calculate total questions from active templates
+    const templates = this.activeTemplates();
+    if (templates.length === 0) return 0;
+    
+    // Use first template as reference (assuming all templates have similar structure)
+    const template = templates[0];
+    let count = 0;
+    template.categories.forEach(category => {
+      category.subcategories.forEach(subcategory => {
+        count += subcategory.questions.length;
+      });
+    });
+    return count;
+  }
+
+  getTotalCategories(): number {
+    const templates = this.activeTemplates();
+    if (templates.length === 0) return 0;
+    
+    // Count unique categories across templates (assuming ADKAR structure)
+    const template = templates[0];
+    return template.categories.length;
+  }
 }
 

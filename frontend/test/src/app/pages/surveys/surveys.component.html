@@ -1,6 +1,23 @@
 <div class="surveys-page">
-  <div class="page-header">
-    <h1>Umfragen</h1>
+  <div class="page-header-section">
+    <div class="header-content">
+      <h1 class="page-header">Assessment</h1>
+      <p class="page-subtitle">Ermitteln Sie die Change-Readiness Ihrer Organisation</p>
+    </div>
+  </div>
+
+  <!-- Assessment Start Screen -->
+  <div class="assessment-start-section">
+    <mat-card class="assessment-intro-card">
+      <div class="intro-content">
+        <mat-icon class="intro-icon">assignment_turned_in</mat-icon>
+        <h2 class="intro-title">Assessment starten</h2>
+        <p class="intro-description">
+          {{ getTotalQuestions() }} Fragen in {{ getTotalCategories() }} Bereichen nach dem ADKAR-Modell. 
+          Sie können jederzeit unterbrechen und später fortfahren.
+        </p>
+      </div>
+    </mat-card>
   </div>
 
   @if (isLoading()) {
