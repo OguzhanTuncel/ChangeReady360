@@ -21,11 +21,7 @@ import { DonutChartComponent } from '../../components/donut-chart/donut-chart.co
   styleUrl: './stakeholder.component.css'
 })
 export class StakeholderComponent implements OnInit {
-  companies = signal<Company[]>([]);
-  selectedCompany = signal<Company | null>(null);
   isLoading = signal(true);
-  newCompanyName = ''; // Normal property for ngModel
-  showAddForm = signal(false);
   
   stakeholderGroups = signal<StakeholderGroup[]>([]);
   stakeholderKpis = signal<StakeholderKpis | null>(null);
@@ -34,7 +30,6 @@ export class StakeholderComponent implements OnInit {
   showDetailView = signal(false);
 
   constructor(
-    private companyService: CompanyService,
     private stakeholderService: StakeholderService
   ) {}
 
