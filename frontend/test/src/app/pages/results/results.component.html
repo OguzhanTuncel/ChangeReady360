@@ -65,6 +65,30 @@
     }
   </div>
 
+  <!-- Trend Chart Section -->
+  <div class="trend-chart-section">
+    <mat-card class="trend-card">
+      <mat-card-header>
+        <mat-card-title>Readiness-Verlauf & Prognose</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        @if (trendData() && trendData()!.dataPoints.length > 0) {
+          <app-line-chart 
+            [dataPoints]="trendData()!.dataPoints"
+            [width]="800"
+            [height]="400"
+            [showTarget]="true">
+          </app-line-chart>
+        } @else {
+          <div class="empty-trend">
+            <mat-icon>show_chart</mat-icon>
+            <p>Keine Trend-Daten verfügbar</p>
+          </div>
+        }
+      </mat-card-content>
+    </mat-card>
+  </div>
+
   <div class="page-header">
     <h1>Ergebnisse</h1>
     <p class="description-text">
