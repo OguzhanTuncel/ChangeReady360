@@ -48,6 +48,55 @@
         </div>
       </mat-card>
     </div>
+
+    <!-- Gruppen-Cards Grid -->
+    <div class="groups-grid">
+      @if (stakeholderGroups().length > 0) {
+        @for (group of stakeholderGroups(); track group.id) {
+          <mat-card class="group-card" (click)="navigateToGroupDetail(group.id)">
+            <div class="group-card-header">
+              <mat-icon class="group-icon">{{ group.icon }}</mat-icon>
+              <span class="status-badge" [class]="getStatusBadgeClass(group.status)">
+                {{ getStatusBadgeText(group.status) }}
+              </span>
+            </div>
+            <div class="group-card-content">
+              <h3 class="group-title">{{ group.name }}</h3>
+              <p class="group-subtitle">{{ group.participantCount }} Personen · {{ getImpactText(group.impact) }}</p>
+              <div class="group-dots">
+                <div class="dot-group">
+                  <span class="dot promoter-dot"></span>
+                  <span class="dot-count">{{ group.promoters }}</span>
+                </div>
+                <div class="dot-group">
+                  <span class="dot neutral-dot"></span>
+                  <span class="dot-count">{{ group.neutrals }}</span>
+                </div>
+                <div class="dot-group">
+                  <span class="dot critic-dot"></span>
+                  <span class="dot-count">{{ group.critics }}</span>
+                </div>
+              </div>
+              <div class="group-readiness">
+                <span class="readiness-value">{{ group.readiness }}%</span>
+                <span class="trend-indicator" [class]="getTrendClass(group.trend)">
+                  <mat-icon class="trend-icon">{{ getTrendIcon(group.trend) }}</mat-icon>
+                  {{ formatTrend(group.trend) }}
+                </span>
+              </div>
+            </div>
+            <div class="group-card-footer">
+              <mat-icon class="arrow-icon">arrow_forward</mat-icon>
+            </div>
+          </mat-card>
+        }
+      } @else {
+        <div class="empty-groups-message">
+          <p>Noch keine Stakeholder-Gruppen verfügbar</p>
+        </div>
+      }
+    </div>
+
     <!-- Aktuell ausgewähltes Unternehmen -->
     @if (selectedCompany()) {
       <mat-card class="selected-company-card">
