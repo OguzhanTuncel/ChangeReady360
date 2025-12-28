@@ -69,7 +69,7 @@
   - [x] 2.7 Empty States für Dashboard: Saubere Empty States wenn keine Daten vorhanden
 - [ ] 3.0 Stakeholder-Seite neu gestalten
   - [x] 3.1 Stakeholder-Model erstellen: Interfaces für Gruppen, Details, Trends
-  - [ ] 3.2 Stakeholder-Service erstellen: HTTP-Service für Stakeholder-Daten
+  - [x] 3.2 Stakeholder-Service erstellen: HTTP-Service für Stakeholder-Daten
   - [ ] 3.3 Stakeholder-Übersicht Header: Titel, Untertitel, "+ Stakeholder hinzufügen" Button
   - [ ] 3.4 KPI-Cards oben: Gesamt, Promoter, Neutral, Kritiker (aus Backend)
   - [ ] 3.5 Gruppen-Cards Grid: Cards mit Icon, Status-Badge, Titel, Subtitle, Dots, Readiness-%, Trend
