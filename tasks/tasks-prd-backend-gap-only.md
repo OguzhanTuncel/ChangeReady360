@@ -98,7 +98,7 @@
   - [x] 4.5 StakeholderController erweitern: POST /groups, PUT /groups/{id}, POST /groups/{id}/persons Endpoints hinzufügen
   - [x] 4.6 Security: @PreAuthorize für COMPANY_ADMIN bei Schreiboperationen
 - [ ] 5.0 Readiness-Berechnungslogik implementieren
-  - [ ] 5.1 ReadinessCalculationService Interface erstellen: calculateReadiness, calculatePromoterNeutralCritic, calculateTrend, calculateStatus
+  - [x] 5.1 ReadinessCalculationService Interface erstellen: calculateReadiness, calculatePromoterNeutralCritic, calculateTrend, calculateStatus
   - [ ] 5.2 ReadinessCalculationServiceImpl implementieren: Readiness aus Survey-Antworten berechnen (Formel: ((Durchschnitt - 1) / 4) * 100)
   - [ ] 5.3 Promoter/Neutral/Kritiker-Logik: Automatische Kategorisierung basierend auf Readiness-Werten (Promoter >=75%, Neutral 50-75%, Kritiker <50%)
   - [ ] 5.4 Trend-Berechnung: Vergleich aktueller Wert mit Wert von vor 30 Tagen (Integer: positiv/negativ/0)
