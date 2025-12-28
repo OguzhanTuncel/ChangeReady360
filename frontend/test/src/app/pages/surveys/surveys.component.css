@@ -115,6 +115,42 @@
   color: var(--gray-600);
 }
 
+.assessment-info-section {
+  margin-bottom: var(--spacing-xl);
+}
+
+.info-card {
+  padding: var(--spacing-lg) !important;
+  background-color: white !important;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.info-content {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-xl);
+  flex-wrap: wrap;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.info-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  color: var(--innovera-blue);
+}
+
+.info-text {
+  font-size: 0.95rem;
+  color: var(--gray-700);
+}
+
 .section {
   margin-bottom: 3rem;
 }

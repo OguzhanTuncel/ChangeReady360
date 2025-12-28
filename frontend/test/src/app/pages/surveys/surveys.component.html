@@ -54,6 +54,22 @@
     </div>
   </div>
 
+  <!-- Assessment Info -->
+  <div class="assessment-info-section">
+    <mat-card class="info-card">
+      <div class="info-content">
+        <div class="info-item">
+          <mat-icon class="info-icon">schedule</mat-icon>
+          <span class="info-text">Geschätzte Dauer: ca. {{ getEstimatedDuration() }} Minuten</span>
+        </div>
+        <div class="info-item">
+          <mat-icon class="info-icon">save</mat-icon>
+          <span class="info-text">Zwischenspeicherung möglich</span>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+
   @if (isLoading()) {
     <div class="loading">Lade Umfragen...</div>
   } @else {

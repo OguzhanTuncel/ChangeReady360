@@ -140,5 +140,11 @@ export class SurveysComponent implements OnInit {
     
     return count;
   }
+
+  getEstimatedDuration(): number {
+    // Estimate: ~2 minutes per question
+    const totalQuestions = this.getTotalQuestions();
+    return Math.ceil(totalQuestions * 2);
+  }
 }
 
