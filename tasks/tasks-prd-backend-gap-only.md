@@ -111,6 +111,6 @@
   - [x] 6.5 ReportingServiceImpl.getTrendData implementieren: Wiederverwendung von Dashboard-Logik
   - [x] 6.6 StakeholderServiceImpl.getGroups implementieren: Echte Gruppen-Daten mit berechneten Readiness-Werten
   - [x] 6.7 StakeholderServiceImpl.getKpis implementieren: Aggregation aus allen Gruppen
-  - [ ] 6.8 StakeholderServiceImpl.getGroupDetail implementieren: Detail-Daten mit Readiness-Historie
+  - [x] 6.8 StakeholderServiceImpl.getGroupDetail implementieren: Detail-Daten mit Readiness-Historie
   - [ ] 6.9 StakeholderServiceImpl.getGroupPersons implementieren: Echte Personen-Daten aus Repository
 

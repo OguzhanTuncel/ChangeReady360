@@ -216,8 +216,39 @@ public class StakeholderServiceImpl implements StakeholderService {
 
 	@Override
 	public StakeholderGroupDetailResponse getGroupDetail(Long groupId, UserPrincipal userPrincipal) {
-		StakeholderGroup group = groupRepository.findByIdAndCompanyId(groupId, userPrincipal.getCompanyId())
+		Long companyId = userPrincipal.getCompanyId();
+		StakeholderGroup group = groupRepository.findByIdAndCompanyId(groupId, companyId)
 			.orElseThrow(() -> new RuntimeException("Stakeholder group not found: " + groupId));
+		
+		List<StakeholderPerson> persons = personRepository.findByGroupId(groupId);
+		int participantCount = persons.size();
+		
+		// Berechne aktuelle Readiness
+		double readiness = calculateGroupReadiness(group, persons, companyId);
+		
+		// Berechne Promoter/Neutral/Critics
+		String category = readinessCalculationService.calculatePromoterNeutralCritic(readiness);
+		int promoters = 0;
+		int neutrals = 0;
+		int critics = 0;
+		
+		if ("promoter".equals(category)) {
+			promoters = participantCount;
+		} else if ("neutral".equals(category)) {
+			neutrals = participantCount;
+		} else {
+			critics = participantCount;
+		}
+		
+		// Berechne Trend
+		double previousReadiness = calculateGroupReadiness30DaysAgo(group, persons, companyId);
+		int trend = readinessCalculationService.calculateTrend(readiness, previousReadiness);
+		
+		// Berechne Status
+		String status = readinessCalculationService.calculateStatus(readiness);
+		
+		// Berechne Readiness-Historie (letzte 30 Tage)
+		List<com.changeready.dto.stakeholder.ReadinessHistoryPointResponse> history = calculateReadinessHistory(group, persons, companyId);
 		
 		StakeholderGroupDetailResponse response = new StakeholderGroupDetailResponse();
 		response.setId(group.getId());
@@ -225,23 +256,89 @@ public class StakeholderServiceImpl implements StakeholderService {
 		response.setIcon(group.getIcon());
 		response.setImpact(group.getImpact().getDisplayName());
 		response.setDescription(group.getDescription());
-		
-		// Participant count
-		int participantCount = personRepository.findByGroupId(group.getId()).size();
 		response.setParticipantCount(participantCount);
-		
-		// TODO: Readiness, trend, promoters, neutrals, critics, status werden in Task 5.0 berechnet
-		response.setReadiness(0.0);
-		response.setTrend(0);
-		response.setPromoters(0);
-		response.setNeutrals(0);
-		response.setCritics(0);
-		response.setStatus("ready");
-		
-		// TODO: Historical readiness wird in Task 5.0 berechnet
-		response.setHistory(new ArrayList<>());
+		response.setReadiness(readiness);
+		response.setTrend(trend);
+		response.setPromoters(promoters);
+		response.setNeutrals(neutrals);
+		response.setCritics(critics);
+		response.setStatus(status);
+		response.setHistory(history);
 		
 		return response;
+	}
+
+	/**
+	 * Berechnet Readiness-Historie für eine Gruppe (letzte 30 Tage)
+	 */
+	private List<com.changeready.dto.stakeholder.ReadinessHistoryPointResponse> calculateReadinessHistory(
+		StakeholderGroup group,
+		List<StakeholderPerson> persons,
+		Long companyId
+	) {
+		if (persons.isEmpty()) {
+			return new ArrayList<>();
+		}
+		
+		LocalDateTime thirtyDaysAgo = LocalDateTime.now().minusDays(30);
+		
+		// Sammle alle SUBMITTED Survey-Instanzen der Personen dieser Gruppe
+		List<SurveyInstance> allInstances = new ArrayList<>();
+		
+		for (StakeholderPerson person : persons) {
+			if (person.getEmail() != null && !person.getEmail().isEmpty()) {
+				userRepository.findByEmail(person.getEmail())
+					.ifPresent(user -> {
+						List<SurveyInstance> userInstances = surveyInstanceRepository
+							.findByUserIdAndCompanyId(user.getId(), companyId)
+							.stream()
+							.filter(instance -> instance.getStatus() == SurveyInstance.SurveyInstanceStatus.SUBMITTED)
+							.filter(instance -> instance.getSubmittedAt() != null)
+							.filter(instance -> instance.getSubmittedAt().isAfter(thirtyDaysAgo))
+							.collect(Collectors.toList());
+						
+						allInstances.addAll(userInstances);
+					});
+			}
+		}
+		
+		if (allInstances.isEmpty()) {
+			return new ArrayList<>();
+		}
+		
+		// Gruppiere nach Datum
+		Map<java.time.LocalDate, List<SurveyInstance>> instancesByDate = allInstances.stream()
+			.collect(Collectors.groupingBy(instance -> instance.getSubmittedAt().toLocalDate()));
+		
+		// Erstelle Historie-Punkte
+		List<com.changeready.dto.stakeholder.ReadinessHistoryPointResponse> history = new ArrayList<>();
+		
+		for (Map.Entry<java.time.LocalDate, List<SurveyInstance>> entry : instancesByDate.entrySet()) {
+			java.time.LocalDate date = entry.getKey();
+			List<SurveyInstance> instances = entry.getValue();
+			
+			// Sammle alle Antworten dieser Instanzen
+			List<SurveyAnswer> allAnswers = new ArrayList<>();
+			for (SurveyInstance instance : instances) {
+				List<SurveyAnswer> answers = surveyAnswerRepository.findByInstanceId(instance.getId());
+				allAnswers.addAll(answers);
+			}
+			
+			if (!allAnswers.isEmpty()) {
+				double readiness = readinessCalculationService.calculateReadiness(allAnswers);
+				
+				com.changeready.dto.stakeholder.ReadinessHistoryPointResponse point =
+					new com.changeready.dto.stakeholder.ReadinessHistoryPointResponse();
+				point.setDate(date);
+				point.setReadiness(readiness);
+				history.add(point);
+			}
+		}
+		
+		// Sortiere nach Datum
+		history.sort(java.util.Comparator.comparing(com.changeready.dto.stakeholder.ReadinessHistoryPointResponse::getDate));
+		
+		return history;
 	}
 
 	@Override
