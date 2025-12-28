@@ -70,7 +70,7 @@
 - [ ] 3.0 Stakeholder-Seite neu gestalten
   - [x] 3.1 Stakeholder-Model erstellen: Interfaces für Gruppen, Details, Trends
   - [x] 3.2 Stakeholder-Service erstellen: HTTP-Service für Stakeholder-Daten
-  - [ ] 3.3 Stakeholder-Übersicht Header: Titel, Untertitel, "+ Stakeholder hinzufügen" Button
+  - [x] 3.3 Stakeholder-Übersicht Header: Titel, Untertitel, "+ Stakeholder hinzufügen" Button
   - [ ] 3.4 KPI-Cards oben: Gesamt, Promoter, Neutral, Kritiker (aus Backend)
   - [ ] 3.5 Gruppen-Cards Grid: Cards mit Icon, Status-Badge, Titel, Subtitle, Dots, Readiness-%, Trend
   - [ ] 3.6 Stakeholder-Detailansicht: Zurück-Button, Gruppen-Header, Statistiken, Readiness-Gauge

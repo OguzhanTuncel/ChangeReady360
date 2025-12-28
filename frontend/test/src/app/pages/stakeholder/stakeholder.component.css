@@ -4,6 +4,18 @@
   min-height: 100vh;
 }
 
+.page-header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-xl);
+  gap: var(--spacing-lg);
+}
+
+.header-content {
+  flex: 1;
+}
+
 .page-header {
   margin-bottom: 2rem;
 }

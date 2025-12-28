@@ -8,6 +8,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { CompanyService } from '../../services/company.service';
 import { Company } from '../../models/survey.model';
+import { StakeholderService } from '../../services/stakeholder.service';
+import { StakeholderGroup, StakeholderKpis } from '../../models/stakeholder.model';
 
 @Component({
   selector: 'app-stakeholder',
@@ -30,12 +32,39 @@ export class StakeholderComponent implements OnInit {
   isLoading = signal(true);
   newCompanyName = ''; // Normal property for ngModel
   showAddForm = signal(false);
+  
+  stakeholderGroups = signal<StakeholderGroup[]>([]);
+  stakeholderKpis = signal<StakeholderKpis | null>(null);
 
-  constructor(private companyService: CompanyService) {}
+  constructor(
+    private companyService: CompanyService,
+    private stakeholderService: StakeholderService
+  ) {}
 
   ngOnInit() {
     this.loadCompanies();
     this.loadSelectedCompany();
+    this.loadStakeholderData();
+  }
+
+  loadStakeholderData() {
+    this.isLoading.set(true);
+    
+    this.stakeholderService.getGroups().subscribe({
+      next: (groups) => {
+        this.stakeholderGroups.set(groups);
+        this.isLoading.set(false);
+      },
+      error: () => {
+        this.isLoading.set(false);
+      }
+    });
+
+    this.stakeholderService.getKpis().subscribe({
+      next: (kpis) => {
+        this.stakeholderKpis.set(kpis);
+      }
+    });
   }
 
   loadCompanies() {
