@@ -76,6 +76,7 @@ public class SecurityConfig {
 				.requestMatchers("/api/v1/stakeholder/**").authenticated() // Stakeholder-Endpoints (geschützt durch @PreAuthorize)
 				.requestMatchers("/api/v1/reporting/**").authenticated() // Reporting-Endpoints (geschützt durch @PreAuthorize)
 				.requestMatchers("/api/v1/measures/**").authenticated() // Measures-Endpoints (geschützt durch @PreAuthorize)
+				.requestMatchers("/api/v1/surveys/**").authenticated() // Survey-Endpoints (geschützt durch @PreAuthorize)
 				.anyRequest().permitAll()
 			)
 			
