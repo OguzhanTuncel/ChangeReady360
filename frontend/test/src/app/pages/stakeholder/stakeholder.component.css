@@ -48,6 +48,55 @@
   height: 20px;
 }
 
+.kpi-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+}
+
+.kpi-card {
+  padding: var(--spacing-lg) !important;
+  background-color: white !important;
+  border-radius: 8px;
+  box-shadow: var(--shadow-sm);
+}
+
+.kpi-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.kpi-header {
+  margin-bottom: var(--spacing-xs);
+}
+
+.kpi-title {
+  font-size: 0.9rem;
+  color: var(--gray-600);
+  font-weight: 500;
+}
+
+.kpi-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--gray-900);
+  line-height: 1;
+}
+
+.promoter-value {
+  color: var(--change-ready-green);
+}
+
+.neutral-value {
+  color: var(--gray-700);
+}
+
+.critic-value {
+  color: var(--error-red);
+}
+
 .selected-company-card {
   margin-bottom: 2rem;
   background-color: white;

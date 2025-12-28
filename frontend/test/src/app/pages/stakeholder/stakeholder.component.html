@@ -11,8 +11,43 @@
   </div>
 
   @if (isLoading()) {
-    <div class="loading">Lade Unternehmen...</div>
+    <div class="loading">Lade Stakeholder-Daten...</div>
   } @else {
+    <!-- KPI Cards -->
+    <div class="kpi-cards-grid">
+      <mat-card class="kpi-card">
+        <div class="kpi-content">
+          <div class="kpi-header">
+            <span class="kpi-title">Gesamt</span>
+          </div>
+          <div class="kpi-value">{{ stakeholderKpis()?.total || 0 }}</div>
+        </div>
+      </mat-card>
+      <mat-card class="kpi-card promoter-card">
+        <div class="kpi-content">
+          <div class="kpi-header">
+            <span class="kpi-title">Promoter</span>
+          </div>
+          <div class="kpi-value promoter-value">{{ stakeholderKpis()?.promoters || 0 }}</div>
+        </div>
+      </mat-card>
+      <mat-card class="kpi-card neutral-card">
+        <div class="kpi-content">
+          <div class="kpi-header">
+            <span class="kpi-title">Neutral</span>
+          </div>
+          <div class="kpi-value neutral-value">{{ stakeholderKpis()?.neutrals || 0 }}</div>
+        </div>
+      </mat-card>
+      <mat-card class="kpi-card critic-card">
+        <div class="kpi-content">
+          <div class="kpi-header">
+            <span class="kpi-title">Kritiker</span>
+          </div>
+          <div class="kpi-value critic-value">{{ stakeholderKpis()?.critics || 0 }}</div>
+        </div>
+      </mat-card>
+    </div>
     <!-- Aktuell ausgewähltes Unternehmen -->
     @if (selectedCompany()) {
       <mat-card class="selected-company-card">
