@@ -105,7 +105,7 @@
   - [x] 5.5 Status-Berechnung: ready (>=75%), attention (50-75%), critical (<50%)
 - [ ] 6.0 Dashboard & Reporting Services mit echten Daten implementieren
   - [x] 6.1 DashboardServiceImpl.getKpis implementieren: Echte Datenaggregation aus SurveyInstances, StakeholderGroups, Measures
-  - [ ] 6.2 DashboardServiceImpl.getTrendData implementieren: Historische Readiness-Daten aus Survey-Ergebnissen
+  - [x] 6.2 DashboardServiceImpl.getTrendData implementieren: Historische Readiness-Daten aus Survey-Ergebnissen
   - [ ] 6.3 ReportingServiceImpl.getManagementSummary implementieren: Echte Datenaggregation
   - [ ] 6.4 ReportingServiceImpl.getDepartmentReadiness implementieren: Readiness pro Department aus Survey-Antworten
   - [ ] 6.5 ReportingServiceImpl.getTrendData implementieren: Wiederverwendung von Dashboard-Logik

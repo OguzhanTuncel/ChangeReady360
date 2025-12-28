@@ -161,12 +161,86 @@ public class DashboardServiceImpl implements DashboardService {
 
 	@Override
 	public TrendDataResponse getTrendData(UserPrincipal userPrincipal) {
-		// TODO: Implementiere echte Trend-Daten aus historischen Survey-Ergebnissen
-		// Aktuell: Leere Liste zurückgeben
+		Long companyId = userPrincipal.getCompanyId();
+		
+		// Lade alle SUBMITTED Survey-Instanzen der Company
+		List<SurveyInstance> submittedInstances = surveyInstanceRepository
+			.findByCompanyIdAndStatus(companyId, SurveyInstance.SurveyInstanceStatus.SUBMITTED);
+		
+		if (submittedInstances.isEmpty()) {
+			TrendDataResponse response = new TrendDataResponse();
+			response.setDataPoints(new ArrayList<>());
+			response.setInsight("Noch keine Daten verfügbar");
+			return response;
+		}
+		
+		// Gruppiere nach Datum (submittedAt) und berechne Readiness pro Tag
+		Map<LocalDate, List<SurveyInstance>> instancesByDate = submittedInstances.stream()
+			.filter(instance -> instance.getSubmittedAt() != null)
+			.collect(Collectors.groupingBy(instance -> instance.getSubmittedAt().toLocalDate()));
+		
+		// Erstelle Trend-Datenpunkte
+		List<TrendDataPointResponse> dataPoints = new ArrayList<>();
+		
+		for (Map.Entry<LocalDate, List<SurveyInstance>> entry : instancesByDate.entrySet()) {
+			LocalDate date = entry.getKey();
+			List<SurveyInstance> instances = entry.getValue();
+			
+			// Sammle alle Antworten dieser Instanzen
+			List<SurveyAnswer> allAnswers = new ArrayList<>();
+			for (SurveyInstance instance : instances) {
+				List<SurveyAnswer> answers = surveyAnswerRepository.findByInstanceId(instance.getId());
+				allAnswers.addAll(answers);
+			}
+			
+			// Berechne Readiness für diesen Tag
+			if (!allAnswers.isEmpty()) {
+				double readiness = readinessCalculationService.calculateReadiness(allAnswers);
+				
+				TrendDataPointResponse point = new TrendDataPointResponse();
+				point.setDate(date);
+				point.setActualValue(readiness);
+				point.setTargetValue(null); // Target-Werte werden später hinzugefügt
+				dataPoints.add(point);
+			}
+		}
+		
+		// Sortiere nach Datum
+		dataPoints.sort(Comparator.comparing(TrendDataPointResponse::getDate));
+		
+		// Berechne Insight
+		String insight = calculateInsight(dataPoints);
+		
 		TrendDataResponse response = new TrendDataResponse();
-		response.setDataPoints(new ArrayList<>());
-		response.setInsight(null);
+		response.setDataPoints(dataPoints);
+		response.setInsight(insight);
 		return response;
+	}
+
+	/**
+	 * Berechnet Insight-Text basierend auf Trend-Daten
+	 */
+	private String calculateInsight(List<TrendDataPointResponse> dataPoints) {
+		if (dataPoints.size() < 2) {
+			return "Ausreichend Daten für Trend-Analyse vorhanden";
+		}
+		
+		TrendDataPointResponse first = dataPoints.get(0);
+		TrendDataPointResponse last = dataPoints.get(dataPoints.size() - 1);
+		
+		double trend = last.getActualValue() - first.getActualValue();
+		
+		if (trend > 5) {
+			return "Positive Entwicklung - Readiness steigt kontinuierlich";
+		} else if (trend > 0) {
+			return "Leichte positive Entwicklung";
+		} else if (trend < -5) {
+			return "Aufmerksamkeit erforderlich - Readiness sinkt";
+		} else if (trend < 0) {
+			return "Leichte Verschlechterung";
+		} else {
+			return "Stabile Entwicklung";
+		}
 	}
 }
 
