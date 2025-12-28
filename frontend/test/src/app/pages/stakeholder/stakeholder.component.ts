@@ -2,10 +2,7 @@ import { Component, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
-import { FormsModule } from '@angular/forms';
 import { StakeholderService } from '../../services/stakeholder.service';
 import { StakeholderGroup, StakeholderKpis, StakeholderGroupDetail, StakeholderPerson } from '../../models/stakeholder.model';
 import { DonutChartComponent } from '../../components/donut-chart/donut-chart.component';
@@ -17,10 +14,7 @@ import { DonutChartComponent } from '../../components/donut-chart/donut-chart.co
     CommonModule,
     MatCardModule,
     MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
     MatIconModule,
-    FormsModule,
     DonutChartComponent
   ],
   templateUrl: './stakeholder.component.html',
