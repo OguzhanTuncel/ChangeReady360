@@ -240,5 +240,15 @@ export class ResultsComponent implements OnInit {
     const circumference = this.getDonutCircumference();
     return circumference - (score / 100) * circumference;
   }
+
+  printReport() {
+    window.print();
+  }
+
+  exportReport() {
+    // TODO: Implement PDF/Excel export functionality
+    console.log('Export report clicked');
+    // This would typically trigger a backend endpoint to generate and download a PDF/Excel file
+  }
 }
 
