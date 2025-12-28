@@ -90,7 +90,7 @@
   - [x] 5.5 Trend-Chart implementieren: Grüne Linie (Ist), orange gestrichelte Linie (Ziel)
   - [x] 5.6 Export-Funktionen: "Drucken" und "Report exportieren" Buttons im Header
   - [x] 5.7 Empty States für Reporting: Wenn keine Trend-Daten vorhanden
-- [ ] 6.0 Backend-Endpoints implementieren
+- [x] 6.0 Backend-Endpoints implementieren
   - [x] 6.1 Dashboard DTOs erstellen: DashboardKpisResponse, TrendDataResponse
   - [x] 6.2 Dashboard Service & Controller: GET /api/v1/dashboard/kpis Endpoint
   - [x] 6.3 Stakeholder DTOs erstellen: StakeholderGroupResponse, StakeholderGroupDetailResponse
