@@ -85,11 +85,11 @@
   - [x] 2.3 SurveyServiceImpl implementieren: Alle Methoden mit Company-Isolation und Validierung
   - [x] 2.4 SurveyController erstellen: POST /instances, GET /instances, GET /instances/{id}, PUT /instances/{id}/answers, POST /instances/{id}/submit, GET /templates
   - [x] 2.5 Security & Validierung: @PreAuthorize für COMPANY_USER, Validierung von Requests
-- [ ] 3.0 Stakeholder Entities & Repositories erstellen
+- [x] 3.0 Stakeholder Entities & Repositories erstellen
   - [x] 3.1 StakeholderGroup Entity erstellen: Felder (id, name, icon String, companyId FK, impact enum, description optional, timestamps)
   - [x] 3.2 StakeholderPerson Entity erstellen: Felder (id, groupId FK, name, role String, email optional, createdAt)
   - [x] 3.3 StakeholderGroupRepository erstellen: findByCompanyId, findByIdAndCompanyId
-  - [ ] 3.4 StakeholderPersonRepository erstellen: findByGroupId
+  - [x] 3.4 StakeholderPersonRepository erstellen: findByGroupId
 - [ ] 4.0 Stakeholder Service erweitern & Controller erweitern
   - [ ] 4.1 Stakeholder Request DTOs erstellen: StakeholderGroupCreateRequest, StakeholderGroupUpdateRequest, StakeholderPersonCreateRequest
   - [ ] 4.2 StakeholderService Interface erweitern: createGroup, updateGroup, addPerson Methoden hinzufügen
