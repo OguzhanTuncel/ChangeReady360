@@ -51,7 +51,7 @@
 
 ## Tasks
 
-- [ ] 1.0 Layout & Struktur umgestalten
+- [x] 1.0 Layout & Struktur umgestalten
   - [x] 1.1 Sidebar umgestalten: Dunkelblaue Sidebar mit Logo "ChangeReady 360" (360 in grünem Badge)
   - [x] 1.2 Navigation-Items aktualisieren: Dashboard, Stakeholder, Assessment, Maßnahmen, Reporting
   - [x] 1.3 User-Profil in Sidebar: Avatar, Name, Rolle am unteren Rand
