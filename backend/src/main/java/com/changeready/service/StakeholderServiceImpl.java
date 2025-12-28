@@ -349,7 +349,7 @@ public class StakeholderServiceImpl implements StakeholderService {
 		Long companyId = userPrincipal.getCompanyId();
 		
 		// Prüfe ob Gruppe zur Company gehört
-		StakeholderGroup group = groupRepository.findByIdAndCompanyId(groupId, companyId)
+		groupRepository.findByIdAndCompanyId(groupId, companyId)
 			.orElseThrow(() -> new RuntimeException("Stakeholder group not found: " + groupId));
 		
 		List<StakeholderPerson> persons = personRepository.findByGroupId(groupId);
