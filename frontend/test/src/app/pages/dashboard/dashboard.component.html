@@ -32,6 +32,44 @@
     </div>
 
     <!-- Main Content Grid -->
+    <div class="main-content-grid">
+      <!-- Gesamt-Readiness Card -->
+      <mat-card class="readiness-card">
+        <mat-card-header>
+          <mat-card-title>Gesamt-Readiness</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          @if (readinessData()) {
+            <div class="readiness-content">
+              <div class="donut-wrapper">
+                <app-donut-chart 
+                  [value]="readinessData()!.overallReadiness" 
+                  [size]="220" 
+                  [strokeWidth]="28">
+                </app-donut-chart>
+              </div>
+              <div class="readiness-stats">
+                <div class="stat-item promoter">
+                  <span class="stat-count">{{ readinessData()!.promoters }}</span>
+                  <span class="stat-label">Promoter</span>
+                </div>
+                <div class="stat-item neutral">
+                  <span class="stat-count">{{ readinessData()!.neutrals }}</span>
+                  <span class="stat-label">Neutral</span>
+                </div>
+                <div class="stat-item critic">
+                  <span class="stat-count">{{ readinessData()!.critics }}</span>
+                  <span class="stat-label">Kritiker</span>
+                </div>
+              </div>
+            </div>
+          } @else {
+            <div class="empty-readiness">
+              <p>Noch keine Readiness-Daten verfügbar</p>
+            </div>
+          }
+        </mat-card-content>
+      </mat-card>
     <div class="content-grid">
       <!-- Open Surveys -->
       <mat-card class="content-card">

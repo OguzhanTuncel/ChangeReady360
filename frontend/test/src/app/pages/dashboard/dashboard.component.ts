@@ -9,7 +9,8 @@ import { MatChipsModule } from '@angular/material/chips';
 import { SurveyService } from '../../services/survey.service';
 import { SurveyInstance, SurveyResponse } from '../../models/survey.model';
 import { DashboardService } from '../../services/dashboard.service';
-import { DashboardKpis } from '../../models/dashboard.model';
+import { DashboardKpis, ReadinessData } from '../../models/dashboard.model';
+import { DonutChartComponent } from '../../components/donut-chart/donut-chart.component';
 
 interface StatCard {
   title: string;
@@ -39,7 +40,8 @@ interface Activity {
     MatButtonModule,
     MatIconModule,
     MatListModule,
-    MatChipsModule
+    MatChipsModule,
+    DonutChartComponent
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
@@ -49,6 +51,7 @@ export class DashboardComponent implements OnInit {
   responses = signal<SurveyResponse[]>([]);
   isLoading = signal(true);
   kpis = signal<DashboardKpis | null>(null);
+  readinessData = signal<ReadinessData | null>(null);
 
   constructor(
     private surveyService: SurveyService,
@@ -67,6 +70,13 @@ export class DashboardComponent implements OnInit {
     this.dashboardService.getKpis().subscribe({
       next: (kpis) => {
         this.kpis.set(kpis);
+      }
+    });
+
+    // Load Readiness Data
+    this.dashboardService.getReadinessData().subscribe({
+      next: (readiness) => {
+        this.readinessData.set(readiness);
       }
     });
 
