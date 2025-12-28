@@ -39,12 +39,13 @@ export class StakeholderService {
    */
   getGroupDetail(groupId: string): Observable<StakeholderGroupDetail> {
     // TODO: Backend-Endpoint implementieren: GET /api/v1/stakeholder/groups/{id}
+    // Trend wird vom Backend berechnet basierend auf historischen Daten
     return of({
       id: groupId,
       name: '',
       icon: '',
       readiness: 0,
-      trend: 0,
+      trend: 0, // Wird vom Backend berechnet: aktueller Wert - Wert vor 30 Tagen
       participantCount: 0,
       promoters: 0,
       neutrals: 0,
