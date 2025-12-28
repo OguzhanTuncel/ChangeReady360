@@ -6,8 +6,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
-import { CompanyService } from '../../services/company.service';
-import { Company } from '../../models/survey.model';
 import { StakeholderService } from '../../services/stakeholder.service';
 import { StakeholderGroup, StakeholderKpis, StakeholderGroupDetail, StakeholderPerson } from '../../models/stakeholder.model';
 import { DonutChartComponent } from '../../components/donut-chart/donut-chart.component';
@@ -47,8 +45,6 @@ export class StakeholderComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.loadCompanies();
-    this.loadSelectedCompany();
     this.loadStakeholderData();
   }
 
@@ -77,64 +73,6 @@ export class StakeholderComponent implements OnInit {
     console.log('Add stakeholder clicked');
   }
 
-  loadCompanies() {
-    this.isLoading.set(true);
-    this.companyService.getCompanies().subscribe({
-      next: (companies) => {
-        this.companies.set(companies);
-        this.isLoading.set(false);
-      },
-      error: () => {
-        this.isLoading.set(false);
-      }
-    });
-  }
-
-  loadSelectedCompany() {
-    this.companyService.getSelectedCompany().subscribe({
-      next: (company) => {
-        this.selectedCompany.set(company);
-      }
-    });
-  }
-
-  selectCompany(company: Company) {
-    this.companyService.setSelectedCompany(company.id);
-    this.selectedCompany.set(company);
-  }
-
-  toggleAddForm() {
-    this.showAddForm.update(show => !show);
-    if (!this.showAddForm()) {
-      this.newCompanyName = '';
-    }
-  }
-
-  createCompany() {
-    const name = this.newCompanyName.trim();
-    if (!name) {
-      return;
-    }
-
-    this.isLoading.set(true);
-    this.companyService.createCompany(name).subscribe({
-      next: (company) => {
-        this.companies.update(companies => [...companies, company]);
-        this.selectCompany(company);
-        this.newCompanyName = '';
-        this.showAddForm.set(false);
-        this.isLoading.set(false);
-      },
-      error: () => {
-        this.isLoading.set(false);
-      }
-    });
-  }
-
-  cancelAdd() {
-    this.newCompanyName = '';
-    this.showAddForm.set(false);
-  }
 
   getStatusBadgeClass(status: 'ready' | 'attention' | 'critical'): string {
     switch (status) {
