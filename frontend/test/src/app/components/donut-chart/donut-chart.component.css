@@ -1,0 +1,18 @@
+.donut-chart-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.donut-chart {
+  display: block;
+}
+
+.background-circle {
+  transition: stroke-dashoffset 0.5s ease-in-out;
+}
+
+.progress-circle {
+  transition: stroke-dashoffset 0.5s ease-in-out, stroke 0.3s ease-in-out;
+}
+

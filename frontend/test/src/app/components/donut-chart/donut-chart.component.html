@@ -1,0 +1,29 @@
+<div class="donut-chart-container">
+  <svg [attr.width]="size" [attr.height]="size" [attr.viewBox]="getViewBox()" class="donut-chart">
+    <!-- Background circle -->
+    <circle
+      [attr.cx]="getCenter()"
+      [attr.cy]="getCenter()"
+      [attr.r]="radius"
+      fill="none"
+      stroke="#E5E5E5"
+      [attr.stroke-width]="strokeWidth"
+      class="background-circle"
+    />
+    <!-- Progress circle -->
+    <circle
+      [attr.cx]="getCenter()"
+      [attr.cy]="getCenter()"
+      [attr.r]="radius"
+      fill="none"
+      [attr.stroke]="color"
+      [attr.stroke-width]="strokeWidth"
+      [attr.stroke-dasharray]="circumference"
+      [attr.stroke-dashoffset]="offset"
+      stroke-linecap="round"
+      transform="rotate(-90, {{ getCenter() }}, {{ getCenter() }})"
+      class="progress-circle"
+    />
+  </svg>
+</div>
+
