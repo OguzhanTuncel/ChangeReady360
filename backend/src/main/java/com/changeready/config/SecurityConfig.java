@@ -71,7 +71,11 @@ public class SecurityConfig {
 				.requestMatchers("/api/v1/auth/login", "/api/v1/auth/logout").permitAll() // Öffentliche Auth-Endpoints
 				.requestMatchers("/api/v1/company-access-requests").permitAll() // Öffentlicher POST-Endpoint
 				.requestMatchers("/api/v1/company-access-requests/**").authenticated() // Geschützte GET/PUT-Endpoints
-				.requestMatchers("/api/v1/admin/**").authenticated()
+				.requestMatchers("/api/v1/admin/**").authenticated() // Admin-Endpoints
+				.requestMatchers("/api/v1/dashboard/**").authenticated() // Dashboard-Endpoints (geschützt durch @PreAuthorize)
+				.requestMatchers("/api/v1/stakeholder/**").authenticated() // Stakeholder-Endpoints (geschützt durch @PreAuthorize)
+				.requestMatchers("/api/v1/reporting/**").authenticated() // Reporting-Endpoints (geschützt durch @PreAuthorize)
+				.requestMatchers("/api/v1/measures/**").authenticated() // Measures-Endpoints (geschützt durch @PreAuthorize)
 				.anyRequest().permitAll()
 			)
 			
