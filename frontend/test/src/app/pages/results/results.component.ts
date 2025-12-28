@@ -7,6 +7,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { SurveyService } from '../../services/survey.service';
 import { SurveyTemplate, SurveyResult, DepartmentResult, DEPARTMENT_DISPLAY_NAMES } from '../../models/survey.model';
+import { ReportingService } from '../../services/reporting.service';
+import { ManagementSummary, DepartmentReadiness } from '../../models/reporting.model';
 
 @Component({
   selector: 'app-results',
@@ -30,13 +32,44 @@ export class ResultsComponent implements OnInit {
   isLoading = signal(true);
   selectedTab = signal<number>(0);
 
+  managementSummary = signal<ManagementSummary | null>(null);
+  departmentReadiness = signal<DepartmentReadiness[]>([]);
+
   displayedColumns: string[] = ['category', 'subcategory', 'average', 'answered', 'reverse'];
   readonly departmentDisplayNames = DEPARTMENT_DISPLAY_NAMES;
 
-  constructor(private surveyService: SurveyService) {}
+  constructor(
+    private surveyService: SurveyService,
+    private reportingService: ReportingService
+  ) {}
 
   ngOnInit() {
     this.loadTemplates();
+    this.loadReportingData();
+  }
+
+  loadReportingData() {
+    this.reportingService.getManagementSummary().subscribe({
+      next: (summary) => {
+        this.managementSummary.set(summary);
+      }
+    });
+
+    this.reportingService.getDepartmentReadiness().subscribe({
+      next: (departments) => {
+        this.departmentReadiness.set(departments);
+      }
+    });
+  }
+
+  getCurrentDate(): string {
+    return new Date().toLocaleDateString('de-DE', { year: 'numeric', month: 'long', day: 'numeric' });
+  }
+
+  getDepartmentColor(readiness: number): string {
+    if (readiness >= 75) return 'var(--change-ready-green)';
+    if (readiness >= 50) return 'var(--gold-accent)';
+    return 'var(--error-red)';
   }
 
   loadTemplates() {
