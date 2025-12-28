@@ -125,5 +125,57 @@ export class StakeholderComponent implements OnInit {
     this.newCompanyName = '';
     this.showAddForm.set(false);
   }
+
+  getStatusBadgeClass(status: 'ready' | 'attention' | 'critical'): string {
+    switch (status) {
+      case 'ready':
+        return 'badge-ready';
+      case 'attention':
+        return 'badge-attention';
+      case 'critical':
+        return 'badge-critical';
+      default:
+        return '';
+    }
+  }
+
+  getStatusBadgeText(status: 'ready' | 'attention' | 'critical'): string {
+    switch (status) {
+      case 'ready':
+        return 'Bereit';
+      case 'attention':
+        return 'Aufmerksamkeit';
+      case 'critical':
+        return 'Kritisch';
+      default:
+        return '';
+    }
+  }
+
+  getTrendIcon(trend: number): string {
+    if (trend > 0) return 'trending_up';
+    if (trend < 0) return 'trending_down';
+    return 'trending_flat';
+  }
+
+  getTrendClass(trend: number): string {
+    if (trend > 0) return 'trend-positive';
+    if (trend < 0) return 'trend-negative';
+    return 'trend-neutral';
+  }
+
+  formatTrend(trend: number): string {
+    if (trend === 0) return '0%';
+    return `${trend > 0 ? '+' : ''}${trend}%`;
+  }
+
+  getImpactText(impact: string): string {
+    return impact;
+  }
+
+  navigateToGroupDetail(groupId: string) {
+    // TODO: Navigate to group detail page
+    console.log('Navigate to group:', groupId);
+  }
 }
 
