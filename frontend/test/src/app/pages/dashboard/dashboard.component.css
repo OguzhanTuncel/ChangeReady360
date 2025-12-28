@@ -407,7 +407,17 @@ mat-card-title mat-icon {
 }
 
 /* Responsive */
+@media (max-width: 1200px) {
+  .kpi-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 768px) {
+  .kpi-cards-grid {
+    grid-template-columns: 1fr;
+  }
+
   .stats-grid {
     grid-template-columns: 1fr;
   }
@@ -418,6 +428,10 @@ mat-card-title mat-icon {
 
   .quick-actions button {
     width: 100%;
+  }
+
+  .kpi-value {
+    font-size: 1.75rem;
   }
 }
 
