@@ -115,6 +115,34 @@ export class DashboardLayoutComponent {
     this.authService.logout().subscribe();
   }
 
+  getUserInitials(): string {
+    const user = this.authService.currentUser();
+    if (!user?.email) return 'U';
+    const name = user.email.split('@')[0];
+    const parts = name.split('.');
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+    return name.substring(0, 2).toUpperCase();
+  }
+
+  getUserName(): string {
+    const user = this.authService.currentUser();
+    if (!user?.email) return 'Benutzer';
+    const name = user.email.split('@')[0];
+    const parts = name.split('.');
+    if (parts.length >= 2) {
+      return parts.map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' ');
+    }
+    return name.charAt(0).toUpperCase() + name.slice(1);
+  }
+
+  getUserRole(): string {
+    const user = this.authService.currentUser();
+    // TODO: Role aus User-Objekt holen wenn verfügbar
+    return 'Projektleiter';
+  }
+
   private updatePageTitle(url: string): void {
     const item = this.navItems.find(nav => url.startsWith(nav.route));
     if (item) {
