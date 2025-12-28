@@ -21,7 +21,7 @@
       [attr.stroke-dasharray]="circumference"
       [attr.stroke-dashoffset]="offset"
       stroke-linecap="round"
-      transform="rotate(-90, {{ getCenter() }}, {{ getCenter() }})"
+      [attr.transform]="getTransform()"
       class="progress-circle"
     />
   </svg>

@@ -56,5 +56,10 @@ export class DonutChartComponent implements OnChanges {
   getCenter(): number {
     return this.size / 2;
   }
+
+  getTransform(): string {
+    const center = this.getCenter();
+    return `rotate(-90 ${center} ${center})`;
+  }
 }
 
