@@ -1,8 +1,11 @@
 package com.changeready.service;
 
+import com.changeready.dto.stakeholder.StakeholderGroupCreateRequest;
 import com.changeready.dto.stakeholder.StakeholderGroupDetailResponse;
 import com.changeready.dto.stakeholder.StakeholderGroupResponse;
+import com.changeready.dto.stakeholder.StakeholderGroupUpdateRequest;
 import com.changeready.dto.stakeholder.StakeholderKpisResponse;
+import com.changeready.dto.stakeholder.StakeholderPersonCreateRequest;
 import com.changeready.dto.stakeholder.StakeholderPersonResponse;
 import com.changeready.security.UserPrincipal;
 
@@ -29,5 +32,20 @@ public interface StakeholderService {
 	 * Lädt Personen einer Stakeholder-Gruppe
 	 */
 	List<StakeholderPersonResponse> getGroupPersons(Long groupId, UserPrincipal userPrincipal);
+
+	/**
+	 * Erstellt eine neue Stakeholder-Gruppe
+	 */
+	StakeholderGroupResponse createGroup(StakeholderGroupCreateRequest request, UserPrincipal userPrincipal);
+
+	/**
+	 * Aktualisiert eine Stakeholder-Gruppe
+	 */
+	StakeholderGroupResponse updateGroup(Long groupId, StakeholderGroupUpdateRequest request, UserPrincipal userPrincipal);
+
+	/**
+	 * Fügt eine Person zu einer Stakeholder-Gruppe hinzu
+	 */
+	StakeholderPersonResponse addPerson(Long groupId, StakeholderPersonCreateRequest request, UserPrincipal userPrincipal);
 }
 
