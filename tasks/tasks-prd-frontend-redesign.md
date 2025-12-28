@@ -87,7 +87,7 @@
   - [x] 5.2 Reporting-Service erstellen: HTTP-Service für Reporting-Daten
   - [x] 5.3 Management Summary Section: Titel, Datum, 4 KPI-Cards, 5 Abteilungs-Cards
   - [x] 5.4 Line-Chart-Komponente erstellen: Readiness-Verlauf & Prognose Chart
-  - [ ] 5.5 Trend-Chart implementieren: Grüne Linie (Ist), orange gestrichelte Linie (Ziel)
+  - [x] 5.5 Trend-Chart implementieren: Grüne Linie (Ist), orange gestrichelte Linie (Ziel)
   - [ ] 5.6 Export-Funktionen: "Drucken" und "Report exportieren" Buttons im Header
   - [ ] 5.7 Empty States für Reporting: Wenn keine Trend-Daten vorhanden
 - [ ] 6.0 Backend-Endpoints implementieren

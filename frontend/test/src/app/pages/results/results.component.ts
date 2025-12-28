@@ -8,6 +8,9 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { SurveyService } from '../../services/survey.service';
 import { SurveyTemplate, SurveyResult, DepartmentResult, DEPARTMENT_DISPLAY_NAMES } from '../../models/survey.model';
 import { ReportingService } from '../../services/reporting.service';
+import { ManagementSummary, DepartmentReadiness, TrendChartData } from '../../models/reporting.model';
+import { LineChartComponent } from '../../components/line-chart/line-chart.component';
+import { ReportingService } from '../../services/reporting.service';
 import { ManagementSummary, DepartmentReadiness } from '../../models/reporting.model';
 
 @Component({
@@ -19,7 +22,8 @@ import { ManagementSummary, DepartmentReadiness } from '../../models/reporting.m
     MatTableModule,
     MatChipsModule,
     MatIconModule,
-    MatTabsModule
+    MatTabsModule,
+    LineChartComponent
   ],
   templateUrl: './results.component.html',
   styleUrl: './results.component.css'
@@ -34,6 +38,7 @@ export class ResultsComponent implements OnInit {
 
   managementSummary = signal<ManagementSummary | null>(null);
   departmentReadiness = signal<DepartmentReadiness[]>([]);
+  trendData = signal<TrendChartData | null>(null);
 
   displayedColumns: string[] = ['category', 'subcategory', 'average', 'answered', 'reverse'];
   readonly departmentDisplayNames = DEPARTMENT_DISPLAY_NAMES;
@@ -58,6 +63,12 @@ export class ResultsComponent implements OnInit {
     this.reportingService.getDepartmentReadiness().subscribe({
       next: (departments) => {
         this.departmentReadiness.set(departments);
+      }
+    });
+
+    this.reportingService.getTrendData().subscribe({
+      next: (trend) => {
+        this.trendData.set(trend);
       }
     });
   }
