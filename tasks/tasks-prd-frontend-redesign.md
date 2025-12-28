@@ -55,10 +55,10 @@
   - [x] 1.1 Sidebar umgestalten: Dunkelblaue Sidebar mit Logo "ChangeReady 360" (360 in grünem Badge)
   - [x] 1.2 Navigation-Items aktualisieren: Dashboard, Stakeholder, Assessment, Maßnahmen, Reporting
   - [x] 1.3 User-Profil in Sidebar: Avatar, Name, Rolle am unteren Rand
-  - [ ] 1.4 "POWERED BY Innovera Consulting" Footer in Sidebar hinzufügen
-  - [ ] 1.5 Header-Bar umgestalten: Firmenname mit Dropdown links, Suchleiste Mitte, Benachrichtigungen & User rechts
-  - [ ] 1.6 Action-Buttons im Header: "Aktualisieren" und "Report" Button hinzufügen
-  - [ ] 1.7 Responsive Design: Sidebar auf Mobile als Overlay, Grid-Layouts anpassen
+  - [x] 1.4 "POWERED BY Innovera Consulting" Footer in Sidebar hinzufügen
+  - [x] 1.5 Header-Bar umgestalten: Firmenname mit Dropdown links, Suchleiste Mitte, Benachrichtigungen & User rechts
+  - [x] 1.6 Action-Buttons im Header: "Aktualisieren" und "Report" Button hinzufügen
+  - [x] 1.7 Responsive Design: Sidebar auf Mobile als Overlay, Grid-Layouts anpassen
 - [ ] 2.0 Dashboard-Seite neu gestalten
   - [ ] 2.1 Dashboard-Model erstellen: Interfaces für KPIs, Readiness-Daten, Stakeholder-Gruppen
   - [ ] 2.2 Dashboard-Service erstellen: HTTP-Service für Backend-KPIs
