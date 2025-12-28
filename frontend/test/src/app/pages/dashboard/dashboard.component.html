@@ -6,8 +6,9 @@
     <div class="loading">Lade Dashboard...</div>
   } @else {
     <!-- KPI Cards Top Row -->
-    <div class="kpi-cards-grid">
-      @for (card of kpiCards; track card.title) {
+    @if (kpiCards.length > 0) {
+      <div class="kpi-cards-grid">
+        @for (card of kpiCards; track card.title) {
         <mat-card class="kpi-card" [class.clickable]="card.route" (click)="card.route && navigateToCard(card.route)">
           <div class="kpi-content">
             <div class="kpi-header">
@@ -28,8 +29,13 @@
             }
           </div>
         </mat-card>
-      }
-    </div>
+        }
+      </div>
+    } @else {
+      <div class="empty-kpis">
+        <p>Keine Dashboard-Daten verfügbar</p>
+      </div>
+    }
 
     <!-- Main Content Grid -->
     <div class="main-content-grid">

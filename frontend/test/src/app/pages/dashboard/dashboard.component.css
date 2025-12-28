@@ -440,6 +440,20 @@ mat-card {
   color: var(--gray-600);
 }
 
+.empty-kpis {
+  text-align: center;
+  padding: var(--spacing-2xl);
+  background-color: white;
+  border-radius: 8px;
+  color: var(--gray-600);
+  margin-bottom: var(--spacing-xl);
+}
+
+.empty-kpis p {
+  margin: 0;
+  font-size: 1rem;
+}
+
 .content-card {
   min-height: 280px;
 }
