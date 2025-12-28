@@ -1,14 +1,11 @@
 package com.changeready.service;
 
 import com.changeready.dto.dashboard.DashboardKpisResponse;
-import com.changeready.dto.dashboard.TrendDataPointResponse;
 import com.changeready.dto.dashboard.TrendDataResponse;
 import com.changeready.security.UserPrincipal;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class DashboardServiceImpl implements DashboardService {
