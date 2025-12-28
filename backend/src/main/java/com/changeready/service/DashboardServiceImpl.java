@@ -1,6 +1,7 @@
 package com.changeready.service;
 
 import com.changeready.dto.dashboard.DashboardKpisResponse;
+import com.changeready.dto.dashboard.TrendDataPointResponse;
 import com.changeready.dto.dashboard.TrendDataResponse;
 import com.changeready.entity.SurveyAnswer;
 import com.changeready.entity.SurveyInstance;
@@ -14,8 +15,11 @@ import com.changeready.repository.UserRepository;
 import com.changeready.security.UserPrincipal;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
