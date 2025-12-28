@@ -196,12 +196,8 @@ public class ReportingServiceImpl implements ReportingService {
 
 	@Override
 	public TrendDataResponse getTrendData(UserPrincipal userPrincipal) {
-		// TODO: Implementiere echte Trend-Daten aus historischen Survey-Ergebnissen
-		// Aktuell: Leere Liste zurückgeben
-		TrendDataResponse response = new TrendDataResponse();
-		response.setDataPoints(new ArrayList<>());
-		response.setInsight(null);
-		return response;
+		// Wiederverwendung der Dashboard-Logik
+		return dashboardService.getTrendData(userPrincipal);
 	}
 }
 

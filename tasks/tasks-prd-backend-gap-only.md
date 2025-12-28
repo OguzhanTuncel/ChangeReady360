@@ -108,7 +108,7 @@
   - [x] 6.2 DashboardServiceImpl.getTrendData implementieren: Historische Readiness-Daten aus Survey-Ergebnissen
   - [x] 6.3 ReportingServiceImpl.getManagementSummary implementieren: Echte Datenaggregation
   - [x] 6.4 ReportingServiceImpl.getDepartmentReadiness implementieren: Readiness pro Department aus Survey-Antworten
-  - [ ] 6.5 ReportingServiceImpl.getTrendData implementieren: Wiederverwendung von Dashboard-Logik
+  - [x] 6.5 ReportingServiceImpl.getTrendData implementieren: Wiederverwendung von Dashboard-Logik
   - [ ] 6.6 StakeholderServiceImpl.getGroups implementieren: Echte Gruppen-Daten mit berechneten Readiness-Werten
   - [ ] 6.7 StakeholderServiceImpl.getKpis implementieren: Aggregation aus allen Gruppen
   - [ ] 6.8 StakeholderServiceImpl.getGroupDetail implementieren: Detail-Daten mit Readiness-Historie
