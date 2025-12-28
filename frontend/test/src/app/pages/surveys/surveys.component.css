@@ -151,6 +151,43 @@
   color: var(--gray-700);
 }
 
+.assessment-start-section {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--spacing-xl);
+}
+
+.start-button {
+  background-color: var(--change-ready-green) !important;
+  color: white !important;
+  padding: var(--spacing-md) var(--spacing-2xl) !important;
+  font-size: 1.1rem !important;
+  font-weight: 600 !important;
+  border-radius: var(--radius-lg) !important;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  box-shadow: var(--shadow-md);
+  transition: all 0.2s;
+}
+
+.start-button:hover:not(:disabled) {
+  background-color: #4a8d6f !important;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.start-button:disabled {
+  background-color: rgba(86, 160, 128, 0.5) !important;
+  cursor: not-allowed;
+}
+
+.start-button mat-icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
 .section {
   margin-bottom: 3rem;
 }

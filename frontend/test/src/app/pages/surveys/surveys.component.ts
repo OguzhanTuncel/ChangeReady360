@@ -29,7 +29,10 @@ export class SurveysComponent implements OnInit {
   userInstances = signal<SurveyInstance[]>([]);
   isLoading = signal(true);
 
-  constructor(private surveyService: SurveyService) {}
+  constructor(
+    private surveyService: SurveyService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.loadData();
@@ -145,6 +148,14 @@ export class SurveysComponent implements OnInit {
     // Estimate: ~2 minutes per question
     const totalQuestions = this.getTotalQuestions();
     return Math.ceil(totalQuestions * 2);
+  }
+
+  startAssessment() {
+    const templates = this.activeTemplates();
+    if (templates.length > 0) {
+      // Navigate to survey start page with first available template
+      this.router.navigate(['/app/survey', templates[0].id, 'start']);
+    }
   }
 }
 

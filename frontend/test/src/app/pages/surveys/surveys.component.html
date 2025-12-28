@@ -70,6 +70,20 @@
     </mat-card>
   </div>
 
+  <!-- Assessment Start Button -->
+  <div class="assessment-start-section">
+    @if (activeTemplates().length > 0) {
+      <button 
+        mat-raised-button 
+        class="start-button" 
+        (click)="startAssessment()"
+        [disabled]="isLoading()">
+        <mat-icon>play_arrow</mat-icon>
+        Assessment starten
+      </button>
+    }
+  </div>
+
   @if (isLoading()) {
     <div class="loading">Lade Umfragen...</div>
   } @else {
