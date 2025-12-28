@@ -7,7 +7,6 @@ import com.changeready.dto.reporting.ManagementSummaryResponse;
 import com.changeready.dto.reporting.ReportingDataResponse;
 import com.changeready.entity.SurveyAnswer;
 import com.changeready.entity.SurveyInstance;
-import com.changeready.entity.StakeholderPerson;
 import com.changeready.repository.SurveyInstanceRepository;
 import com.changeready.repository.SurveyAnswerRepository;
 import com.changeready.repository.StakeholderPersonRepository;
