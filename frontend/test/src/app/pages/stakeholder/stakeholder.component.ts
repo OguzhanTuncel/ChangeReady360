@@ -72,6 +72,11 @@ export class StakeholderComponent implements OnInit {
     });
   }
 
+  addStakeholder() {
+    // TODO: Implementieren - Dialog öffnen oder zu Formular navigieren
+    console.log('Add stakeholder clicked');
+  }
+
   loadCompanies() {
     this.isLoading.set(true);
     this.companyService.getCompanies().subscribe({
