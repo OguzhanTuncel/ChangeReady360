@@ -59,7 +59,7 @@
   - [x] 1.5 Header-Bar umgestalten: Firmenname mit Dropdown links, Suchleiste Mitte, Benachrichtigungen & User rechts
   - [x] 1.6 Action-Buttons im Header: "Aktualisieren" und "Report" Button hinzufügen
   - [x] 1.7 Responsive Design: Sidebar auf Mobile als Overlay, Grid-Layouts anpassen
-- [ ] 2.0 Dashboard-Seite neu gestalten
+- [x] 2.0 Dashboard-Seite neu gestalten
   - [x] 2.1 Dashboard-Model erstellen: Interfaces für KPIs, Readiness-Daten, Stakeholder-Gruppen
   - [x] 2.2 Dashboard-Service erstellen: HTTP-Service für Backend-KPIs
   - [x] 2.3 KPI-Cards oben implementieren: 4 Cards (Readiness Score, Stakeholder, Kritiker, Maßnahmen)
