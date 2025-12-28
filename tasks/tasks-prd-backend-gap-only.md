@@ -81,7 +81,7 @@
   - [x] 1.5 SurveyAnswerRepository erstellen: findByInstanceId(Long instanceId)
 - [ ] 2.0 Survey Service & Controller implementieren
   - [x] 2.1 Survey DTOs erstellen: SurveyTemplateResponse (JSON parsen), SurveyInstanceResponse, SurveyInstanceDetailResponse, CreateRequest, AnswerUpdateRequest
-  - [ ] 2.2 SurveyService Interface erstellen: createInstance, getInstances, getInstance, saveAnswers, submitInstance, getTemplates
+  - [x] 2.2 SurveyService Interface erstellen: createInstance, getInstances, getInstance, saveAnswers, submitInstance, getTemplates
   - [ ] 2.3 SurveyServiceImpl implementieren: Alle Methoden mit Company-Isolation und Validierung
   - [ ] 2.4 SurveyController erstellen: POST /instances, GET /instances, GET /instances/{id}, PUT /instances/{id}/answers, POST /instances/{id}/submit, GET /templates
   - [ ] 2.5 Security & Validierung: @PreAuthorize für COMPANY_USER, Validierung von Requests
