@@ -86,7 +86,7 @@
   - [x] 2.4 SurveyController erstellen: POST /instances, GET /instances, GET /instances/{id}, PUT /instances/{id}/answers, POST /instances/{id}/submit, GET /templates
   - [x] 2.5 Security & Validierung: @PreAuthorize für COMPANY_USER, Validierung von Requests
 - [ ] 3.0 Stakeholder Entities & Repositories erstellen
-  - [ ] 3.1 StakeholderGroup Entity erstellen: Felder (id, name, icon String, companyId FK, impact enum, description optional, timestamps)
+  - [x] 3.1 StakeholderGroup Entity erstellen: Felder (id, name, icon String, companyId FK, impact enum, description optional, timestamps)
   - [ ] 3.2 StakeholderPerson Entity erstellen: Felder (id, groupId FK, name, role String, email optional, createdAt)
   - [ ] 3.3 StakeholderGroupRepository erstellen: findByCompanyId, findByIdAndCompanyId
   - [ ] 3.4 StakeholderPersonRepository erstellen: findByGroupId
