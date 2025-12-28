@@ -104,7 +104,7 @@
   - [x] 5.4 Trend-Berechnung: Vergleich aktueller Wert mit Wert von vor 30 Tagen (Integer: positiv/negativ/0)
   - [x] 5.5 Status-Berechnung: ready (>=75%), attention (50-75%), critical (<50%)
 - [ ] 6.0 Dashboard & Reporting Services mit echten Daten implementieren
-  - [ ] 6.1 DashboardServiceImpl.getKpis implementieren: Echte Datenaggregation aus SurveyInstances, StakeholderGroups, Measures
+  - [x] 6.1 DashboardServiceImpl.getKpis implementieren: Echte Datenaggregation aus SurveyInstances, StakeholderGroups, Measures
   - [ ] 6.2 DashboardServiceImpl.getTrendData implementieren: Historische Readiness-Daten aus Survey-Ergebnissen
   - [ ] 6.3 ReportingServiceImpl.getManagementSummary implementieren: Echte Datenaggregation
   - [ ] 6.4 ReportingServiceImpl.getDepartmentReadiness implementieren: Readiness pro Department aus Survey-Antworten
