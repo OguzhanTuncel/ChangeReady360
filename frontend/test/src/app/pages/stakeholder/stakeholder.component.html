@@ -1,9 +1,13 @@
 <div class="stakeholder-page">
-  <div class="page-header">
-    <h1>Stakeholder</h1>
-    <p class="description-text">
-      Verwalten Sie Unternehmen und wählen Sie das aktuelle Unternehmen für Umfragen und Auswertungen aus.
-    </p>
+  <div class="page-header-section">
+    <div class="header-content">
+      <h1 class="page-header">Stakeholder-Management</h1>
+      <p class="page-subtitle">Übersicht aller betroffenen Gruppen und deren Change-Readiness</p>
+    </div>
+    <button mat-raised-button color="primary" class="add-button" (click)="addStakeholder()">
+      <mat-icon>add</mat-icon>
+      Stakeholder hinzufügen
+    </button>
   </div>
 
   @if (isLoading()) {
