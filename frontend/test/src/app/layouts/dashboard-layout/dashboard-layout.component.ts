@@ -50,10 +50,10 @@ export class DashboardLayoutComponent {
 
   navItems: NavItem[] = [
     { label: 'Dashboard', route: '/app/dashboard', icon: 'dashboard' },
-    { label: 'Umfragen', route: '/app/surveys', icon: 'assignment' },
-    { label: 'Ergebnisse', route: '/app/results', icon: 'bar_chart' },
     { label: 'Stakeholder', route: '/app/stakeholder', icon: 'people' },
-    { label: 'Einstellungen', route: '/app/settings', icon: 'settings' }
+    { label: 'Assessment', route: '/app/surveys', icon: 'assignment' },
+    { label: 'Maßnahmen', route: '/app/measures', icon: 'checklist' },
+    { label: 'Reporting', route: '/app/results', icon: 'bar_chart' }
   ];
 
   constructor(

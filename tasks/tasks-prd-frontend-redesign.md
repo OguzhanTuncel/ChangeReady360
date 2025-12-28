@@ -53,7 +53,7 @@
 
 - [ ] 1.0 Layout & Struktur umgestalten
   - [x] 1.1 Sidebar umgestalten: Dunkelblaue Sidebar mit Logo "ChangeReady 360" (360 in grünem Badge)
-  - [ ] 1.2 Navigation-Items aktualisieren: Dashboard, Stakeholder, Assessment, Maßnahmen, Reporting
+  - [x] 1.2 Navigation-Items aktualisieren: Dashboard, Stakeholder, Assessment, Maßnahmen, Reporting
   - [ ] 1.3 User-Profil in Sidebar: Avatar, Name, Rolle am unteren Rand
   - [ ] 1.4 "POWERED BY Innovera Consulting" Footer in Sidebar hinzufügen
   - [ ] 1.5 Header-Bar umgestalten: Firmenname mit Dropdown links, Suchleiste Mitte, Benachrichtigungen & User rechts
