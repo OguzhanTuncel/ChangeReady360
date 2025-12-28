@@ -1,16 +1,106 @@
 <div class="stakeholder-page">
-  <div class="page-header-section">
-    <div class="header-content">
-      <h1 class="page-header">Stakeholder-Management</h1>
-      <p class="page-subtitle">Übersicht aller betroffenen Gruppen und deren Change-Readiness</p>
-    </div>
-    <button mat-raised-button color="primary" class="add-button" (click)="addStakeholder()">
-      <mat-icon>add</mat-icon>
-      Stakeholder hinzufügen
-    </button>
-  </div>
+  @if (showDetailView() && selectedGroup()) {
+    <!-- Detail View -->
+    <div class="detail-view">
+      <button mat-button class="back-button" (click)="backToOverview()">
+        <mat-icon>arrow_back</mat-icon>
+        Zurück zur Übersicht
+      </button>
+      
+      <div class="detail-header">
+        <mat-icon class="detail-icon">{{ selectedGroup()!.icon }}</mat-icon>
+        <div class="detail-title-section">
+          <h1 class="detail-title">{{ selectedGroup()!.name }}</h1>
+          <p class="detail-impact">Betroffenheit: {{ getImpactText(selectedGroup()!.impact) }}</p>
+        </div>
+        <span class="status-badge" [class]="getStatusBadgeClass(selectedGroup()!.status)">
+          {{ getStatusBadgeText(selectedGroup()!.status) }}
+        </span>
+      </div>
 
-  @if (isLoading()) {
+      <div class="detail-stats-grid">
+        <mat-card class="stat-card">
+          <div class="stat-content">
+            <span class="stat-label">Promoter</span>
+            <span class="stat-value promoter-value">{{ selectedGroup()!.promoters }}</span>
+          </div>
+        </mat-card>
+        <mat-card class="stat-card">
+          <div class="stat-content">
+            <span class="stat-label">Neutral</span>
+            <span class="stat-value neutral-value">{{ selectedGroup()!.neutrals }}</span>
+          </div>
+        </mat-card>
+        <mat-card class="stat-card">
+          <div class="stat-content">
+            <span class="stat-label">Kritiker</span>
+            <span class="stat-value critic-value">{{ selectedGroup()!.critics }}</span>
+          </div>
+        </mat-card>
+      </div>
+
+      <mat-card class="readiness-gauge-card">
+        <mat-card-header>
+          <mat-card-title>Readiness</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="gauge-wrapper">
+            <app-donut-chart 
+              [value]="selectedGroup()!.readiness" 
+              [size]="200" 
+              [strokeWidth]="24">
+            </app-donut-chart>
+            <div class="gauge-label">{{ selectedGroup()!.readiness }}%</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      @if (groupPersons().length > 0) {
+        <mat-card class="persons-card">
+          <mat-card-header>
+            <mat-card-title>Stakeholder-Personen</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="persons-list">
+              @for (person of groupPersons(); track person.id) {
+                <div class="person-item">
+                  <div class="person-info">
+                    <span class="person-name">{{ person.name }}</span>
+                    @if (person.role) {
+                      <span class="person-role">{{ person.role }}</span>
+                    }
+                  </div>
+                  <span class="person-category" [class]="'category-' + person.category">
+                    {{ person.category === 'promoter' ? 'Promoter' : person.category === 'neutral' ? 'Neutral' : 'Kritiker' }}
+                  </span>
+                </div>
+              }
+            </div>
+          </mat-card-content>
+        </mat-card>
+      } @else {
+        <mat-card class="empty-persons-card">
+          <mat-card-content>
+            <p>Noch keine Stakeholder-Personen verfügbar</p>
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+  } @else {
+    <!-- Overview View -->
+    <div class="overview-view">
+      <div class="page-header-section">
+        <div class="header-content">
+          <h1 class="page-header">Stakeholder-Management</h1>
+          <p class="page-subtitle">Übersicht aller betroffenen Gruppen und deren Change-Readiness</p>
+        </div>
+        <button mat-raised-button color="primary" class="add-button" (click)="addStakeholder()">
+          <mat-icon>add</mat-icon>
+          Stakeholder hinzufügen
+        </button>
+      </div>
+
+      @if (isLoading()) {
     <div class="loading">Lade Stakeholder-Daten...</div>
   } @else {
     <!-- KPI Cards -->
