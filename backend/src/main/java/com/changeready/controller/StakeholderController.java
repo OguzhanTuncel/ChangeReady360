@@ -1,19 +1,20 @@
 package com.changeready.controller;
 
+import com.changeready.dto.stakeholder.StakeholderGroupCreateRequest;
 import com.changeready.dto.stakeholder.StakeholderGroupDetailResponse;
 import com.changeready.dto.stakeholder.StakeholderGroupResponse;
+import com.changeready.dto.stakeholder.StakeholderGroupUpdateRequest;
 import com.changeready.dto.stakeholder.StakeholderKpisResponse;
+import com.changeready.dto.stakeholder.StakeholderPersonCreateRequest;
 import com.changeready.dto.stakeholder.StakeholderPersonResponse;
 import com.changeready.security.UserPrincipal;
 import com.changeready.service.StakeholderService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -62,6 +63,57 @@ public class StakeholderController {
 		
 		List<StakeholderPersonResponse> persons = stakeholderService.getGroupPersons(id, userPrincipal);
 		return ResponseEntity.ok(persons);
+	}
+
+	/**
+	 * POST /api/v1/stakeholder/groups
+	 * Erstellt eine neue Stakeholder-Gruppe
+	 * Nur COMPANY_ADMIN darf Gruppen erstellen
+	 */
+	@PostMapping("/groups")
+	@PreAuthorize("hasRole('COMPANY_ADMIN')")
+	public ResponseEntity<StakeholderGroupResponse> createGroup(@Valid @RequestBody StakeholderGroupCreateRequest request) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+		
+		StakeholderGroupResponse group = stakeholderService.createGroup(request, userPrincipal);
+		return ResponseEntity.ok(group);
+	}
+
+	/**
+	 * PUT /api/v1/stakeholder/groups/{id}
+	 * Aktualisiert eine Stakeholder-Gruppe
+	 * Nur COMPANY_ADMIN darf Gruppen aktualisieren
+	 */
+	@PutMapping("/groups/{id}")
+	@PreAuthorize("hasRole('COMPANY_ADMIN')")
+	public ResponseEntity<StakeholderGroupResponse> updateGroup(
+		@PathVariable Long id,
+		@Valid @RequestBody StakeholderGroupUpdateRequest request
+	) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+		
+		StakeholderGroupResponse group = stakeholderService.updateGroup(id, request, userPrincipal);
+		return ResponseEntity.ok(group);
+	}
+
+	/**
+	 * POST /api/v1/stakeholder/groups/{id}/persons
+	 * Fügt eine Person zu einer Stakeholder-Gruppe hinzu
+	 * Nur COMPANY_ADMIN darf Personen hinzufügen
+	 */
+	@PostMapping("/groups/{id}/persons")
+	@PreAuthorize("hasRole('COMPANY_ADMIN')")
+	public ResponseEntity<StakeholderPersonResponse> addPerson(
+		@PathVariable Long id,
+		@Valid @RequestBody StakeholderPersonCreateRequest request
+	) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+		
+		StakeholderPersonResponse person = stakeholderService.addPerson(id, request, userPrincipal);
+		return ResponseEntity.ok(person);
 	}
 }
 
