@@ -106,7 +106,7 @@
 - [ ] 6.0 Dashboard & Reporting Services mit echten Daten implementieren
   - [x] 6.1 DashboardServiceImpl.getKpis implementieren: Echte Datenaggregation aus SurveyInstances, StakeholderGroups, Measures
   - [x] 6.2 DashboardServiceImpl.getTrendData implementieren: Historische Readiness-Daten aus Survey-Ergebnissen
-  - [ ] 6.3 ReportingServiceImpl.getManagementSummary implementieren: Echte Datenaggregation
+  - [x] 6.3 ReportingServiceImpl.getManagementSummary implementieren: Echte Datenaggregation
   - [ ] 6.4 ReportingServiceImpl.getDepartmentReadiness implementieren: Readiness pro Department aus Survey-Antworten
   - [ ] 6.5 ReportingServiceImpl.getTrendData implementieren: Wiederverwendung von Dashboard-Logik
   - [ ] 6.6 StakeholderServiceImpl.getGroups implementieren: Echte Gruppen-Daten mit berechneten Readiness-Werten
