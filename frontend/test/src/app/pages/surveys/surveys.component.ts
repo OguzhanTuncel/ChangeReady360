@@ -108,5 +108,37 @@ export class SurveysComponent implements OnInit {
     const template = templates[0];
     return template.categories.length;
   }
+
+  getQuestionsForAdkarArea(area: 'KNOWLEDGE' | 'ABILITY' | 'DESIRE' | 'REINFORCEMENT'): number {
+    const templates = this.activeTemplates();
+    if (templates.length === 0) return 0;
+    
+    // Map ADKAR areas to category names (assuming categories match ADKAR structure)
+    const areaMap: Record<string, string[]> = {
+      'KNOWLEDGE': ['Wissen', 'Knowledge', 'Wissen (Knowledge)'],
+      'ABILITY': ['Fähigkeit', 'Ability', 'Fähigkeit (Ability)'],
+      'DESIRE': ['Motivation', 'Desire', 'Motivation (Desire)'],
+      'REINFORCEMENT': ['Kommunikation', 'Reinforcement', 'Kommunikation (Reinforcement)']
+    };
+    
+    const template = templates[0];
+    const categoryNames = areaMap[area] || [];
+    let count = 0;
+    
+    template.categories.forEach(category => {
+      if (categoryNames.some(name => category.name.includes(name))) {
+        category.subcategories.forEach(subcategory => {
+          count += subcategory.questions.length;
+        });
+      }
+    });
+    
+    // If no exact match, distribute questions evenly across 4 areas
+    if (count === 0) {
+      return Math.ceil(this.getTotalQuestions() / 4);
+    }
+    
+    return count;
+  }
 }
 

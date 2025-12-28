@@ -78,7 +78,7 @@
   - [x] 3.8 Empty States für Stakeholder: Wenn keine Gruppen oder Daten vorhanden
 - [ ] 4.0 Assessment-Seite neu gestalten
   - [x] 4.1 Assessment-Start-Screen: Titel, Untertitel, zentrale Card mit Icon und Beschreibung
-  - [ ] 4.2 ADKAR-Bereiche Cards: 4 Cards für Wissen, Fähigkeit, Motivation, Kommunikation
+  - [x] 4.2 ADKAR-Bereiche Cards: 4 Cards für Wissen, Fähigkeit, Motivation, Kommunikation
   - [ ] 4.3 Assessment-Info: Geschätzte Dauer, Zwischenspeicherung möglich
   - [ ] 4.4 Assessment-Start-Button: Grüner Button mit Play-Icon
   - [ ] 4.5 ADKAR-Modell Integration: Survey-Templates müssen ADKAR-Struktur unterstützen

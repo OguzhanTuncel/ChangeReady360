@@ -20,6 +20,40 @@
     </mat-card>
   </div>
 
+  <!-- ADKAR-Bereiche Cards -->
+  <div class="adkar-areas-section">
+    <div class="adkar-grid">
+      <mat-card class="adkar-card">
+        <div class="adkar-content">
+          <mat-icon class="adkar-icon">info</mat-icon>
+          <h3 class="adkar-title">Wissen</h3>
+          <p class="adkar-questions">{{ getQuestionsForAdkarArea('KNOWLEDGE') }} Fragen</p>
+        </div>
+      </mat-card>
+      <mat-card class="adkar-card">
+        <div class="adkar-content">
+          <mat-icon class="adkar-icon">bolt</mat-icon>
+          <h3 class="adkar-title">Fähigkeit</h3>
+          <p class="adkar-questions">{{ getQuestionsForAdkarArea('ABILITY') }} Fragen</p>
+        </div>
+      </mat-card>
+      <mat-card class="adkar-card">
+        <div class="adkar-content">
+          <mat-icon class="adkar-icon">flag</mat-icon>
+          <h3 class="adkar-title">Motivation</h3>
+          <p class="adkar-questions">{{ getQuestionsForAdkarArea('DESIRE') }} Fragen</p>
+        </div>
+      </mat-card>
+      <mat-card class="adkar-card">
+        <div class="adkar-content">
+          <mat-icon class="adkar-icon">people</mat-icon>
+          <h3 class="adkar-title">Kommunikation</h3>
+          <p class="adkar-questions">{{ getQuestionsForAdkarArea('REINFORCEMENT') }} Fragen</p>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+
   @if (isLoading()) {
     <div class="loading">Lade Umfragen...</div>
   } @else {
