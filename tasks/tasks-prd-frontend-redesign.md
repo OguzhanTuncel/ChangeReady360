@@ -91,7 +91,7 @@
   - [x] 5.6 Export-Funktionen: "Drucken" und "Report exportieren" Buttons im Header
   - [x] 5.7 Empty States für Reporting: Wenn keine Trend-Daten vorhanden
 - [ ] 6.0 Backend-Endpoints implementieren
-  - [ ] 6.1 Dashboard DTOs erstellen: DashboardKpisResponse, TrendDataResponse
+  - [x] 6.1 Dashboard DTOs erstellen: DashboardKpisResponse, TrendDataResponse
   - [ ] 6.2 Dashboard Service & Controller: GET /api/v1/dashboard/kpis Endpoint
   - [ ] 6.3 Stakeholder DTOs erstellen: StakeholderGroupResponse, StakeholderGroupDetailResponse
   - [ ] 6.4 Stakeholder Service & Controller: GET /api/v1/stakeholder/groups Endpoints
