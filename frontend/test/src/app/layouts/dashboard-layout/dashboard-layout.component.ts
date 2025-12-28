@@ -39,7 +39,8 @@ interface NavItem {
     MatFormFieldModule,
     MatBadgeModule,
     MatMenuModule,
-    MatInputModule
+    MatInputModule,
+    MatTooltipModule
   ],
   templateUrl: './dashboard-layout.component.html',
   styleUrl: './dashboard-layout.component.css'
