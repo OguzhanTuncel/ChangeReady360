@@ -83,7 +83,7 @@
   - [x] 2.1 Survey DTOs erstellen: SurveyTemplateResponse (JSON parsen), SurveyInstanceResponse, SurveyInstanceDetailResponse, CreateRequest, AnswerUpdateRequest
   - [x] 2.2 SurveyService Interface erstellen: createInstance, getInstances, getInstance, saveAnswers, submitInstance, getTemplates
   - [x] 2.3 SurveyServiceImpl implementieren: Alle Methoden mit Company-Isolation und Validierung
-  - [ ] 2.4 SurveyController erstellen: POST /instances, GET /instances, GET /instances/{id}, PUT /instances/{id}/answers, POST /instances/{id}/submit, GET /templates
+  - [x] 2.4 SurveyController erstellen: POST /instances, GET /instances, GET /instances/{id}, PUT /instances/{id}/answers, POST /instances/{id}/submit, GET /templates
   - [ ] 2.5 Security & Validierung: @PreAuthorize für COMPANY_USER, Validierung von Requests
 - [ ] 3.0 Stakeholder Entities & Repositories erstellen
   - [ ] 3.1 StakeholderGroup Entity erstellen: Felder (id, name, icon String, companyId FK, impact enum, description optional, timestamps)
