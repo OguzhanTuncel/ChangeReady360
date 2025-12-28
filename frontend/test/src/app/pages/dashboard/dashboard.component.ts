@@ -8,6 +8,8 @@ import { MatListModule } from '@angular/material/list';
 import { MatChipsModule } from '@angular/material/chips';
 import { SurveyService } from '../../services/survey.service';
 import { SurveyInstance, SurveyResponse } from '../../models/survey.model';
+import { DashboardService } from '../../services/dashboard.service';
+import { DashboardKpis } from '../../models/dashboard.model';
 
 interface StatCard {
   title: string;
@@ -46,8 +48,11 @@ export class DashboardComponent implements OnInit {
   instances = signal<SurveyInstance[]>([]);
   responses = signal<SurveyResponse[]>([]);
   isLoading = signal(true);
+  kpis = signal<DashboardKpis | null>(null);
+
   constructor(
     private surveyService: SurveyService,
+    private dashboardService: DashboardService,
     private router: Router
   ) {}
 
@@ -58,6 +63,13 @@ export class DashboardComponent implements OnInit {
   loadData() {
     this.isLoading.set(true);
     
+    // Load Dashboard KPIs
+    this.dashboardService.getKpis().subscribe({
+      next: (kpis) => {
+        this.kpis.set(kpis);
+      }
+    });
+
     this.surveyService.getUserInstances().subscribe({
       next: (instances) => {
         this.instances.set(instances);
@@ -72,46 +84,59 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  get statCards(): StatCard[] {
-    const openInstances = this.getOpenInstances();
-    const completedInstances = this.getCompletedInstances();
-    const totalResponses = this.responses().length;
-    const overallScore = this.calculateOverallScore();
+  get kpiCards(): StatCard[] {
+    const kpisData = this.kpis();
+    if (!kpisData) {
+      return [];
+    }
 
     return [
       {
-        title: 'Aktive Umfragen',
-        value: openInstances.length,
-        icon: 'assignment',
-        color: 'primary',
-        route: '/app/surveys',
-        change: openInstances.length > 0 ? `${openInstances.length} offen` : 'Keine offenen Umfragen'
-      },
-      {
-        title: 'Abgeschlossene Analysen',
-        value: completedInstances.length,
-        icon: 'check_circle',
-        color: 'primary',
-        route: '/app/surveys',
-        change: completedInstances.length > 0 ? `${completedInstances.length} abgeschlossen` : 'Keine abgeschlossene Analyse'
-      },
-      {
-        title: 'Durchschnittlicher Score',
-        value: `${overallScore}%`,
+        title: 'Readiness Score',
+        value: `${kpisData.readinessScore}%`,
         icon: 'trending_up',
         color: 'primary',
         route: '/app/results',
-        change: totalResponses > 0 ? `Basierend auf ${totalResponses} Antworten` : 'Noch keine Daten'
+        change: kpisData.readinessTrend !== 0 
+          ? `${kpisData.readinessTrend > 0 ? '+' : ''}${kpisData.readinessTrend}%`
+          : undefined
       },
       {
-        title: 'Antworten',
-        value: totalResponses,
+        title: 'Stakeholder',
+        value: kpisData.stakeholderCount,
         icon: 'people',
         color: 'primary',
-        route: '/app/surveys',
-        change: totalResponses > 0 ? `${totalResponses} abgegeben` : 'Keine offenen Antworten'
+        route: '/app/stakeholder',
+        change: kpisData.stakeholderGroupsCount > 0 
+          ? `in ${kpisData.stakeholderGroupsCount} Gruppen`
+          : undefined
+      },
+      {
+        title: 'Kritiker',
+        value: kpisData.criticsCount,
+        icon: 'info',
+        color: 'warn',
+        route: '/app/stakeholder',
+        change: kpisData.criticsCount > 0 
+          ? 'benötigen Aufmerksamkeit'
+          : undefined
+      },
+      {
+        title: 'Offene Maßnahmen',
+        value: kpisData.openMeasuresCount,
+        icon: 'visibility',
+        color: 'primary',
+        route: undefined, // TODO: Route zu Maßnahmen-Seite wenn vorhanden
+        change: kpisData.overdueMeasuresCount > 0 
+          ? `davon ${kpisData.overdueMeasuresCount} überfällig`
+          : undefined
       }
     ];
+  }
+
+  get statCards(): StatCard[] {
+    // Legacy method - wird später entfernt wenn alles auf kpiCards umgestellt ist
+    return this.kpiCards;
   }
 
   get recentActivities(): Activity[] {
@@ -285,6 +310,17 @@ export class DashboardComponent implements OnInit {
     } else {
       return instances.filter(i => i.submittedAt).length;
     }
+  }
+
+  getCurrentDate(): string {
+    const date = new Date();
+    const options: Intl.DateTimeFormatOptions = { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    };
+    return date.toLocaleDateString('de-DE', options);
   }
 }
 

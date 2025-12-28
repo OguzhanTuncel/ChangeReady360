@@ -1,29 +1,31 @@
 <div class="dashboard-page">
-  <h1 class="page-header">Dashboard</h1>
-
-  <!-- Description Box -->
-  <div class="description-box">
-    Dieses Dashboard bietet Ihnen einen Überblick über Ihre aktuellen Change-Aktivitäten und dient als zentraler Einstiegspunkt.
-  </div>
+  <h1 class="page-header">Change-Readiness Dashboard</h1>
+  <p class="page-subtitle">{{ getCurrentDate() }}</p>
 
   @if (isLoading()) {
     <div class="loading">Lade Dashboard...</div>
   } @else {
-    <!-- Statistics Cards -->
-    <div class="stats-grid">
-      @for (card of statCards; track card.title) {
-        <mat-card class="stat-card" [class.clickable]="card.route" (click)="card.route && navigateToCard(card.route)">
-          <div class="stat-content">
-            <div class="stat-icon">
-              <mat-icon>{{ card.icon }}</mat-icon>
+    <!-- KPI Cards Top Row -->
+    <div class="kpi-cards-grid">
+      @for (card of kpiCards; track card.title) {
+        <mat-card class="kpi-card" [class.clickable]="card.route" (click)="card.route && navigateToCard(card.route)">
+          <div class="kpi-content">
+            <div class="kpi-header">
+              <mat-icon class="kpi-icon">{{ card.icon }}</mat-icon>
+              <span class="kpi-title">{{ card.title }}</span>
             </div>
-            <div class="stat-details">
-              <div class="stat-value">{{ card.value }}</div>
-              <div class="stat-title">{{ card.title }}</div>
-              @if (card.change) {
-                <div class="stat-change">{{ card.change }}</div>
-              }
-            </div>
+            <div class="kpi-value">{{ card.value }}</div>
+            @if (card.change) {
+              <div class="kpi-change" [class.positive]="card.change.startsWith('+')" [class.negative]="card.change.startsWith('-')">
+                {{ card.change }}
+              </div>
+            } @else if (card.title === 'Stakeholder' && kpis()?.stakeholderGroupsCount) {
+              <div class="kpi-subtitle">in {{ kpis()!.stakeholderGroupsCount }} Gruppen</div>
+            } @else if (card.title === 'Kritiker' && kpis()?.criticsCount && kpis()!.criticsCount > 0) {
+              <div class="kpi-subtitle">benötigen Aufmerksamkeit</div>
+            } @else if (card.title === 'Offene Maßnahmen' && kpis()?.overdueMeasuresCount && kpis()!.overdueMeasuresCount > 0) {
+              <div class="kpi-subtitle">davon {{ kpis()!.overdueMeasuresCount }} überfällig</div>
+            }
           </div>
         </mat-card>
       }
