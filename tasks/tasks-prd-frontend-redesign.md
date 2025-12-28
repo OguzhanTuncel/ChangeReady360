@@ -93,7 +93,7 @@
 - [ ] 6.0 Backend-Endpoints implementieren
   - [x] 6.1 Dashboard DTOs erstellen: DashboardKpisResponse, TrendDataResponse
   - [x] 6.2 Dashboard Service & Controller: GET /api/v1/dashboard/kpis Endpoint
-  - [ ] 6.3 Stakeholder DTOs erstellen: StakeholderGroupResponse, StakeholderGroupDetailResponse
+  - [x] 6.3 Stakeholder DTOs erstellen: StakeholderGroupResponse, StakeholderGroupDetailResponse
   - [ ] 6.4 Stakeholder Service & Controller: GET /api/v1/stakeholder/groups Endpoints
   - [ ] 6.5 Reporting Service & Controller: GET /api/v1/reporting/trends Endpoint
   - [ ] 6.6 Maßnahmen Entity & Repository: Falls nicht vorhanden, Measure Entity erstellen
