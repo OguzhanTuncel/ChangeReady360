@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -168,7 +169,7 @@ public class ReportingServiceImpl implements ReportingService {
 				String color = getReadinessColor(readiness);
 				
 				DepartmentReadinessResponse response = new DepartmentReadinessResponse();
-				response.setId(department.name());
+				response.setId(department.name()); // Department name als ID (z.B. "EINKAUF")
 				response.setName(department.getDisplayName());
 				response.setReadiness(readiness);
 				response.setColor(color);

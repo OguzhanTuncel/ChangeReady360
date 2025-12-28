@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class DepartmentReadinessResponse {
 
-	private Long id;
+	private String id; // Department enum name (z.B. "EINKAUF")
 	private String name;
 	private Double readiness; // Readiness in Prozent (0-100)
 	private String color; // Farbcodierung für Visualisierung (z.B. "#56A080")
