@@ -66,11 +66,20 @@
         }
       </mat-nav-list>
 
+      <!-- User Profile Section -->
+      <div class="user-profile-section">
+        <div class="user-avatar">
+          {{ getUserInitials() }}
+        </div>
+        <div class="user-info">
+          <div class="user-name">{{ getUserName() }}</div>
+          <div class="user-role">{{ getUserRole() }}</div>
+        </div>
+      </div>
+
+      <!-- Footer -->
       <div class="sidenav-footer">
-        <button mat-button class="logout-button" (click)="logout()">
-          <mat-icon>logout</mat-icon>
-          <span>Abmelden</span>
-        </button>
+        <div class="powered-by">POWERED BY Innovera Consulting</div>
       </div>
     </mat-sidenav>
 
