@@ -441,6 +441,50 @@
   color: var(--gray-600);
 }
 
+.empty-kpis-message {
+  text-align: center;
+  padding: var(--spacing-xl);
+  background-color: white;
+  border-radius: 8px;
+  color: var(--gray-600);
+  margin-bottom: var(--spacing-xl);
+}
+
+.empty-kpis-message p {
+  margin: 0;
+  font-size: 1rem;
+}
+
+/* Responsive for groups grid */
+@media (max-width: 1200px) {
+  .groups-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .kpi-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .detail-stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .kpi-cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .page-header-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .add-button {
+    width: 100%;
+  }
+}
+
 .selected-company-card {
   margin-bottom: 2rem;
   background-color: white;
