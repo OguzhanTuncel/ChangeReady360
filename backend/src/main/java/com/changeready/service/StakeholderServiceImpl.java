@@ -17,6 +17,7 @@ import com.changeready.security.UserPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,17 +40,32 @@ public class StakeholderServiceImpl implements StakeholderService {
 
 	@Override
 	public List<StakeholderGroupResponse> getGroups(UserPrincipal userPrincipal) {
-		// TODO: Implementiere echte Daten aus Stakeholder Entities mit Readiness-Berechnung
-		// Aktuell: Leere Liste zurückgeben
-		return new ArrayList<>();
+		List<StakeholderGroup> groups = groupRepository.findByCompanyId(userPrincipal.getCompanyId());
+		
+		return groups.stream()
+			.map(group -> {
+				StakeholderGroupResponse response = toGroupResponse(group);
+				// Participant count aus Personen berechnen
+				int participantCount = personRepository.findByGroupId(group.getId()).size();
+				response.setParticipantCount(participantCount);
+				// TODO: Readiness, trend, promoters, neutrals, critics, status werden in Task 5.0 berechnet
+				return response;
+			})
+			.collect(java.util.stream.Collectors.toList());
 	}
 
 	@Override
 	public StakeholderKpisResponse getKpis(UserPrincipal userPrincipal) {
-		// TODO: Implementiere echte KPI-Berechnung aus Stakeholder Daten
-		// Aktuell: Platzhalter-Daten zurückgeben
+		List<StakeholderGroup> groups = groupRepository.findByCompanyId(userPrincipal.getCompanyId());
+		
+		int total = 0;
+		for (StakeholderGroup group : groups) {
+			total += personRepository.findByGroupId(group.getId()).size();
+		}
+		
 		StakeholderKpisResponse response = new StakeholderKpisResponse();
-		response.setTotal(0);
+		response.setTotal(total);
+		// TODO: promoters, neutrals, critics werden in Task 5.0 aus Readiness-Berechnung abgeleitet
 		response.setPromoters(0);
 		response.setNeutrals(0);
 		response.setCritics(0);
@@ -58,16 +74,50 @@ public class StakeholderServiceImpl implements StakeholderService {
 
 	@Override
 	public StakeholderGroupDetailResponse getGroupDetail(Long groupId, UserPrincipal userPrincipal) {
-		// TODO: Implementiere echte Daten aus Stakeholder Entities
-		// Aktuell: Exception werfen, da keine Daten vorhanden
-		throw new RuntimeException("Stakeholder group not found: " + groupId);
+		StakeholderGroup group = groupRepository.findByIdAndCompanyId(groupId, userPrincipal.getCompanyId())
+			.orElseThrow(() -> new RuntimeException("Stakeholder group not found: " + groupId));
+		
+		StakeholderGroupDetailResponse response = new StakeholderGroupDetailResponse();
+		response.setId(group.getId());
+		response.setName(group.getName());
+		response.setIcon(group.getIcon());
+		response.setImpact(group.getImpact().getDisplayName());
+		response.setDescription(group.getDescription());
+		
+		// Participant count
+		int participantCount = personRepository.findByGroupId(group.getId()).size();
+		response.setParticipantCount(participantCount);
+		
+		// TODO: Readiness, trend, promoters, neutrals, critics, status werden in Task 5.0 berechnet
+		response.setReadiness(0.0);
+		response.setTrend(0);
+		response.setPromoters(0);
+		response.setNeutrals(0);
+		response.setCritics(0);
+		response.setStatus("ready");
+		
+		// TODO: Historical readiness wird in Task 5.0 berechnet
+		response.setHistoricalReadiness(new ArrayList<>());
+		response.setLastUpdated(LocalDateTime.now());
+		
+		return response;
 	}
 
 	@Override
 	public List<StakeholderPersonResponse> getGroupPersons(Long groupId, UserPrincipal userPrincipal) {
-		// TODO: Implementiere echte Daten aus Stakeholder Entities
-		// Aktuell: Leere Liste zurückgeben
-		return new ArrayList<>();
+		// Prüfe ob Gruppe zur Company gehört
+		StakeholderGroup group = groupRepository.findByIdAndCompanyId(groupId, userPrincipal.getCompanyId())
+			.orElseThrow(() -> new RuntimeException("Stakeholder group not found: " + groupId));
+		
+		List<StakeholderPerson> persons = personRepository.findByGroupId(groupId);
+		
+		return persons.stream()
+			.map(person -> {
+				StakeholderPersonResponse response = toPersonResponse(person);
+				// TODO: category (promoter/neutral/critic) wird in Task 5.0 aus Readiness berechnet
+				return response;
+			})
+			.collect(java.util.stream.Collectors.toList());
 	}
 
 	@Override
