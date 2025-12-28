@@ -310,14 +310,14 @@ public class StakeholderServiceImpl implements StakeholderService {
 		}
 		
 		// Gruppiere nach Datum
-		Map<java.time.LocalDate, List<SurveyInstance>> instancesByDate = allInstances.stream()
+		Map<LocalDate, List<SurveyInstance>> instancesByDate = allInstances.stream()
 			.collect(Collectors.groupingBy(instance -> instance.getSubmittedAt().toLocalDate()));
 		
 		// Erstelle Historie-Punkte
 		List<com.changeready.dto.stakeholder.ReadinessHistoryPointResponse> history = new ArrayList<>();
 		
-		for (Map.Entry<java.time.LocalDate, List<SurveyInstance>> entry : instancesByDate.entrySet()) {
-			java.time.LocalDate date = entry.getKey();
+		for (Map.Entry<LocalDate, List<SurveyInstance>> entry : instancesByDate.entrySet()) {
+			LocalDate date = entry.getKey();
 			List<SurveyInstance> instances = entry.getValue();
 			
 			// Sammle alle Antworten dieser Instanzen
@@ -339,7 +339,7 @@ public class StakeholderServiceImpl implements StakeholderService {
 		}
 		
 		// Sortiere nach Datum
-		history.sort(java.util.Comparator.comparing(com.changeready.dto.stakeholder.ReadinessHistoryPointResponse::getDate));
+		history.sort(Comparator.comparing(com.changeready.dto.stakeholder.ReadinessHistoryPointResponse::getDate));
 		
 		return history;
 	}
