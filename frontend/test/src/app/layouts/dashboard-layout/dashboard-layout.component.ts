@@ -56,7 +56,6 @@ export class DashboardLayoutComponent {
     { label: 'Dashboard', route: '/app/dashboard', icon: 'dashboard' },
     { label: 'Stakeholder', route: '/app/stakeholder', icon: 'people' },
     { label: 'Assessment', route: '/app/surveys', icon: 'assignment' },
-    { label: 'Maßnahmen', route: '/app/measures', icon: 'checklist' },
     { label: 'Reporting', route: '/app/results', icon: 'bar_chart' }
   ];
 
