@@ -97,8 +97,7 @@ public class StakeholderServiceImpl implements StakeholderService {
 		response.setStatus("ready");
 		
 		// TODO: Historical readiness wird in Task 5.0 berechnet
-		response.setHistoricalReadiness(new ArrayList<>());
-		response.setLastUpdated(LocalDateTime.now());
+		response.setHistory(new ArrayList<>());
 		
 		return response;
 	}
@@ -106,7 +105,7 @@ public class StakeholderServiceImpl implements StakeholderService {
 	@Override
 	public List<StakeholderPersonResponse> getGroupPersons(Long groupId, UserPrincipal userPrincipal) {
 		// Prüfe ob Gruppe zur Company gehört
-		StakeholderGroup group = groupRepository.findByIdAndCompanyId(groupId, userPrincipal.getCompanyId())
+		groupRepository.findByIdAndCompanyId(groupId, userPrincipal.getCompanyId())
 			.orElseThrow(() -> new RuntimeException("Stakeholder group not found: " + groupId));
 		
 		List<StakeholderPerson> persons = personRepository.findByGroupId(groupId);
