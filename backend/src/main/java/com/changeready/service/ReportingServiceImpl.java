@@ -135,9 +135,62 @@ public class ReportingServiceImpl implements ReportingService {
 
 	@Override
 	public List<DepartmentReadinessResponse> getDepartmentReadiness(UserPrincipal userPrincipal) {
-		// TODO: Implementiere echte Daten aus Survey-Ergebnissen nach Abteilungen
-		// Aktuell: Leere Liste zurückgeben
-		return new ArrayList<>();
+		Long companyId = userPrincipal.getCompanyId();
+		
+		// Lade alle SUBMITTED Survey-Instanzen der Company
+		List<SurveyInstance> submittedInstances = surveyInstanceRepository
+			.findByCompanyIdAndStatus(companyId, SurveyInstance.SurveyInstanceStatus.SUBMITTED);
+		
+		if (submittedInstances.isEmpty()) {
+			return new ArrayList<>();
+		}
+		
+		// Gruppiere nach Department
+		Map<com.changeready.entity.Department, List<SurveyInstance>> instancesByDepartment = submittedInstances.stream()
+			.collect(Collectors.groupingBy(SurveyInstance::getDepartment));
+		
+		List<DepartmentReadinessResponse> departmentReadiness = new ArrayList<>();
+		
+		for (Map.Entry<com.changeready.entity.Department, List<SurveyInstance>> entry : instancesByDepartment.entrySet()) {
+			com.changeready.entity.Department department = entry.getKey();
+			List<SurveyInstance> instances = entry.getValue();
+			
+			// Sammle alle Antworten dieser Abteilung
+			List<SurveyAnswer> allAnswers = new ArrayList<>();
+			for (SurveyInstance instance : instances) {
+				List<SurveyAnswer> answers = surveyAnswerRepository.findByInstanceId(instance.getId());
+				allAnswers.addAll(answers);
+			}
+			
+			// Berechne Readiness für diese Abteilung
+			if (!allAnswers.isEmpty()) {
+				double readiness = readinessCalculationService.calculateReadiness(allAnswers);
+				String color = getReadinessColor(readiness);
+				
+				DepartmentReadinessResponse response = new DepartmentReadinessResponse();
+				response.setId(department.name());
+				response.setName(department.getDisplayName());
+				response.setReadiness(readiness);
+				response.setColor(color);
+				
+				departmentReadiness.add(response);
+			}
+		}
+		
+		return departmentReadiness;
+	}
+
+	/**
+	 * Bestimmt Farbe basierend auf Readiness-Wert
+	 */
+	private String getReadinessColor(double readiness) {
+		if (readiness >= 75.0) {
+			return "#56A080"; // Grün
+		} else if (readiness >= 50.0) {
+			return "#DFB55E"; // Orange
+		} else {
+			return "#DC2626"; // Rot
+		}
 	}
 
 	@Override
