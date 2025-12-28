@@ -77,7 +77,7 @@
   - [x] 1.1 SurveyInstance Entity erstellen: Felder (id, templateId FK, userId FK, companyId FK, participantType enum, department enum, status enum DRAFT/SUBMITTED, timestamps, submittedAt optional)
   - [x] 1.2 SurveyAnswer Entity erstellen: Felder (id, instanceId FK, questionId String, value Integer 1-5, timestamps)
   - [x] 1.3 SurveyTemplateRepository erstellen: findByActive(Boolean active)
-  - [ ] 1.4 SurveyInstanceRepository erstellen: findByUserIdAndCompanyId, findByCompanyIdAndStatus, findByTemplateIdAndCompanyId
+  - [x] 1.4 SurveyInstanceRepository erstellen: findByUserIdAndCompanyId, findByCompanyIdAndStatus, findByTemplateIdAndCompanyId
   - [ ] 1.5 SurveyAnswerRepository erstellen: findByInstanceId(Long instanceId)
 - [ ] 2.0 Survey Service & Controller implementieren
   - [ ] 2.1 Survey DTOs erstellen: SurveyTemplateResponse (JSON parsen), SurveyInstanceResponse, SurveyInstanceDetailResponse, CreateRequest, AnswerUpdateRequest
