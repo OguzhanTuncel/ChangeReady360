@@ -79,23 +79,42 @@
 
 .sidenav {
   width: 260px;
-  background-color: var(--white);
-  border-right: 1px solid var(--gray-200);
+  background-color: #1E3A5F; /* Dunkelblau */
+  border-right: none;
   display: flex;
   flex-direction: column;
 }
 
 .sidenav-header {
   padding: var(--spacing-xl) var(--spacing-lg);
-  border-bottom: 1px solid var(--gray-200);
-  background-color: var(--cream);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: transparent;
 }
 
-.sidenav-header h2 {
-  margin: 0;
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo-text {
   font-size: 1.5rem;
-  color: var(--innovera-blue);
+  color: white;
   font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.logo-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #56A080; /* Grün */
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 12px;
+  line-height: 1.2;
 }
 
 mat-nav-list {
@@ -104,42 +123,42 @@ mat-nav-list {
 }
 
 mat-nav-list a {
-  color: var(--gray-700);
+  color: rgba(255, 255, 255, 0.8);
   text-decoration: none;
   transition: all var(--transition-base);
 }
 
 mat-nav-list a:hover {
-  background-color: var(--gray-100);
-  color: var(--innovera-blue);
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
 }
 
 mat-nav-list a.active {
-  background-color: rgba(49, 116, 155, 0.1);
-  color: var(--innovera-blue);
+  background-color: rgba(255, 255, 255, 0.15);
+  color: white;
   font-weight: 500;
-  border-left: 3px solid var(--innovera-blue);
+  border-left: 3px solid #56A080; /* Grün */
 }
 
 mat-nav-list a.active mat-icon {
-  color: var(--innovera-blue);
+  color: white;
 }
 
 .sidenav-footer {
   padding: var(--spacing-md);
-  border-top: 1px solid var(--gray-200);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .logout-button {
   width: 100%;
   justify-content: flex-start;
-  color: var(--gray-700);
+  color: rgba(255, 255, 255, 0.8);
   text-transform: none;
 }
 
 .logout-button:hover {
-  background-color: var(--gray-100);
-  color: var(--error-red);
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
 }
 
 .logout-button mat-icon {
