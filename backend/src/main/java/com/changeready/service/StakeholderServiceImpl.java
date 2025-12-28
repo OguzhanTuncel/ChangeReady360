@@ -8,17 +8,25 @@ import com.changeready.dto.stakeholder.StakeholderKpisResponse;
 import com.changeready.dto.stakeholder.StakeholderPersonCreateRequest;
 import com.changeready.dto.stakeholder.StakeholderPersonResponse;
 import com.changeready.entity.Company;
+import com.changeready.entity.SurveyAnswer;
+import com.changeready.entity.SurveyInstance;
 import com.changeready.entity.StakeholderGroup;
 import com.changeready.entity.StakeholderPerson;
+import com.changeready.entity.User;
 import com.changeready.repository.CompanyRepository;
+import com.changeready.repository.SurveyAnswerRepository;
+import com.changeready.repository.SurveyInstanceRepository;
 import com.changeready.repository.StakeholderGroupRepository;
 import com.changeready.repository.StakeholderPersonRepository;
+import com.changeready.repository.UserRepository;
 import com.changeready.security.UserPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class StakeholderServiceImpl implements StakeholderService {
@@ -26,31 +34,148 @@ public class StakeholderServiceImpl implements StakeholderService {
 	private final StakeholderGroupRepository groupRepository;
 	private final StakeholderPersonRepository personRepository;
 	private final CompanyRepository companyRepository;
+	private final SurveyInstanceRepository surveyInstanceRepository;
+	private final SurveyAnswerRepository surveyAnswerRepository;
+	private final UserRepository userRepository;
+	private final ReadinessCalculationService readinessCalculationService;
 
 	public StakeholderServiceImpl(
 		StakeholderGroupRepository groupRepository,
 		StakeholderPersonRepository personRepository,
-		CompanyRepository companyRepository
+		CompanyRepository companyRepository,
+		SurveyInstanceRepository surveyInstanceRepository,
+		SurveyAnswerRepository surveyAnswerRepository,
+		UserRepository userRepository,
+		ReadinessCalculationService readinessCalculationService
 	) {
 		this.groupRepository = groupRepository;
 		this.personRepository = personRepository;
 		this.companyRepository = companyRepository;
+		this.surveyInstanceRepository = surveyInstanceRepository;
+		this.surveyAnswerRepository = surveyAnswerRepository;
+		this.userRepository = userRepository;
+		this.readinessCalculationService = readinessCalculationService;
 	}
 
 	@Override
 	public List<StakeholderGroupResponse> getGroups(UserPrincipal userPrincipal) {
-		List<StakeholderGroup> groups = groupRepository.findByCompanyId(userPrincipal.getCompanyId());
+		Long companyId = userPrincipal.getCompanyId();
+		List<StakeholderGroup> groups = groupRepository.findByCompanyId(companyId);
 		
 		return groups.stream()
 			.map(group -> {
+				List<StakeholderPerson> persons = personRepository.findByGroupId(group.getId());
+				int participantCount = persons.size();
+				
+				// Berechne Readiness für diese Gruppe
+				double readiness = calculateGroupReadiness(group, persons, companyId);
+				
+				// Berechne Promoter/Neutral/Critics
+				String category = readinessCalculationService.calculatePromoterNeutralCritic(readiness);
+				int promoters = 0;
+				int neutrals = 0;
+				int critics = 0;
+				
+				if ("promoter".equals(category)) {
+					promoters = participantCount;
+				} else if ("neutral".equals(category)) {
+					neutrals = participantCount;
+				} else {
+					critics = participantCount;
+				}
+				
+				// Berechne Trend (aktueller Wert vs. Wert vor 30 Tagen)
+				double previousReadiness = calculateGroupReadiness30DaysAgo(group, persons, companyId);
+				int trend = readinessCalculationService.calculateTrend(readiness, previousReadiness);
+				
+				// Berechne Status
+				String status = readinessCalculationService.calculateStatus(readiness);
+				
 				StakeholderGroupResponse response = toGroupResponse(group);
-				// Participant count aus Personen berechnen
-				int participantCount = personRepository.findByGroupId(group.getId()).size();
 				response.setParticipantCount(participantCount);
-				// TODO: Readiness, trend, promoters, neutrals, critics, status werden in Task 5.0 berechnet
+				response.setReadiness(readiness);
+				response.setTrend(trend);
+				response.setPromoters(promoters);
+				response.setNeutrals(neutrals);
+				response.setCritics(critics);
+				response.setStatus(status);
+				
 				return response;
 			})
-			.collect(java.util.stream.Collectors.toList());
+			.collect(Collectors.toList());
+	}
+
+	/**
+	 * Berechnet Readiness für eine Stakeholder-Gruppe
+	 */
+	private double calculateGroupReadiness(StakeholderGroup group, List<StakeholderPerson> persons, Long companyId) {
+		if (persons.isEmpty()) {
+			return 0.0;
+		}
+		
+		List<SurveyAnswer> allAnswers = new ArrayList<>();
+		
+		for (StakeholderPerson person : persons) {
+			if (person.getEmail() != null && !person.getEmail().isEmpty()) {
+				userRepository.findByEmail(person.getEmail())
+					.ifPresent(user -> {
+						List<SurveyInstance> userInstances = surveyInstanceRepository
+							.findByUserIdAndCompanyId(user.getId(), companyId)
+							.stream()
+							.filter(instance -> instance.getStatus() == SurveyInstance.SurveyInstanceStatus.SUBMITTED)
+							.collect(Collectors.toList());
+						
+						for (SurveyInstance instance : userInstances) {
+							List<SurveyAnswer> answers = surveyAnswerRepository.findByInstanceId(instance.getId());
+							allAnswers.addAll(answers);
+						}
+					});
+			}
+		}
+		
+		if (allAnswers.isEmpty()) {
+			return 0.0;
+		}
+		
+		return readinessCalculationService.calculateReadiness(allAnswers);
+	}
+
+	/**
+	 * Berechnet Readiness für eine Gruppe von vor 30 Tagen
+	 */
+	private double calculateGroupReadiness30DaysAgo(StakeholderGroup group, List<StakeholderPerson> persons, Long companyId) {
+		if (persons.isEmpty()) {
+			return 0.0;
+		}
+		
+		LocalDateTime thirtyDaysAgo = LocalDateTime.now().minusDays(30);
+		List<SurveyAnswer> allAnswers = new ArrayList<>();
+		
+		for (StakeholderPerson person : persons) {
+			if (person.getEmail() != null && !person.getEmail().isEmpty()) {
+				userRepository.findByEmail(person.getEmail())
+					.ifPresent(user -> {
+						List<SurveyInstance> userInstances = surveyInstanceRepository
+							.findByUserIdAndCompanyId(user.getId(), companyId)
+							.stream()
+							.filter(instance -> instance.getStatus() == SurveyInstance.SurveyInstanceStatus.SUBMITTED)
+							.filter(instance -> instance.getSubmittedAt() != null)
+							.filter(instance -> instance.getSubmittedAt().isBefore(thirtyDaysAgo))
+							.collect(Collectors.toList());
+						
+						for (SurveyInstance instance : userInstances) {
+							List<SurveyAnswer> answers = surveyAnswerRepository.findByInstanceId(instance.getId());
+							allAnswers.addAll(answers);
+						}
+					});
+			}
+		}
+		
+		if (allAnswers.isEmpty()) {
+			return 0.0;
+		}
+		
+		return readinessCalculationService.calculateReadiness(allAnswers);
 	}
 
 	@Override
