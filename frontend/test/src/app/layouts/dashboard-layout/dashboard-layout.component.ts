@@ -36,7 +36,10 @@ interface NavItem {
     MatListModule,
     MatCardModule,
     MatSelectModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatBadgeModule,
+    MatMenuModule,
+    MatInputModule
   ],
   templateUrl: './dashboard-layout.component.html',
   styleUrl: './dashboard-layout.component.css'
@@ -47,6 +50,7 @@ export class DashboardLayoutComponent {
   currentPageTitle = signal('Dashboard');
   companies = signal<Company[]>([]);
   selectedCompany = signal<Company | null>(null);
+  notificationCount = signal(2); // TODO: Aus Backend laden
 
   navItems: NavItem[] = [
     { label: 'Dashboard', route: '/app/dashboard', icon: 'dashboard' },
@@ -141,6 +145,17 @@ export class DashboardLayoutComponent {
     const user = this.authService.currentUser();
     // TODO: Role aus User-Objekt holen wenn verfügbar
     return 'Projektleiter';
+  }
+
+  refreshData(): void {
+    // TODO: Daten aktualisieren
+    this.loadCompanies();
+    this.loadSelectedCompany();
+  }
+
+  exportReport(): void {
+    // TODO: Report exportieren
+    console.log('Export report');
   }
 
   private updatePageTitle(url: string): void {

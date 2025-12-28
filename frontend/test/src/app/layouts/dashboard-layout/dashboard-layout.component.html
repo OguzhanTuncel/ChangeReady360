@@ -1,38 +1,69 @@
 <div class="dashboard-container">
-  <!-- Top Toolbar -->
-  <mat-toolbar color="primary" class="toolbar">
-    <button mat-icon-button (click)="toggleSidenav()" class="menu-button">
-      <mat-icon>menu</mat-icon>
-    </button>
-    
-    <span class="page-title">{{ currentPageTitle() }}</span>
-    
-    <span class="spacer"></span>
-    
-    <!-- Company Selection -->
-    @if (companies().length > 0) {
-      <div class="company-selector">
-        <mat-form-field appearance="outline" class="company-select-field">
-          <mat-label>Unternehmen</mat-label>
-          <mat-select 
-            [value]="selectedCompany()?.id" 
-            (selectionChange)="onCompanyChange($event.value)"
-          >
-            @for (company of companies(); track company.id) {
-              <mat-option [value]="company.id">{{ company.name }}</mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
+  <!-- Top Header Bar -->
+  <div class="header-bar">
+    <!-- Left: Company Name with Dropdown -->
+    <div class="header-left">
+      @if (selectedCompany()) {
+        <div class="company-info">
+          <mat-icon class="company-icon">business</mat-icon>
+          <div class="company-details">
+            <div class="company-name">{{ selectedCompany()!.name }}</div>
+            <div class="company-context">Transformation</div>
+          </div>
+          <mat-icon class="dropdown-icon">arrow_drop_down</mat-icon>
+        </div>
+      } @else {
+        <div class="company-info">
+          <mat-icon class="company-icon">business</mat-icon>
+          <div class="company-details">
+            <div class="company-name">Kein Unternehmen</div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Center: Search Bar -->
+    <div class="header-center">
+      <div class="search-container">
+        <mat-icon class="search-icon">search</mat-icon>
+        <input 
+          type="text" 
+          class="search-input" 
+          placeholder="Stakeholder, Maßnahmen suchen..."
+        />
       </div>
-    }
-    
-    <div class="user-info">
-      <span class="user-email">{{ authService.currentUser()?.email || 'Benutzer' }}</span>
-      <button mat-icon-button (click)="logout()" class="user-menu-button" matTooltip="Abmelden">
-        <mat-icon>account_circle</mat-icon>
+    </div>
+
+    <!-- Right: Notifications, User, Actions -->
+    <div class="header-right">
+      <!-- Notifications -->
+      <button mat-icon-button class="header-button" matTooltip="Benachrichtigungen">
+        <mat-icon [matBadge]="notificationCount()" [matBadgeHidden]="notificationCount() === 0" matBadgeColor="warn">notifications</mat-icon>
+      </button>
+
+      <!-- User Avatar -->
+      <button mat-icon-button class="header-button user-avatar-button" [matMenuTriggerFor]="userMenu">
+        <div class="header-avatar">{{ getUserInitials() }}</div>
+        <mat-icon class="dropdown-icon">arrow_drop_down</mat-icon>
+      </button>
+      <mat-menu #userMenu="matMenu">
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          <span>Abmelden</span>
+        </button>
+      </mat-menu>
+
+      <!-- Action Buttons -->
+      <button mat-button class="action-button refresh-button" (click)="refreshData()">
+        <mat-icon>refresh</mat-icon>
+        Aktualisieren
+      </button>
+      <button mat-button class="action-button report-button" (click)="exportReport()">
+        <mat-icon>download</mat-icon>
+        Report
       </button>
     </div>
-  </mat-toolbar>
+  </div>
 
   <!-- Sidebar & Content -->
   <mat-sidenav-container class="sidenav-container">
