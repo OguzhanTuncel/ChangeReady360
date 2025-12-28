@@ -96,7 +96,7 @@
   - [x] 6.3 Stakeholder DTOs erstellen: StakeholderGroupResponse, StakeholderGroupDetailResponse
   - [x] 6.4 Stakeholder Service & Controller: GET /api/v1/stakeholder/groups Endpoints
   - [x] 6.5 Reporting Service & Controller: GET /api/v1/reporting/trends Endpoint
-  - [ ] 6.6 Maßnahmen Entity & Repository: Falls nicht vorhanden, Measure Entity erstellen
+  - [x] 6.6 Maßnahmen Entity & Repository: Falls nicht vorhanden, Measure Entity erstellen
   - [ ] 6.7 Maßnahmen Endpoint: GET /api/v1/measures/open Endpoint
   - [ ] 6.8 Security Config aktualisieren: Alle neuen Endpoints rollenbasiert schützen
 
