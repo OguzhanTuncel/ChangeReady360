@@ -65,7 +65,7 @@
   - [x] 2.3 KPI-Cards oben implementieren: 4 Cards (Readiness Score, Stakeholder, Kritiker, Maßnahmen)
   - [x] 2.4 Donut-Chart-Komponente erstellen: Readiness-Visualisierung ohne Zahlen im Chart
   - [x] 2.5 Gesamt-Readiness Card: Donut-Chart mit Promoter/Neutral/Kritiker-Zahlen darunter
-  - [ ] 2.6 Stakeholder-Gruppen Card: Liste mit Readiness-%, Trends, Progress-Bars, Status-Badges
+  - [x] 2.6 Stakeholder-Gruppen Card: Liste mit Readiness-%, Trends, Progress-Bars, Status-Badges
   - [ ] 2.7 Empty States für Dashboard: Saubere Empty States wenn keine Daten vorhanden
 - [ ] 3.0 Stakeholder-Seite neu gestalten
   - [ ] 3.1 Stakeholder-Model erstellen: Interfaces für Gruppen, Details, Trends

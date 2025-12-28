@@ -9,7 +9,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { SurveyService } from '../../services/survey.service';
 import { SurveyInstance, SurveyResponse } from '../../models/survey.model';
 import { DashboardService } from '../../services/dashboard.service';
-import { DashboardKpis, ReadinessData } from '../../models/dashboard.model';
+import { DashboardKpis, ReadinessData, StakeholderGroupSummary } from '../../models/dashboard.model';
 import { DonutChartComponent } from '../../components/donut-chart/donut-chart.component';
 
 interface StatCard {
@@ -52,6 +52,7 @@ export class DashboardComponent implements OnInit {
   isLoading = signal(true);
   kpis = signal<DashboardKpis | null>(null);
   readinessData = signal<ReadinessData | null>(null);
+  stakeholderGroups = signal<StakeholderGroupSummary[]>([]);
 
   constructor(
     private surveyService: SurveyService,
@@ -77,6 +78,13 @@ export class DashboardComponent implements OnInit {
     this.dashboardService.getReadinessData().subscribe({
       next: (readiness) => {
         this.readinessData.set(readiness);
+      }
+    });
+
+    // Load Stakeholder Groups
+    this.dashboardService.getStakeholderGroups().subscribe({
+      next: (groups) => {
+        this.stakeholderGroups.set(groups);
       }
     });
 
@@ -331,6 +339,49 @@ export class DashboardComponent implements OnInit {
       day: 'numeric' 
     };
     return date.toLocaleDateString('de-DE', options);
+  }
+
+  getStatusBadgeClass(status: 'ready' | 'attention' | 'critical'): string {
+    switch (status) {
+      case 'ready':
+        return 'badge-ready';
+      case 'attention':
+        return 'badge-attention';
+      case 'critical':
+        return 'badge-critical';
+      default:
+        return '';
+    }
+  }
+
+  getStatusBadgeText(status: 'ready' | 'attention' | 'critical'): string {
+    switch (status) {
+      case 'ready':
+        return 'Bereit';
+      case 'attention':
+        return 'Aufmerksamkeit';
+      case 'critical':
+        return 'Kritisch';
+      default:
+        return '';
+    }
+  }
+
+  getTrendIcon(trend: number): string {
+    if (trend > 0) return 'trending_up';
+    if (trend < 0) return 'trending_down';
+    return 'trending_flat';
+  }
+
+  getTrendClass(trend: number): string {
+    if (trend > 0) return 'trend-positive';
+    if (trend < 0) return 'trend-negative';
+    return 'trend-neutral';
+  }
+
+  formatTrend(trend: number): string {
+    if (trend === 0) return '0%';
+    return `${trend > 0 ? '+' : ''}${trend}%`;
   }
 }
 

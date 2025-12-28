@@ -265,6 +265,181 @@ mat-card {
   color: var(--gray-600);
 }
 
+.stakeholder-groups-card {
+  min-height: 320px;
+}
+
+.stakeholder-groups-card mat-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.view-all-link {
+  font-size: 0.9rem;
+  color: var(--innovera-blue);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.view-all-link:hover {
+  color: var(--change-ready-green);
+}
+
+.groups-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.group-item {
+  padding: var(--spacing-md);
+  border-radius: 8px;
+  background-color: var(--gray-100);
+  transition: background-color 0.2s;
+}
+
+.group-item:hover {
+  background-color: var(--gray-200);
+}
+
+.group-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-sm);
+}
+
+.group-info {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.group-icon {
+  color: var(--innovera-blue);
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+.group-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.group-name {
+  font-weight: 600;
+  color: var(--gray-900);
+  font-size: 0.95rem;
+}
+
+.group-participants {
+  font-size: 0.8rem;
+  color: var(--gray-600);
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.badge-ready {
+  background-color: rgba(86, 160, 128, 0.15);
+  color: var(--change-ready-green);
+}
+
+.badge-attention {
+  background-color: rgba(223, 181, 94, 0.15);
+  color: var(--gold-accent);
+}
+
+.badge-critical {
+  background-color: rgba(220, 38, 38, 0.15);
+  color: var(--error-red);
+}
+
+.group-progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.progress-bar-container {
+  width: 100%;
+  height: 8px;
+  background-color: var(--gray-300);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease-in-out;
+}
+
+.progress-bar.badge-ready {
+  background-color: var(--change-ready-green);
+}
+
+.progress-bar.badge-attention {
+  background-color: var(--gold-accent);
+}
+
+.progress-bar.badge-critical {
+  background-color: var(--error-red);
+}
+
+.group-metrics {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.readiness-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--gray-900);
+}
+
+.trend-indicator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.trend-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+.trend-positive {
+  color: var(--change-ready-green);
+}
+
+.trend-negative {
+  color: var(--error-red);
+}
+
+.trend-neutral {
+  color: var(--gray-600);
+}
+
+.empty-groups {
+  text-align: center;
+  padding: var(--spacing-xl);
+  color: var(--gray-600);
+}
+
 .content-card {
   min-height: 280px;
 }
