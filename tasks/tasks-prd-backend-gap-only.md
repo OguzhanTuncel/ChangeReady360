@@ -79,12 +79,12 @@
   - [x] 1.3 SurveyTemplateRepository erstellen: findByActive(Boolean active)
   - [x] 1.4 SurveyInstanceRepository erstellen: findByUserIdAndCompanyId, findByCompanyIdAndStatus, findByTemplateIdAndCompanyId
   - [x] 1.5 SurveyAnswerRepository erstellen: findByInstanceId(Long instanceId)
-- [ ] 2.0 Survey Service & Controller implementieren
+- [x] 2.0 Survey Service & Controller implementieren
   - [x] 2.1 Survey DTOs erstellen: SurveyTemplateResponse (JSON parsen), SurveyInstanceResponse, SurveyInstanceDetailResponse, CreateRequest, AnswerUpdateRequest
   - [x] 2.2 SurveyService Interface erstellen: createInstance, getInstances, getInstance, saveAnswers, submitInstance, getTemplates
   - [x] 2.3 SurveyServiceImpl implementieren: Alle Methoden mit Company-Isolation und Validierung
   - [x] 2.4 SurveyController erstellen: POST /instances, GET /instances, GET /instances/{id}, PUT /instances/{id}/answers, POST /instances/{id}/submit, GET /templates
-  - [ ] 2.5 Security & Validierung: @PreAuthorize für COMPANY_USER, Validierung von Requests
+  - [x] 2.5 Security & Validierung: @PreAuthorize für COMPANY_USER, Validierung von Requests
 - [ ] 3.0 Stakeholder Entities & Repositories erstellen
   - [ ] 3.1 StakeholderGroup Entity erstellen: Felder (id, name, icon String, companyId FK, impact enum, description optional, timestamps)
   - [ ] 3.2 StakeholderPerson Entity erstellen: Felder (id, groupId FK, name, role String, email optional, createdAt)
