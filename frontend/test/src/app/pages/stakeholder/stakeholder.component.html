@@ -119,7 +119,7 @@
           <div class="kpi-header">
             <span class="kpi-title">Promoter</span>
           </div>
-          <div class="kpi-value promoter-value">{{ stakeholderKpis()?.promoters || 0 }}</div>
+          <div class="kpi-value promoter-value">{{ stakeholderKpis()!.promoters }}</div>
         </div>
       </mat-card>
       <mat-card class="kpi-card neutral-card">
@@ -127,7 +127,7 @@
           <div class="kpi-header">
             <span class="kpi-title">Neutral</span>
           </div>
-          <div class="kpi-value neutral-value">{{ stakeholderKpis()?.neutrals || 0 }}</div>
+          <div class="kpi-value neutral-value">{{ stakeholderKpis()!.neutrals }}</div>
         </div>
       </mat-card>
       <mat-card class="kpi-card critic-card">
