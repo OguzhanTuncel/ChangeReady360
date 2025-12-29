@@ -3,9 +3,13 @@ import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { StakeholderService } from '../../services/stakeholder.service';
+import { DashboardService } from '../../services/dashboard.service';
 import { StakeholderGroup, StakeholderKpis, StakeholderGroupDetail, StakeholderPerson } from '../../models/stakeholder.model';
 import { DonutChartComponent } from '../../components/donut-chart/donut-chart.component';
+import { StakeholderCreateDialogComponent } from '../../components/stakeholder-create-dialog/stakeholder-create-dialog.component';
+import { ConfirmDialogComponent } from '../../components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-stakeholder',
@@ -15,6 +19,7 @@ import { DonutChartComponent } from '../../components/donut-chart/donut-chart.co
     MatCardModule,
     MatButtonModule,
     MatIconModule,
+    MatDialogModule,
     DonutChartComponent
   ],
   templateUrl: './stakeholder.component.html',
@@ -30,7 +35,9 @@ export class StakeholderComponent implements OnInit {
   showDetailView = signal(false);
 
   constructor(
-    private stakeholderService: StakeholderService
+    private stakeholderService: StakeholderService,
+    private dashboardService: DashboardService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit() {
@@ -58,8 +65,17 @@ export class StakeholderComponent implements OnInit {
   }
 
   addStakeholder() {
-    // TODO: Implementieren - Dialog öffnen oder zu Formular navigieren
-    console.log('Add stakeholder clicked');
+    const dialogRef = this.dialog.open(StakeholderCreateDialogComponent, {
+      width: '500px',
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Reload stakeholder data after successful creation
+        this.loadStakeholderData();
+      }
+    });
   }
 
 
@@ -117,6 +133,36 @@ export class StakeholderComponent implements OnInit {
         this.showDetailView.set(true);
         this.loadGroupPersons(groupId);
       }
+    });
+  }
+
+  deleteGroup(group: StakeholderGroup, event?: MouseEvent) {
+    event?.stopPropagation();
+
+    const ref = this.dialog.open(ConfirmDialogComponent, {
+      width: '420px',
+      disableClose: true,
+      data: {
+        title: 'Stakeholder-Gruppe löschen?',
+        message: `Willst du Gruppe "${group.name}" wirklich löschen?`,
+        confirmText: 'Löschen',
+        cancelText: 'Abbrechen'
+      }
+    });
+
+    ref.afterClosed().subscribe((confirmed: boolean) => {
+      if (!confirmed) return;
+      this.isLoading.set(true);
+      this.stakeholderService.deleteGroup(group.id).subscribe({
+        next: () => {
+          // Daten sofort neu laden (Stakeholder + Dashboard KPIs)
+          this.loadStakeholderData();
+          this.dashboardService.getDashboardData().subscribe();
+        },
+        error: () => {
+          this.isLoading.set(false);
+        }
+      });
     });
   }
 

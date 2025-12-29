@@ -8,6 +8,7 @@ import com.changeready.dto.stakeholder.StakeholderKpisResponse;
 import com.changeready.dto.stakeholder.StakeholderPersonCreateRequest;
 import com.changeready.dto.stakeholder.StakeholderPersonResponse;
 import com.changeready.entity.Company;
+import com.changeready.entity.Department;
 import com.changeready.entity.SurveyAnswer;
 import com.changeready.entity.SurveyInstance;
 import com.changeready.entity.StakeholderGroup;
@@ -21,6 +22,7 @@ import com.changeready.repository.UserRepository;
 import com.changeready.security.UserPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -28,7 +30,10 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
 public class StakeholderServiceImpl implements StakeholderService {
@@ -68,12 +73,21 @@ public class StakeholderServiceImpl implements StakeholderService {
 			.map(group -> {
 				List<StakeholderPerson> persons = personRepository.findByGroupId(group.getId());
 				int participantCount = persons.size();
+
+				// Optional: Department-Mapping über Gruppenname (z.B. "Einkauf" -> EINKAUF)
+				Optional<Department> mappedDepartment = resolveDepartmentFromGroupName(group.getName());
+				if (mappedDepartment.isPresent()) {
+					List<SurveyInstance> deptInstances = getSubmittedInstancesForDepartment(companyId, mappedDepartment.get(), null, null);
+					participantCount = deptInstances.size();
+				}
 				
 				// Berechne Readiness für diese Gruppe
-				double readiness = calculateGroupReadiness(group, persons, companyId);
+				double readinessRaw = mappedDepartment.isPresent()
+					? calculateDepartmentReadiness(companyId, mappedDepartment.get(), null, null)
+					: calculateGroupReadiness(group, persons, companyId);
 				
 				// Berechne Promoter/Neutral/Critics
-				String category = readinessCalculationService.calculatePromoterNeutralCritic(readiness);
+				String category = readinessCalculationService.calculatePromoterNeutralCritic(readinessRaw);
 				int promoters = 0;
 				int neutrals = 0;
 				int critics = 0;
@@ -87,15 +101,17 @@ public class StakeholderServiceImpl implements StakeholderService {
 				}
 				
 				// Berechne Trend (aktueller Wert vs. Wert vor 30 Tagen)
-				double previousReadiness = calculateGroupReadiness30DaysAgo(group, persons, companyId);
-				int trend = readinessCalculationService.calculateTrend(readiness, previousReadiness);
+				double previousReadinessRaw = mappedDepartment.isPresent()
+					? calculateDepartmentReadiness(companyId, mappedDepartment.get(), null, LocalDateTime.now().minusDays(30))
+					: calculateGroupReadiness30DaysAgo(group, persons, companyId);
+				int trend = readinessCalculationService.calculateTrend(readinessRaw, previousReadinessRaw);
 				
 				// Berechne Status
-				String status = readinessCalculationService.calculateStatus(readiness);
+				String status = readinessCalculationService.calculateStatus(readinessRaw);
 				
 				StakeholderGroupResponse response = toGroupResponse(group);
 				response.setParticipantCount(participantCount);
-				response.setReadiness(readiness);
+				response.setReadiness(roundPercent0(readinessRaw));
 				response.setTrend(trend);
 				response.setPromoters(promoters);
 				response.setNeutrals(neutrals);
@@ -193,13 +209,20 @@ public class StakeholderServiceImpl implements StakeholderService {
 		for (StakeholderGroup group : groups) {
 			List<StakeholderPerson> persons = personRepository.findByGroupId(group.getId());
 			int participantCount = persons.size();
+
+			Optional<Department> mappedDepartment = resolveDepartmentFromGroupName(group.getName());
+			if (mappedDepartment.isPresent()) {
+				participantCount = getSubmittedInstancesForDepartment(companyId, mappedDepartment.get(), null, null).size();
+			}
 			total += participantCount;
 			
 			// Berechne Readiness für diese Gruppe
-			double readiness = calculateGroupReadiness(group, persons, companyId);
+			double readinessRaw = mappedDepartment.isPresent()
+				? calculateDepartmentReadiness(companyId, mappedDepartment.get(), null, null)
+				: calculateGroupReadiness(group, persons, companyId);
 			
 			// Kategorisiere basierend auf Readiness
-			String category = readinessCalculationService.calculatePromoterNeutralCritic(readiness);
+			String category = readinessCalculationService.calculatePromoterNeutralCritic(readinessRaw);
 			if ("promoter".equals(category)) {
 				promoters += participantCount;
 			} else if ("neutral".equals(category)) {
@@ -225,12 +248,19 @@ public class StakeholderServiceImpl implements StakeholderService {
 		
 		List<StakeholderPerson> persons = personRepository.findByGroupId(groupId);
 		int participantCount = persons.size();
+
+		Optional<Department> mappedDepartment = resolveDepartmentFromGroupName(group.getName());
+		if (mappedDepartment.isPresent()) {
+			participantCount = getSubmittedInstancesForDepartment(companyId, mappedDepartment.get(), null, null).size();
+		}
 		
 		// Berechne aktuelle Readiness
-		double readiness = calculateGroupReadiness(group, persons, companyId);
+		double readinessRaw = mappedDepartment.isPresent()
+			? calculateDepartmentReadiness(companyId, mappedDepartment.get(), null, null)
+			: calculateGroupReadiness(group, persons, companyId);
 		
 		// Berechne Promoter/Neutral/Critics
-		String category = readinessCalculationService.calculatePromoterNeutralCritic(readiness);
+		String category = readinessCalculationService.calculatePromoterNeutralCritic(readinessRaw);
 		int promoters = 0;
 		int neutrals = 0;
 		int critics = 0;
@@ -244,14 +274,18 @@ public class StakeholderServiceImpl implements StakeholderService {
 		}
 		
 		// Berechne Trend
-		double previousReadiness = calculateGroupReadiness30DaysAgo(group, persons, companyId);
-		int trend = readinessCalculationService.calculateTrend(readiness, previousReadiness);
+		double previousReadinessRaw = mappedDepartment.isPresent()
+			? calculateDepartmentReadiness(companyId, mappedDepartment.get(), null, LocalDateTime.now().minusDays(30))
+			: calculateGroupReadiness30DaysAgo(group, persons, companyId);
+		int trend = readinessCalculationService.calculateTrend(readinessRaw, previousReadinessRaw);
 		
 		// Berechne Status
-		String status = readinessCalculationService.calculateStatus(readiness);
+		String status = readinessCalculationService.calculateStatus(readinessRaw);
 		
 		// Berechne Readiness-Historie (letzte 30 Tage)
-		List<com.changeready.dto.stakeholder.ReadinessHistoryPointResponse> history = calculateReadinessHistory(group, persons, companyId);
+		List<com.changeready.dto.stakeholder.ReadinessHistoryPointResponse> history = mappedDepartment.isPresent()
+			? calculateDepartmentReadinessHistory(companyId, mappedDepartment.get())
+			: calculateReadinessHistory(group, persons, companyId);
 		
 		StakeholderGroupDetailResponse response = new StakeholderGroupDetailResponse();
 		response.setId(group.getId());
@@ -260,7 +294,7 @@ public class StakeholderServiceImpl implements StakeholderService {
 		response.setImpact(group.getImpact().getDisplayName());
 		response.setDescription(group.getDescription());
 		response.setParticipantCount(participantCount);
-		response.setReadiness(readiness);
+		response.setReadiness(roundPercent0(readinessRaw));
 		response.setTrend(trend);
 		response.setPromoters(promoters);
 		response.setNeutrals(neutrals);
@@ -344,6 +378,86 @@ public class StakeholderServiceImpl implements StakeholderService {
 		return history;
 	}
 
+	private Optional<Department> resolveDepartmentFromGroupName(String groupName) {
+		if (groupName == null || groupName.isBlank()) {
+			return Optional.empty();
+		}
+		String key = normalizeKey(groupName);
+		return switch (key) {
+			case "einkauf" -> Optional.of(Department.EINKAUF);
+			case "vertrieb" -> Optional.of(Department.VERTRIEB);
+			case "lagerlogistik", "lagerundlogistik", "lagerlogistikund" -> Optional.of(Department.LAGER_LOGISTIK);
+			case "it" -> Optional.of(Department.IT);
+			case "geschaeftsfuehrung", "geschaftsfuhrung", "geschaeftsfuehrungund" -> Optional.of(Department.GESCHAEFTSFUEHRUNG);
+			default -> Optional.empty();
+		};
+	}
+
+	private String normalizeKey(String input) {
+		String s = input.trim().toLowerCase();
+		s = s.replace("ä", "ae").replace("ö", "oe").replace("ü", "ue").replace("ß", "ss");
+		s = s.replace("&", "und");
+		s = s.replaceAll("[^a-z0-9]+", "");
+		return s;
+	}
+
+	private List<SurveyInstance> getSubmittedInstancesForDepartment(Long companyId, Department department, LocalDateTime after, LocalDateTime before) {
+		return surveyInstanceRepository.findByCompanyIdAndStatus(companyId, SurveyInstance.SurveyInstanceStatus.SUBMITTED)
+			.stream()
+			.filter(i -> i.getDepartment() == department)
+			.filter(i -> i.getSubmittedAt() != null)
+			.filter(i -> after == null || i.getSubmittedAt().isAfter(after))
+			.filter(i -> before == null || i.getSubmittedAt().isBefore(before))
+			.collect(Collectors.toList());
+	}
+
+	private double calculateDepartmentReadiness(Long companyId, Department department, LocalDateTime after, LocalDateTime before) {
+		List<SurveyInstance> instances = getSubmittedInstancesForDepartment(companyId, department, after, before);
+		if (instances.isEmpty()) {
+			return 0.0;
+		}
+		List<SurveyAnswer> allAnswers = new ArrayList<>();
+		for (SurveyInstance instance : instances) {
+			allAnswers.addAll(surveyAnswerRepository.findByInstanceId(instance.getId()));
+		}
+		if (allAnswers.isEmpty()) {
+			return 0.0;
+		}
+		return readinessCalculationService.calculateReadiness(allAnswers);
+	}
+
+	private List<com.changeready.dto.stakeholder.ReadinessHistoryPointResponse> calculateDepartmentReadinessHistory(Long companyId, Department department) {
+		LocalDateTime thirtyDaysAgo = LocalDateTime.now().minusDays(30);
+		List<SurveyInstance> instances = getSubmittedInstancesForDepartment(companyId, department, thirtyDaysAgo, null);
+		if (instances.isEmpty()) {
+			return new ArrayList<>();
+		}
+		Map<LocalDate, List<SurveyInstance>> instancesByDate = instances.stream()
+			.collect(Collectors.groupingBy(i -> i.getSubmittedAt().toLocalDate()));
+
+		List<com.changeready.dto.stakeholder.ReadinessHistoryPointResponse> history = new ArrayList<>();
+		for (Map.Entry<LocalDate, List<SurveyInstance>> entry : instancesByDate.entrySet()) {
+			List<SurveyAnswer> answers = new ArrayList<>();
+			for (SurveyInstance instance : entry.getValue()) {
+				answers.addAll(surveyAnswerRepository.findByInstanceId(instance.getId()));
+			}
+			if (!answers.isEmpty()) {
+				double readinessRaw = readinessCalculationService.calculateReadiness(answers);
+				com.changeready.dto.stakeholder.ReadinessHistoryPointResponse point =
+					new com.changeready.dto.stakeholder.ReadinessHistoryPointResponse();
+				point.setDate(entry.getKey());
+				point.setReadiness(roundPercent0(readinessRaw));
+				history.add(point);
+			}
+		}
+		history.sort(Comparator.comparing(com.changeready.dto.stakeholder.ReadinessHistoryPointResponse::getDate));
+		return history;
+	}
+
+	private double roundPercent0(double value) {
+		return (double) Math.round(value);
+	}
+
 	@Override
 	public List<StakeholderPersonResponse> getGroupPersons(Long groupId, UserPrincipal userPrincipal) {
 		Long companyId = userPrincipal.getCompanyId();
@@ -421,7 +535,11 @@ public class StakeholderServiceImpl implements StakeholderService {
 		// Neue Gruppe erstellen
 		StakeholderGroup group = new StakeholderGroup();
 		group.setName(request.getName());
-		group.setIcon(request.getIcon());
+		String icon = request.getIcon();
+		if (icon == null || icon.isBlank()) {
+			icon = "people";
+		}
+		group.setIcon(icon);
 		group.setImpact(request.getImpact());
 		group.setDescription(request.getDescription());
 		group.setCompany(company);
@@ -474,6 +592,19 @@ public class StakeholderServiceImpl implements StakeholderService {
 		person = personRepository.save(person);
 
 		return toPersonResponse(person);
+	}
+
+	@Override
+	@Transactional
+	public void deleteGroup(Long groupId, UserPrincipal userPrincipal) {
+		Long companyId = userPrincipal.getCompanyId();
+
+		StakeholderGroup group = groupRepository.findByIdAndCompanyId(groupId, companyId)
+			.orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Stakeholder group not found: " + groupId));
+
+		// Erst Personen löschen (FK), dann Gruppe
+		personRepository.deleteByGroupId(groupId);
+		groupRepository.delete(group);
 	}
 
 	// Helper-Methoden für Mapping

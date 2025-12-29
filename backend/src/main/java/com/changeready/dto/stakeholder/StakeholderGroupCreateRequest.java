@@ -16,7 +16,6 @@ public class StakeholderGroupCreateRequest {
 	@NotBlank(message = "Name is required")
 	private String name;
 
-	@NotBlank(message = "Icon is required")
 	private String icon;
 
 	@NotNull(message = "Impact is required")

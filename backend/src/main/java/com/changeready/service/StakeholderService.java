@@ -47,5 +47,10 @@ public interface StakeholderService {
 	 * Fügt eine Person zu einer Stakeholder-Gruppe hinzu
 	 */
 	StakeholderPersonResponse addPerson(Long groupId, StakeholderPersonCreateRequest request, UserPrincipal userPrincipal);
+
+	/**
+	 * Löscht eine Stakeholder-Gruppe (inkl. Personen) innerhalb der Company des Benutzers
+	 */
+	void deleteGroup(Long groupId, UserPrincipal userPrincipal);
 }
 

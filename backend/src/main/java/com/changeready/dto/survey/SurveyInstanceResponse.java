@@ -23,5 +23,8 @@ public class SurveyInstanceResponse {
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 	private LocalDateTime submittedAt;
+	// Additive Felder für Frontend-Progress-Anzeige
+	private Integer totalQuestions; // Gesamtanzahl Fragen im Template
+	private Integer answeredQuestions; // Anzahl bereits beantworteter Fragen
 }
 

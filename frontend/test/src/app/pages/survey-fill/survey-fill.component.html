@@ -40,6 +40,7 @@
 
     <!-- Navigation Buttons -->
     <div class="navigation-footer">
+      <div class="left-actions">
       <button 
         mat-raised-button 
         class="back-button"
@@ -49,34 +50,61 @@
         <mat-icon>arrow_back</mat-icon>
         Zurück
       </button>
+      </div>
       
       @if (isLastQuestion()) {
-        <button 
-          mat-raised-button 
-          color="primary" 
-          class="submit-button"
-          [disabled]="!canGoNext() || isSubmitting()"
-          (click)="submitSurvey()"
-        >
-          @if (isSubmitting()) {
-            <mat-icon>hourglass_empty</mat-icon>
-            Wird gespeichert...
-          } @else {
-            <mat-icon>check_circle</mat-icon>
-            Absenden
-          }
-        </button>
+        <div class="right-actions">
+          <button
+            mat-raised-button
+            class="exit-danger-button"
+            [disabled]="isSubmitting()"
+            (click)="exitSurvey()"
+          >
+            Umfrage verlassen
+          </button>
+
+          <button 
+            mat-raised-button 
+            color="primary" 
+            class="submit-button"
+            [disabled]="!canGoNext() || isSubmitting()"
+            (click)="submitSurvey()"
+          >
+            @if (isSubmitting()) {
+              <ng-container>
+                <mat-icon>hourglass_empty</mat-icon>
+                Wird gespeichert...
+              </ng-container>
+            } @else {
+              <ng-container>
+                <mat-icon>check_circle</mat-icon>
+                Absenden
+              </ng-container>
+            }
+          </button>
+        </div>
       } @else {
-        <button 
-          mat-raised-button 
-          color="primary" 
-          class="next-button"
-          [disabled]="!canGoNext() || isSubmitting()"
-          (click)="goToNext()"
-        >
-          Weiter
-          <mat-icon>arrow_forward</mat-icon>
-        </button>
+        <div class="right-actions">
+          <button
+            mat-raised-button
+            class="exit-danger-button"
+            [disabled]="isSubmitting()"
+            (click)="exitSurvey()"
+          >
+            Umfrage verlassen
+          </button>
+
+          <button 
+            mat-raised-button 
+            color="primary" 
+            class="next-button"
+            [disabled]="!canGoNext() || isSubmitting()"
+            (click)="goToNext()"
+          >
+            Weiter
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </div>
       }
     </div>
   }

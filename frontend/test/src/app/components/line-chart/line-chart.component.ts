@@ -25,6 +25,9 @@ export class LineChartComponent implements OnChanges, OnInit {
   targetPath: string = '';
   areaPath: string = '';
   insight: string = '';
+  readonly yMin: number = 0;
+  readonly yMax: number = 100;
+  private minDateMs: number = 0;
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['dataPoints'] || changes['width'] || changes['height']) {
@@ -37,14 +40,20 @@ export class LineChartComponent implements OnChanges, OnInit {
   }
 
   private calculateChart(): void {
-    if (this.dataPoints.length === 0) {
-      this.viewBox = `0 0 ${this.width} ${this.height}`;
-      return;
-    }
-
     this.viewBox = `0 0 ${this.width} ${this.height}`;
     this.chartWidth = this.width - (this.padding * 2);
     this.chartHeight = this.height - (this.padding * 2);
+    this.yScale = this.chartHeight / (this.yMax - this.yMin);
+
+    if (this.dataPoints.length === 0) {
+      this.actualPath = '';
+      this.targetPath = '';
+      this.areaPath = '';
+      this.insight = '';
+      this.xScale = 0;
+      this.minDateMs = 0;
+      return;
+    }
 
     // Calculate scales
     const dates = this.dataPoints.map(d => d.date.getTime());
@@ -52,12 +61,7 @@ export class LineChartComponent implements OnChanges, OnInit {
     const maxDate = Math.max(...dates);
     const dateRange = maxDate - minDate || 1;
     this.xScale = this.chartWidth / dateRange;
-
-    const values = this.dataPoints.flatMap(d => [d.actualValue, d.targetValue || 0]);
-    const minValue = Math.min(...values);
-    const maxValue = Math.max(...values);
-    const valueRange = maxValue - minValue || 100;
-    this.yScale = this.chartHeight / valueRange;
+    this.minDateMs = minDate;
 
     // Generate paths
     this.generatePaths();
@@ -70,10 +74,10 @@ export class LineChartComponent implements OnChanges, OnInit {
     const areaPoints: string[] = [];
 
     this.dataPoints.forEach((point, index) => {
-      const x = this.padding + ((point.date.getTime() - Math.min(...this.dataPoints.map(d => d.date.getTime()))) * this.xScale);
-      const actualY = this.padding + this.chartHeight - ((point.actualValue - Math.min(...this.dataPoints.map(d => d.actualValue))) * this.yScale);
-      const targetY = point.targetValue 
-        ? this.padding + this.chartHeight - ((point.targetValue - Math.min(...this.dataPoints.map(d => d.actualValue))) * this.yScale)
+      const x = this.padding + ((point.date.getTime() - this.minDateMs) * this.xScale);
+      const actualY = this.padding + this.chartHeight - ((point.actualValue - this.yMin) * this.yScale);
+      const targetY = (point.targetValue !== undefined && point.targetValue !== null)
+        ? this.padding + this.chartHeight - ((point.targetValue - this.yMin) * this.yScale)
         : null;
 
       if (index === 0) {
@@ -129,12 +133,21 @@ export class LineChartComponent implements OnChanges, OnInit {
   }
 
   getYPosition(value: number): number {
-    const values = this.dataPoints.map(d => d.actualValue);
-    const minValue = Math.min(...values);
-    const maxValue = Math.max(...values);
-    const valueRange = maxValue - minValue || 100;
-    const yScale = this.chartHeight / valueRange;
-    return this.padding + this.chartHeight - ((value - minValue) * yScale);
+    return this.padding + this.chartHeight - ((value - this.yMin) * this.yScale);
+  }
+
+  getPointX(point: TrendDataPoint): number {
+    if (this.dataPoints.length === 0) return 0;
+    return this.padding + ((point.date.getTime() - this.minDateMs) * this.xScale);
+  }
+
+  getPointY(point: TrendDataPoint): number {
+    if (this.dataPoints.length === 0) return 0;
+    return this.padding + this.chartHeight - ((point.actualValue - this.yMin) * this.yScale);
+  }
+
+  hasTargetValues(): boolean {
+    return this.dataPoints.some(p => p.targetValue !== undefined && p.targetValue !== null);
   }
 }
 

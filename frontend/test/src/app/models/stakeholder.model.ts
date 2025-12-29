@@ -45,3 +45,4 @@ export interface StakeholderKpis {
   critics: number; // Anzahl Kritiker
 }
 
+

@@ -68,10 +68,10 @@ public class StakeholderController {
 	/**
 	 * POST /api/v1/stakeholder/groups
 	 * Erstellt eine neue Stakeholder-Gruppe
-	 * Nur COMPANY_ADMIN darf Gruppen erstellen
+	 * SYSTEM_ADMIN und COMPANY_ADMIN dürfen Gruppen erstellen
 	 */
 	@PostMapping("/groups")
-	@PreAuthorize("hasRole('COMPANY_ADMIN')")
+	@PreAuthorize("hasAnyRole('SYSTEM_ADMIN', 'COMPANY_ADMIN')")
 	public ResponseEntity<StakeholderGroupResponse> createGroup(@Valid @RequestBody StakeholderGroupCreateRequest request) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
@@ -83,10 +83,10 @@ public class StakeholderController {
 	/**
 	 * PUT /api/v1/stakeholder/groups/{id}
 	 * Aktualisiert eine Stakeholder-Gruppe
-	 * Nur COMPANY_ADMIN darf Gruppen aktualisieren
+	 * SYSTEM_ADMIN und COMPANY_ADMIN dürfen Gruppen aktualisieren
 	 */
 	@PutMapping("/groups/{id}")
-	@PreAuthorize("hasRole('COMPANY_ADMIN')")
+	@PreAuthorize("hasAnyRole('SYSTEM_ADMIN', 'COMPANY_ADMIN')")
 	public ResponseEntity<StakeholderGroupResponse> updateGroup(
 		@PathVariable Long id,
 		@Valid @RequestBody StakeholderGroupUpdateRequest request
@@ -99,12 +99,27 @@ public class StakeholderController {
 	}
 
 	/**
+	 * DELETE /api/v1/stakeholder/groups/{id}
+	 * Löscht eine Stakeholder-Gruppe (inkl. Personen)
+	 * SYSTEM_ADMIN und COMPANY_ADMIN dürfen Gruppen löschen
+	 */
+	@DeleteMapping("/groups/{id}")
+	@PreAuthorize("hasAnyRole('SYSTEM_ADMIN', 'COMPANY_ADMIN')")
+	public ResponseEntity<Void> deleteGroup(@PathVariable Long id) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+
+		stakeholderService.deleteGroup(id, userPrincipal);
+		return ResponseEntity.ok().build();
+	}
+
+	/**
 	 * POST /api/v1/stakeholder/groups/{id}/persons
 	 * Fügt eine Person zu einer Stakeholder-Gruppe hinzu
-	 * Nur COMPANY_ADMIN darf Personen hinzufügen
+	 * SYSTEM_ADMIN und COMPANY_ADMIN dürfen Personen hinzufügen
 	 */
 	@PostMapping("/groups/{id}/persons")
-	@PreAuthorize("hasRole('COMPANY_ADMIN')")
+	@PreAuthorize("hasAnyRole('SYSTEM_ADMIN', 'COMPANY_ADMIN')")
 	public ResponseEntity<StakeholderPersonResponse> addPerson(
 		@PathVariable Long id,
 		@Valid @RequestBody StakeholderPersonCreateRequest request

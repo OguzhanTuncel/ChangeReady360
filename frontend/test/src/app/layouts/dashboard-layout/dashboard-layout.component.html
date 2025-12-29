@@ -38,7 +38,7 @@
     <div class="header-right">
       <!-- Notifications -->
       <button mat-icon-button class="header-button" matTooltip="Benachrichtigungen">
-        <mat-icon [matBadge]="notificationCount()" [matBadgeHidden]="notificationCount() === 0" matBadgeColor="warn">notifications</mat-icon>
+        <mat-icon [matBadge]="notificationCount()" [matBadgeHidden]="notificationCount() === 0" matBadgeColor="warn" [attr.aria-hidden]="false">notifications</mat-icon>
       </button>
 
       <!-- User Avatar -->

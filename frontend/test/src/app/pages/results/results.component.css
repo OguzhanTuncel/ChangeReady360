@@ -354,24 +354,7 @@ mat-card-title {
   color: white;
 }
 
-.reverse-items {
-  display: flex;
-  gap: 0.25rem;
-  flex-wrap: wrap;
-}
-
-.reverse-chip {
-  padding: 0.25rem 0.5rem;
-  background-color: var(--accent-color, #ff9800);
-  color: white;
-  border-radius: 4px;
-  font-size: 0.75rem;
-}
-
-.no-reverse {
-  color: var(--text-secondary, #666);
-  font-style: italic;
-}
+/* Reverse-Items werden nicht mehr in der UI angezeigt. */
 
 .loading {
   text-align: center;

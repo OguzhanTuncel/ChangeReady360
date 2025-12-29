@@ -1,4 +1,20 @@
 <svg [attr.width]="width" [attr.height]="height" [attr.viewBox]="viewBox" class="line-chart">
+  <!-- Axes -->
+  <line
+    [attr.x1]="padding"
+    [attr.x2]="padding"
+    [attr.y1]="padding"
+    [attr.y2]="height - padding"
+    class="axis-line"
+  />
+  <line
+    [attr.x1]="padding"
+    [attr.x2]="width - padding"
+    [attr.y1]="height - padding"
+    [attr.y2]="height - padding"
+    class="axis-line"
+  />
+
   <!-- Y-Axis Grid Lines -->
   @for (label of getYAxisLabels(); track label) {
     <line
@@ -6,9 +22,6 @@
       [attr.x2]="width - padding"
       [attr.y1]="getYPosition(label)"
       [attr.y2]="getYPosition(label)"
-      stroke="#E5E5E5"
-      stroke-width="1"
-      stroke-dasharray="4,4"
       class="grid-line"
     />
     <!-- Y-Axis Labels -->
@@ -60,8 +73,8 @@
   <!-- Data points for actual -->
   @for (point of dataPoints; track point.date.getTime()) {
     <circle
-      [attr.cx]="padding + ((point.date.getTime() - Math.min(...dataPoints.map(d => d.date.getTime()))) * xScale)"
-      [attr.cy]="padding + chartHeight - ((point.actualValue - Math.min(...dataPoints.map(d => d.actualValue))) * yScale)"
+      [attr.cx]="getPointX(point)"
+      [attr.cy]="getPointY(point)"
       r="4"
       fill="#56A080"
       class="data-point"
@@ -84,12 +97,18 @@
       <div class="legend-line actual"></div>
       <span>Ist-Wert</span>
     </div>
-    @if (showTarget && dataPoints.some(p => p.targetValue)) {
+    @if (showTarget && hasTargetValues()) {
       <div class="legend-item">
         <div class="legend-line target"></div>
         <span>Zielwert</span>
       </div>
     }
+  </div>
+}
+
+@if (dataPoints.length === 0) {
+  <div class="empty-chart">
+    Keine Trend-Daten verfügbar
   </div>
 }
 

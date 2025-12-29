@@ -79,11 +79,6 @@ export class SurveyStartComponent implements OnInit {
       return;
     }
 
-    if (!this.companyService.getSelectedCompanyId()) {
-      this.error.set('Bitte wählen Sie zuerst ein Unternehmen aus');
-      return;
-    }
-
     this.isLoading.set(true);
     this.error.set(null);
 
@@ -96,7 +91,26 @@ export class SurveyStartComponent implements OnInit {
         this.router.navigate(['/app/survey', instance.id, 'fill']);
       },
       error: (err) => {
-        this.error.set('Fehler beim Starten des Fragebogens');
+        console.error('Error creating survey instance:', err);
+        let errorMessage = 'Fehler beim Starten des Fragebogens';
+        
+        if (err.status === 0 || err.status === undefined) {
+          errorMessage = 'Verbindung zum Backend fehlgeschlagen. Bitte stellen Sie sicher, dass der Backend-Server läuft.';
+        } else if (err.status === 401) {
+          errorMessage = 'Authentifizierung fehlgeschlagen. Bitte loggen Sie sich erneut ein.';
+        } else if (err.status === 403) {
+          errorMessage = 'Sie haben keine Berechtigung, das Assessment zu starten.';
+        } else if (err.status === 404) {
+          errorMessage = 'Umfrage-Vorlage nicht gefunden.';
+        } else if (err.status === 400) {
+          errorMessage = err.error?.message || 'Ungültige Anfrage. Bitte überprüfen Sie Ihre Eingaben.';
+        } else if (err.error?.message) {
+          errorMessage = err.error.message;
+        } else if (err.message) {
+          errorMessage = err.message;
+        }
+        
+        this.error.set(errorMessage);
         this.isLoading.set(false);
       }
     });

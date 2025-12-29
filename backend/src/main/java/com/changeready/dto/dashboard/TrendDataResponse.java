@@ -17,3 +17,4 @@ public class TrendDataResponse {
 	private String insight; // Optional: Trend-Insight (z.B. "Positive Entwicklung")
 }
 
+

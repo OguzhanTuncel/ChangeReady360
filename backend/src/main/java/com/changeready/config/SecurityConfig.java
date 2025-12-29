@@ -69,14 +69,15 @@ public class SecurityConfig {
 			.authorizeHttpRequests(auth -> auth
 				.requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/index.html").permitAll() // Swagger UI - muss zuerst kommen
 				.requestMatchers("/api/v1/auth/login", "/api/v1/auth/logout").permitAll() // Öffentliche Auth-Endpoints
+				.requestMatchers("/api/v1/debug/**").authenticated() // Debug-Endpoints (nur für Diagnose; zusätzlich durch @PreAuthorize geschützt)
 				.requestMatchers("/api/v1/company-access-requests").permitAll() // Öffentlicher POST-Endpoint
 				.requestMatchers("/api/v1/company-access-requests/**").authenticated() // Geschützte GET/PUT-Endpoints
 				.requestMatchers("/api/v1/admin/**").authenticated() // Admin-Endpoints
-				.requestMatchers("/api/v1/dashboard/**").authenticated() // Dashboard-Endpoints (geschützt durch @PreAuthorize)
-				.requestMatchers("/api/v1/stakeholder/**").authenticated() // Stakeholder-Endpoints (geschützt durch @PreAuthorize)
-				.requestMatchers("/api/v1/reporting/**").authenticated() // Reporting-Endpoints (geschützt durch @PreAuthorize)
-				.requestMatchers("/api/v1/measures/**").authenticated() // Measures-Endpoints (geschützt durch @PreAuthorize)
-				.requestMatchers("/api/v1/surveys/**").authenticated() // Survey-Endpoints (geschützt durch @PreAuthorize)
+				.requestMatchers("/api/v1/dashboard/**").authenticated() // Dashboard-Endpoints
+				.requestMatchers("/api/v1/stakeholder/**").authenticated() // Stakeholder-Endpoints
+				.requestMatchers("/api/v1/reporting/**").authenticated() // Reporting-Endpoints
+				.requestMatchers("/api/v1/measures/**").authenticated() // Measures-Endpoints
+				.requestMatchers("/api/v1/surveys/**").authenticated() // Survey-Endpoints
 				.anyRequest().permitAll()
 			)
 			

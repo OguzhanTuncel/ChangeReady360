@@ -151,10 +151,22 @@
         @for (group of stakeholderGroups(); track group.id) {
           <mat-card class="group-card" (click)="navigateToGroupDetail(group.id)">
             <div class="group-card-header">
-              <mat-icon class="group-icon">{{ group.icon }}</mat-icon>
+              <div class="group-card-header-left">
+                <mat-icon class="group-icon">{{ group.icon }}</mat-icon>
+              </div>
+              <div class="group-card-header-right">
+                <button
+                  mat-icon-button
+                  class="delete-button"
+                  (click)="deleteGroup(group, $event)"
+                  aria-label="Stakeholder-Gruppe löschen"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
               <span class="status-badge" [class]="getStatusBadgeClass(group.status)">
                 {{ getStatusBadgeText(group.status) }}
               </span>
+              </div>
             </div>
             <div class="group-card-content">
               <h3 class="group-title">{{ group.name }}</h3>

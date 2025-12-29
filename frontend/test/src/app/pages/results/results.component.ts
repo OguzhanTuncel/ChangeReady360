@@ -10,8 +10,6 @@ import { SurveyTemplate, SurveyResult, DepartmentResult, DEPARTMENT_DISPLAY_NAME
 import { ReportingService } from '../../services/reporting.service';
 import { ManagementSummary, DepartmentReadiness, TrendChartData } from '../../models/reporting.model';
 import { LineChartComponent } from '../../components/line-chart/line-chart.component';
-import { ReportingService } from '../../services/reporting.service';
-import { ManagementSummary, DepartmentReadiness } from '../../models/reporting.model';
 
 @Component({
   selector: 'app-results',
@@ -40,7 +38,7 @@ export class ResultsComponent implements OnInit {
   departmentReadiness = signal<DepartmentReadiness[]>([]);
   trendData = signal<TrendChartData | null>(null);
 
-  displayedColumns: string[] = ['category', 'subcategory', 'average', 'answered', 'reverse'];
+  displayedColumns: string[] = ['category', 'subcategory', 'average', 'answered'];
   readonly departmentDisplayNames = DEPARTMENT_DISPLAY_NAMES;
 
   constructor(
@@ -101,24 +99,25 @@ export class ResultsComponent implements OnInit {
   loadResults(templateId: string) {
     this.isLoading.set(true);
     
-    // Load overall results
-    this.surveyService.calculateResults(templateId).subscribe({
+    // Load template-specific results from backend
+    this.reportingService.getTemplateResults(templateId).subscribe({
       next: (results) => {
         this.results.set(results);
         this.isLoading.set(false);
       },
       error: () => {
+        this.results.set([]);
         this.isLoading.set(false);
       }
     });
 
-    // Load department results
-    this.surveyService.calculateResultsByDepartment(templateId).subscribe({
+    // Load template-specific department results from backend
+    this.reportingService.getTemplateDepartmentResults(templateId).subscribe({
       next: (departmentResults) => {
         this.departmentResults.set(departmentResults);
       },
       error: () => {
-        // Ignore errors for department results
+        this.departmentResults.set([]);
       }
     });
   }

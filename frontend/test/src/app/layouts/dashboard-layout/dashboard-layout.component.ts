@@ -55,7 +55,8 @@ export class DashboardLayoutComponent {
   currentPageTitle = signal('Dashboard');
   companies = signal<Company[]>([]);
   selectedCompany = signal<Company | null>(null);
-  notificationCount = signal(2); // TODO: Aus Backend laden
+  // No-mock: solange es keinen Backend-Endpoint gibt, zeigen wir 0 statt Demo-Zahl.
+  notificationCount = signal(0);
 
   navItems: NavItem[] = [
     { label: 'Dashboard', route: '/app/dashboard', icon: 'dashboard' },
@@ -147,8 +148,7 @@ export class DashboardLayoutComponent {
 
   getUserRole(): string {
     const user = this.authService.currentUser();
-    // TODO: Role aus User-Objekt holen wenn verfügbar
-    return 'Projektleiter';
+    return user?.role || '';
   }
 
   refreshData(): void {

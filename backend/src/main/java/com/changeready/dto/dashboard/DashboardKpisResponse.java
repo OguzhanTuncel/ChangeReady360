@@ -22,3 +22,4 @@ public class DashboardKpisResponse {
 	private Integer activeMeasures;
 }
 
+

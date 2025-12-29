@@ -8,7 +8,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * SEC-007: CORS Configuration
@@ -17,7 +16,7 @@ import java.util.List;
 @Configuration
 public class CorsConfig {
 
-	@Value("${app.cors.allowed-origins:http://localhost:4200}")
+	@Value("${app.cors.allowed-origins:http://localhost:4200,http://localhost:4201}")
 	private String allowedOrigins;
 
 	@Bean

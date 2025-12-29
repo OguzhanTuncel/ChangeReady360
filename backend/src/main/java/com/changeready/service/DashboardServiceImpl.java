@@ -70,6 +70,21 @@ public class DashboardServiceImpl implements DashboardService {
 			.filter(instance -> instance.getStatus() == SurveyInstance.SurveyInstanceStatus.DRAFT)
 			.count();
 		response.setOpenSurveys((int) openSurveys);
+
+		// Overall Readiness (Source of Truth): Aus allen SUBMITTED Survey-Instanzen der Company
+		List<SurveyInstance> submittedInstances = allInstances.stream()
+			.filter(instance -> instance.getStatus() == SurveyInstance.SurveyInstanceStatus.SUBMITTED)
+			.collect(Collectors.toList());
+		if (!submittedInstances.isEmpty()) {
+			List<SurveyAnswer> allAnswers = new ArrayList<>();
+			for (SurveyInstance instance : submittedInstances) {
+				allAnswers.addAll(surveyAnswerRepository.findByInstanceId(instance.getId()));
+			}
+			double readinessRaw = allAnswers.isEmpty() ? 0.0 : readinessCalculationService.calculateReadiness(allAnswers);
+			response.setOverallReadiness(roundPercent0(readinessRaw));
+		} else {
+			response.setOverallReadiness(0.0);
+		}
 		
 		// Stakeholder-Statistiken
 		List<StakeholderGroup> groups = stakeholderGroupRepository.findByCompanyId(companyId);
@@ -77,8 +92,6 @@ public class DashboardServiceImpl implements DashboardService {
 		int promoters = 0;
 		int neutrals = 0;
 		int critics = 0;
-		double totalReadiness = 0.0;
-		int groupsWithReadiness = 0;
 		
 		for (StakeholderGroup group : groups) {
 			// Personen der Gruppe laden
@@ -88,9 +101,6 @@ public class DashboardServiceImpl implements DashboardService {
 			// Readiness für diese Gruppe berechnen
 			double groupReadiness = calculateGroupReadiness(group, persons, companyId);
 			if (groupReadiness > 0) {
-				totalReadiness += groupReadiness;
-				groupsWithReadiness++;
-				
 				// Kategorisierung
 				String category = readinessCalculationService.calculatePromoterNeutralCritic(groupReadiness);
 				if ("promoter".equals(category)) {
@@ -107,13 +117,6 @@ public class DashboardServiceImpl implements DashboardService {
 		response.setPromoters(promoters);
 		response.setNeutrals(neutrals);
 		response.setCritics(critics);
-		
-		// Overall Readiness = Durchschnitt aller Gruppen-Readiness-Werte
-		if (groupsWithReadiness > 0) {
-			response.setOverallReadiness(totalReadiness / groupsWithReadiness);
-		} else {
-			response.setOverallReadiness(0.0);
-		}
 		
 		// Active Measures
 		List<com.changeready.dto.measure.MeasureResponse> activeMeasures = measureService.getActiveMeasures(userPrincipal);
@@ -199,11 +202,12 @@ public class DashboardServiceImpl implements DashboardService {
 			
 			// Berechne Readiness für diesen Tag
 			if (!allAnswers.isEmpty()) {
-				double readiness = readinessCalculationService.calculateReadiness(allAnswers);
+				double readinessRaw = readinessCalculationService.calculateReadiness(allAnswers);
+				double readinessRounded = roundPercent0(readinessRaw);
 				
 				TrendDataPointResponse point = new TrendDataPointResponse();
 				point.setDate(date);
-				point.setActualValue(readiness);
+				point.setActualValue(readinessRounded);
 				point.setTargetValue(null); // Target-Werte werden später hinzugefügt
 				dataPoints.add(point);
 			}
@@ -245,6 +249,10 @@ public class DashboardServiceImpl implements DashboardService {
 		} else {
 			return "Stabile Entwicklung";
 		}
+	}
+
+	private double roundPercent0(double value) {
+		return (double) Math.round(value);
 	}
 }
 

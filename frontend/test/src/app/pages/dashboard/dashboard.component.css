@@ -195,7 +195,7 @@ mat-card {
 
 .main-content-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  grid-template-columns: 1fr 1fr;
   gap: var(--spacing-lg);
 }
 
@@ -221,6 +221,15 @@ mat-card {
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+}
+
+.donut-center-label {
+  position: absolute;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--gray-900);
+  line-height: 1;
 }
 
 .readiness-stats {
@@ -666,6 +675,10 @@ mat-card-title mat-icon {
   .kpi-cards-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .main-content-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 768px) {
@@ -677,7 +690,7 @@ mat-card-title mat-icon {
     grid-template-columns: 1fr;
   }
 
-  .content-grid {
+  .main-content-grid {
     grid-template-columns: 1fr;
   }
 

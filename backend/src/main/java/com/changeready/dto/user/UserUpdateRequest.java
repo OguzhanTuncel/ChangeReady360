@@ -30,3 +30,4 @@ public class UserUpdateRequest {
 	// to prevent privilege escalation and unauthorized status changes
 }
 
+

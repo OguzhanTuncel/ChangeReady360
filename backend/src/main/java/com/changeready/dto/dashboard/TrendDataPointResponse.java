@@ -18,3 +18,4 @@ public class TrendDataPointResponse {
 	private Double targetValue; // Optional: Zielwert für Prognose
 }
 
+

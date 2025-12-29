@@ -12,7 +12,7 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-  loginForm!: FormGroup;
+  loginForm!: FormGroup; // Definitiv initialisiert im Constructor
   isLoading = signal(false);
   errorMessage = signal<string | null>(null);
 
@@ -28,6 +28,7 @@ export class LoginComponent {
       return;
     }
 
+    // FormGroup initialisieren
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
@@ -53,9 +54,21 @@ export class LoginComponent {
       },
       error: (error) => {
         this.isLoading.set(false);
-        this.errorMessage.set(
-          error.error?.message || 'Login fehlgeschlagen. Bitte überprüfen Sie Ihre Anmeldedaten.'
-        );
+        console.error('Login error details:', error);
+        
+        let message = 'Login fehlgeschlagen. Bitte überprüfen Sie Ihre Anmeldedaten.';
+        
+        if (error.status === 0 || error.status === undefined) {
+          message = 'Verbindung zum Backend fehlgeschlagen. Bitte stellen Sie sicher, dass der Backend-Server auf Port 8080 läuft.';
+        } else if (error.status === 404) {
+          message = 'Backend-Endpoint nicht gefunden. Bitte überprüfen Sie, ob das Backend läuft.';
+        } else if (error.status === 401 || error.status === 403) {
+          message = 'Ungültige E-Mail oder Passwort.';
+        } else if (error.error?.message) {
+          message = error.error.message;
+        }
+        
+        this.errorMessage.set(message);
       }
     });
   }

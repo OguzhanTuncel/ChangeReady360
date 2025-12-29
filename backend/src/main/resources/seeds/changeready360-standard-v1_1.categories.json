@@ -1,0 +1,421 @@
+[
+  {
+    "name": "Verständnis",
+    "subcategories": [
+      {
+        "name": "Verständnis",
+        "questions": [
+          {
+            "id": "CRS_001",
+            "text": "Ich verstehe das Ziel {Artikel} {Projekt}.",
+            "category": "Verständnis",
+            "subcategory": "Verständnis",
+            "onlyPMA": false,
+            "reverse": false,
+            "order": 1
+          },
+          {
+            "id": "CRS_002",
+            "text": "Ich verstehe, warum {Artikel} {Projekt} wichtig ist.",
+            "category": "Verständnis",
+            "subcategory": "Verständnis",
+            "onlyPMA": false,
+            "reverse": false,
+            "order": 2
+          },
+          {
+            "id": "CRS_003",
+            "text": "Ich verstehe, welche konkreten Auswirkungen {Artikel} {Projekt} auf mich und meine Arbeit haben wird.",
+            "category": "Verständnis",
+            "subcategory": "Verständnis",
+            "onlyPMA": false,
+            "reverse": false,
+            "order": 3
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Unterstützung",
+    "subcategories": [
+      {
+        "name": "Unterstützung",
+        "questions": [
+          {
+            "id": "CRS_004",
+            "text": "Ich weiß, wer meine Ansprechpartner bei {Artikel} {Projekt} sind.",
+            "category": "Unterstützung",
+            "subcategory": "Unterstützung",
+            "onlyPMA": false,
+            "reverse": false,
+            "order": 4
+          },
+          {
+            "id": "CRS_005",
+            "text": "Ich erlebe die Ansprechpartner {Artikel} {Projekt} als verfügbar, bei Fragen oder Problemen.",
+            "category": "Unterstützung",
+            "subcategory": "Unterstützung",
+            "onlyPMA": false,
+            "reverse": false,
+            "order": 5
+          },
+          {
+            "id": "CRS_006",
+            "text": "Ich erlebe die Unterstützung der Ansprechpartner {Artikel} {Projekt} als hilfreich.",
+            "category": "Unterstützung",
+            "subcategory": "Unterstützung",
+            "onlyPMA": false,
+            "reverse": false,
+            "order": 6
+          },
+          {
+            "id": "CRS_007",
+            "text": "Ich erlebe, dass ich ermutigt werde, bei {Artikel} {Projekt} mitzugehen.",
+            "category": "Unterstützung",
+            "subcategory": "Unterstützung",
+            "onlyPMA": false,
+            "reverse": false,
+            "order": 7
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Transparenz, Entscheidungsfindung und Einbindung im Change-Prozess",
+    "subcategories": [
+      {
+        "name": "Transparenz & Einbindung",
+        "questions": [
+          {
+            "id": "CRS_008",
+            "text": "Ich erlebe, dass ich die für meine Arbeit relevanten Entscheidungsprozesse in {Artikel} {Projekt} nachvollziehen kann.",
+            "category": "Transparenz, Entscheidungsfindung und Einbindung im Change-Prozess",
+            "subcategory": "Transparenz & Einbindung",
+            "onlyPMA": false,
+            "reverse": false,
+            "order": 8
+          },
+          {
+            "id": "CRS_009",
+            "text": "Ich erlebe, dass ich über Probleme und Unsicherheiten im Rahmen {Artikel} {Projekt} klar informiert werde.",
+            "category": "Transparenz, Entscheidungsfindung und Einbindung im Change-Prozess",
+            "subcategory": "Transparenz & Einbindung",
+            "onlyPMA": false,
+            "reverse": false,
+            "order": 9
+          },
+          {
+            "id": "CRS_010",
+            "text": "Ich erlebe, dass mein Input bei {Artikel} {Projekt} berücksichtigt wird.",
+            "category": "Transparenz, Entscheidungsfindung und Einbindung im Change-Prozess",
+            "subcategory": "Transparenz & Einbindung",
+            "onlyPMA": false,
+            "reverse": false,
+            "order": 10
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Menge und Frequenz der Kommunikation",
+    "subcategories": [
+      {
+        "name": "Menge & Frequenz",
+        "questions": [
+          {
+            "id": "CRS_011",
+            "text": "Ich erlebe, dass ich regelmäßig Updates zu {Artikel} {Projekt} erhalte.",
+            "category": "Menge und Frequenz der Kommunikation",
+            "subcategory": "Menge & Frequenz",
+            "onlyPMA": false,
+            "reverse": false,
+            "order": 11
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Effektivität der Kommunikation",
+    "subcategories": [
+      {
+        "name": "Effektivität",
+        "questions": [
+          {
+            "id": "CRS_012",
+            "text": "Ich erlebe, dass mir meine Aufgaben und Anweisungen im Rahmen von {Artikel} {Projekt} fast immer klar sind.",
+            "category": "Effektivität der Kommunikation",
+            "subcategory": "Effektivität",
+            "onlyPMA": false,
+            "reverse": false,
+            "order": 12
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Offener Umgang",
+    "subcategories": [
+      {
+        "name": "Offener Umgang",
+        "questions": [
+          {
+            "id": "CRS_013",
+            "text": "Ich fühle mich wohl dabei, bei {Artikel} {Projekt} Kritik zu äußern oder zu widersprechen.",
+            "category": "Offener Umgang",
+            "subcategory": "Offener Umgang",
+            "onlyPMA": false,
+            "reverse": false,
+            "order": 13
+          },
+          {
+            "id": "CRS_014",
+            "text": "Ich fühle mich wohl dabei, Probleme oder Fehler bei {Artikel} {Projekt} anzusprechen.",
+            "category": "Offener Umgang",
+            "subcategory": "Offener Umgang",
+            "onlyPMA": false,
+            "reverse": false,
+            "order": 14
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Ressourcen – Zeit",
+    "subcategories": [
+      {
+        "name": "Zeit",
+        "questions": [
+          {
+            "id": "CRS_015",
+            "text": "Ich habe ausreichend Zeit, um die mit {Artikel} {Projekt} verbundenen Anforderungen in meiner Arbeit zu bewältigen.",
+            "category": "Ressourcen – Zeit",
+            "subcategory": "Zeit",
+            "onlyPMA": false,
+            "reverse": false,
+            "order": 15
+          },
+          {
+            "id": "CRS_016",
+            "text": "Ich habe genug Zeit, um {Artikel} {Projekt} mitzugehen.",
+            "category": "Ressourcen – Zeit",
+            "subcategory": "Zeit",
+            "onlyPMA": false,
+            "reverse": false,
+            "order": 16
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Ressourcen – Equipment",
+    "subcategories": [
+      {
+        "name": "Equipment",
+        "questions": [
+          {
+            "id": "CRS_017",
+            "text": "Ich habe das notwendige Equipment, um die mit {Artikel} {Projekt} verbundenen Anforderungen in meiner Arbeit umzusetzen.",
+            "category": "Ressourcen – Equipment",
+            "subcategory": "Equipment",
+            "onlyPMA": false,
+            "reverse": false,
+            "order": 17
+          },
+          {
+            "id": "CRS_018",
+            "text": "Ich habe das nötige Equipment, um {Artikel} {Projekt} mitzugehen.",
+            "category": "Ressourcen – Equipment",
+            "subcategory": "Equipment",
+            "onlyPMA": false,
+            "reverse": false,
+            "order": 18
+          },
+          {
+            "id": "CRS_019",
+            "text": "Ich habe das notwendige Equipment, um im Rahmen von {Artikel} {Projekt} gut arbeiten zu können.",
+            "category": "Ressourcen – Equipment",
+            "subcategory": "Equipment",
+            "onlyPMA": false,
+            "reverse": false,
+            "order": 19
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Prozesse",
+    "subcategories": [
+      {
+        "name": "Prozesse",
+        "questions": [
+          {
+            "id": "CRS_020",
+            "text": "Ich erlebe Prozesse, die mich in meiner Arbeit bei {Artikel} {Projekt} unnötig ausbremsen.",
+            "category": "Prozesse",
+            "subcategory": "Prozesse",
+            "onlyPMA": false,
+            "reverse": true,
+            "order": 20
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Kompetenzen",
+    "subcategories": [
+      {
+        "name": "Kompetenzen",
+        "questions": [
+          {
+            "id": "CRS_021",
+            "text": "Ich habe die nötigen Fähigkeiten, um {Artikel} {Projekt} mitzugehen.",
+            "category": "Kompetenzen",
+            "subcategory": "Kompetenzen",
+            "onlyPMA": false,
+            "reverse": false,
+            "order": 21
+          },
+          {
+            "id": "CRS_022",
+            "text": "Ich verfüge über die nötigen Fähigkeiten, um die mit {Artikel} {Projekt} verbundenen Anforderungen in meiner Arbeit zu erfüllen.",
+            "category": "Kompetenzen",
+            "subcategory": "Kompetenzen",
+            "onlyPMA": false,
+            "reverse": false,
+            "order": 22
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Persönliche Vorteile und Nachteile",
+    "subcategories": [
+      {
+        "name": "Vorteile & Nachteile",
+        "questions": [
+          {
+            "id": "CRS_023",
+            "text": "Ich glaube, dass es sich für mich lohnt, wenn das Unternehmen {Artikel} {Projekt} umsetzt.",
+            "category": "Persönliche Vorteile und Nachteile",
+            "subcategory": "Vorteile & Nachteile",
+            "onlyPMA": false,
+            "reverse": false,
+            "order": 23
+          },
+          {
+            "id": "CRS_024",
+            "text": "Ich glaube, dass {Artikel} {Projekt} meine Arbeit erleichtern wird.",
+            "category": "Persönliche Vorteile und Nachteile",
+            "subcategory": "Vorteile & Nachteile",
+            "onlyPMA": false,
+            "reverse": false,
+            "order": 24
+          },
+          {
+            "id": "CRS_025",
+            "text": "Ich glaube, dass mir meine Arbeit nach {Artikel} {Projekt} mehr gefallen wird.",
+            "category": "Persönliche Vorteile und Nachteile",
+            "subcategory": "Vorteile & Nachteile",
+            "onlyPMA": false,
+            "reverse": false,
+            "order": 25
+          },
+          {
+            "id": "CRS_026",
+            "text": "Ich glaube, dass ich durch {Artikel} {Projekt} einen höheren Workload haben werde.",
+            "category": "Persönliche Vorteile und Nachteile",
+            "subcategory": "Vorteile & Nachteile",
+            "onlyPMA": false,
+            "reverse": true,
+            "order": 26
+          },
+          {
+            "id": "CRS_027",
+            "text": "Ich befürchte, dass ich durch {Artikel} {Projekt} einen Teil meines Status in der Organisation verlieren werde.",
+            "category": "Persönliche Vorteile und Nachteile",
+            "subcategory": "Vorteile & Nachteile",
+            "onlyPMA": false,
+            "reverse": true,
+            "order": 27
+          },
+          {
+            "id": "CRS_028",
+            "text": "Ich befürchte, dass {Artikel} {Projekt} viele der persönlichen Beziehungen in meiner Arbeit beeinträchtigen wird.",
+            "category": "Persönliche Vorteile und Nachteile",
+            "subcategory": "Vorteile & Nachteile",
+            "onlyPMA": false,
+            "reverse": true,
+            "order": 28
+          },
+          {
+            "id": "CRS_029",
+            "text": "Ich glaube, dass {Artikel} {Projekt} ein Risiko für meine Zukunft in diesem Job darstellt.",
+            "category": "Persönliche Vorteile und Nachteile",
+            "subcategory": "Vorteile & Nachteile",
+            "onlyPMA": false,
+            "reverse": true,
+            "order": 29
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Einstellung und Haltung",
+    "subcategories": [
+      {
+        "name": "Einstellung & Haltung",
+        "questions": [
+          {
+            "id": "CRS_030",
+            "text": "Ich bin bereit dazu, die erforderlichen Fähigkeiten für {Artikel} {Projekt} zu erlernen.",
+            "category": "Einstellung und Haltung",
+            "subcategory": "Einstellung & Haltung",
+            "onlyPMA": false,
+            "reverse": false,
+            "order": 30
+          },
+          {
+            "id": "CRS_031",
+            "text": "Ich halte {Artikel} {Projekt} für sinnvoll.",
+            "category": "Einstellung und Haltung",
+            "subcategory": "Einstellung & Haltung",
+            "onlyPMA": false,
+            "reverse": false,
+            "order": 31
+          },
+          {
+            "id": "CRS_032",
+            "text": "Ich investiere aktiv Zeit und Energie, um die mit {Artikel} {Projekt} verbundenen Anforderungen in meiner Arbeit umzusetzen.",
+            "category": "Einstellung und Haltung",
+            "subcategory": "Einstellung & Haltung",
+            "onlyPMA": false,
+            "reverse": false,
+            "order": 32
+          },
+          {
+            "id": "CRS_033",
+            "text": "Ich stehe {Artikel} {Projekt} positiv gegenüber und bin bereit, ihn aktiv mitzugehen.",
+            "category": "Einstellung und Haltung",
+            "subcategory": "Einstellung & Haltung",
+            "onlyPMA": false,
+            "reverse": false,
+            "order": 33
+          }
+        ]
+      }
+    ]
+  }
+]
+
+

@@ -16,7 +16,6 @@ public class SurveyAnswerItem {
 	@NotNull(message = "Question ID is required")
 	private String questionId;
 
-	@NotNull(message = "Value is required")
 	@Min(value = 1, message = "Value must be between 1 and 5")
 	@Max(value = 5, message = "Value must be between 1 and 5")
 	private Integer value;

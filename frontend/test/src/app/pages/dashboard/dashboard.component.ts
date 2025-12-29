@@ -6,6 +6,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatChipsModule } from '@angular/material/chips';
+import { forkJoin, of } from 'rxjs';
+import { catchError, finalize } from 'rxjs/operators';
 import { SurveyService } from '../../services/survey.service';
 import { SurveyInstance, SurveyResponse } from '../../models/survey.model';
 import { DashboardService } from '../../services/dashboard.service';
@@ -53,6 +55,7 @@ export class DashboardComponent implements OnInit {
   kpis = signal<DashboardKpis | null>(null);
   readinessData = signal<ReadinessData | null>(null);
   stakeholderGroups = signal<StakeholderGroupSummary[]>([]);
+  errorMessage = signal<string | null>(null);
 
   constructor(
     private surveyService: SurveyService,
@@ -66,40 +69,79 @@ export class DashboardComponent implements OnInit {
 
   loadData() {
     this.isLoading.set(true);
+    this.errorMessage.set(null);
     
-    // Load Dashboard KPIs
-    this.dashboardService.getKpis().subscribe({
-      next: (kpis) => {
-        this.kpis.set(kpis);
-      }
-    });
-
-    // Load Readiness Data
-    this.dashboardService.getReadinessData().subscribe({
-      next: (readiness) => {
-        this.readinessData.set(readiness);
-      }
-    });
-
-    // Load Stakeholder Groups
-    this.dashboardService.getStakeholderGroups().subscribe({
-      next: (groups) => {
-        this.stakeholderGroups.set(groups);
-      }
-    });
-
-    this.surveyService.getUserInstances().subscribe({
-      next: (instances) => {
-        this.instances.set(instances);
-      }
-    });
-
-    this.surveyService.getUserResponses().subscribe({
-      next: (responses) => {
-        this.responses.set(responses);
+    // Load all data in parallel with proper error handling
+    forkJoin({
+      kpis: this.dashboardService.getKpis().pipe(
+        catchError(error => {
+          console.error('Error loading dashboard KPIs:', error);
+          this.handleError(error, 'Dashboard-KPIs');
+          return of(null);
+        })
+      ),
+      readiness: this.dashboardService.getReadinessData().pipe(
+        catchError(error => {
+          console.error('Error loading readiness data:', error);
+          this.handleError(error, 'Readiness-Daten');
+          return of(null);
+        })
+      ),
+      groups: this.dashboardService.getStakeholderGroups().pipe(
+        catchError(error => {
+          console.error('Error loading stakeholder groups:', error);
+          this.handleError(error, 'Stakeholder-Gruppen');
+          return of([]);
+        })
+      ),
+      instances: this.surveyService.getUserInstances().pipe(
+        catchError(error => {
+          console.error('Error loading survey instances:', error);
+          this.handleError(error, 'Umfragen');
+          return of([]);
+        })
+      ),
+      responses: this.surveyService.getUserResponses().pipe(
+        catchError(error => {
+          console.error('Error loading survey responses:', error);
+          this.handleError(error, 'Umfrage-Antworten');
+          return of([]);
+        })
+      )
+    }).pipe(
+      finalize(() => {
+        // Always set isLoading to false when all requests complete (success or error)
         this.isLoading.set(false);
+      })
+    ).subscribe({
+      next: (data) => {
+        this.kpis.set(data.kpis);
+        this.readinessData.set(data.readiness);
+        this.stakeholderGroups.set(data.groups);
+        this.instances.set(data.instances);
+        this.responses.set(data.responses);
+      },
+      error: (error) => {
+        console.error('Error loading dashboard data:', error);
+        this.handleError(error, 'Dashboard-Daten');
+        // Set default values on error
+        this.kpis.set(null);
+        this.readinessData.set(null);
+        this.stakeholderGroups.set([]);
+        this.instances.set([]);
+        this.responses.set([]);
       }
     });
+  }
+
+  private handleError(error: any, context: string): void {
+    if (error.status === 0 || error.status === undefined) {
+      this.errorMessage.set(`Verbindung zum Backend fehlgeschlagen. Bitte stellen Sie sicher, dass der Backend-Server auf Port 8080 läuft.`);
+    } else if (error.status === 401 || error.status === 403) {
+      this.errorMessage.set(`Authentifizierung fehlgeschlagen. Bitte loggen Sie sich erneut ein.`);
+    } else {
+      this.errorMessage.set(`Fehler beim Laden von ${context}. Status: ${error.status}`);
+    }
   }
 
   get kpiCards(): StatCard[] {
@@ -121,12 +163,14 @@ export class DashboardComponent implements OnInit {
       },
       {
         title: 'Stakeholder',
-        value: kpisData.stakeholderCount,
+        // UX: on dashboard we show number of stakeholder groups (created groups),
+        // because that is what users create/manage here.
+        value: kpisData.stakeholderGroupsCount,
         icon: 'people',
         color: 'primary',
         route: '/app/stakeholder',
-        change: kpisData.stakeholderGroupsCount > 0 
-          ? `in ${kpisData.stakeholderGroupsCount} Gruppen`
+        change: kpisData.stakeholderCount > 0
+          ? `${kpisData.stakeholderCount} Personen`
           : undefined
       },
       {
@@ -204,7 +248,9 @@ export class DashboardComponent implements OnInit {
     return this.getOpenInstances().map(instance => ({
       id: instance.id,
       title: instance.template.name,
-      participants: 1, // Single user instance
+      // Participants: Single-user instances haben immer 1 Teilnehmer
+      // Wenn Backend später participantCount liefert, nutze: instance.participantCount || 1
+      participants: 1,
       status: 'in_progress' as const,
       route: `/app/survey/${instance.id}/fill`
     }));
@@ -216,31 +262,6 @@ export class DashboardComponent implements OnInit {
 
   getCompletedInstances(): SurveyInstance[] {
     return this.instances().filter(i => i.submittedAt);
-  }
-
-  calculateOverallScore(): number {
-    const responses = this.responses();
-    if (responses.length === 0) return 0;
-
-    // Sammle alle Antwortwerte
-    const allAnswers: number[] = [];
-    responses.forEach(response => {
-      response.answers.forEach(answer => {
-        if (answer.value !== null) {
-          allAnswers.push(answer.value);
-        }
-      });
-    });
-
-    if (allAnswers.length === 0) return 0;
-
-    // Berechne den Durchschnitt aller Antworten (1-5 Skala)
-    const totalAverage = allAnswers.reduce((sum, val) => sum + val, 0) / allAnswers.length;
-    
-    // Skaliere von 1-5 auf 0-100% (gleiche Formel wie Results)
-    // 1 = 0%, 3 = 50%, 5 = 100%
-    const percentage = ((totalAverage - 1) / 4) * 100;
-    return Math.max(0, Math.min(100, Math.round(percentage)));
   }
 
   formatDate(date: Date): string {

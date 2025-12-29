@@ -78,7 +78,9 @@ export class SurveyReviewComponent implements OnInit {
           : subcategory.questions.filter(q => !q.onlyPMA);
         
         questions.forEach(question => {
-          if (!answersMap.has(question.id) || answersMap.get(question.id) === null) {
+          // "Keine Angabe" wird backendseitig als fehlende Antwort gespeichert (kein SurveyAnswer).
+          // Für Review zeigen wir Fragen ohne gespeicherte Antwort als "offen" an.
+          if (!answersMap.has(question.id)) {
             unanswered.push(question);
           }
         });
@@ -114,14 +116,6 @@ export class SurveyReviewComponent implements OnInit {
   submit() {
     const instance = this.instance();
     if (!instance) return;
-
-    // Prüfe ob alle Fragen beantwortet sind
-    const unansweredQuestions = this.getUnansweredQuestions();
-    if (unansweredQuestions.length > 0) {
-      this.error.set(`Offene Fragen vorhanden. Absenden nicht möglich.`);
-      this.isSubmitting.set(false);
-      return;
-    }
 
     this.isSubmitting.set(true);
     this.error.set(null);

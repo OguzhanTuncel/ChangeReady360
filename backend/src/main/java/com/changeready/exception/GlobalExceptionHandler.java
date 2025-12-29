@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -59,6 +60,16 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException ex) {
 		ErrorResponse errorResponse = new ErrorResponse("Access Denied", "FORBIDDEN");
 		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
+	}
+
+	@ExceptionHandler(ResponseStatusException.class)
+	public ResponseEntity<ErrorResponse> handleResponseStatusException(ResponseStatusException ex) {
+		HttpStatus status = HttpStatus.valueOf(ex.getStatusCode().value());
+		String message = "prod".equalsIgnoreCase(activeProfile)
+			? status.getReasonPhrase()
+			: ex.getMessage();
+		ErrorResponse errorResponse = new ErrorResponse(message, status.name());
+		return ResponseEntity.status(status).body(errorResponse);
 	}
 
 	@ExceptionHandler(Exception.class)

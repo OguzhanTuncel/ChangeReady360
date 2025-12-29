@@ -174,6 +174,13 @@ public class SurveyServiceImpl implements SurveyService {
 		
 		// Antworten speichern/aktualisieren
 		for (SurveyAnswerItem item : request.getAnswers()) {
+			// "Keine Angabe": Null bedeutet Antwort entfernen (nicht in Auswertung einfließen lassen)
+			if (item.getValue() == null) {
+				answerRepository.findByInstanceIdAndQuestionId(instanceId, item.getQuestionId())
+					.ifPresent(answerRepository::delete);
+				continue;
+			}
+
 			answerRepository.findByInstanceIdAndQuestionId(instanceId, item.getQuestionId())
 				.ifPresentOrElse(
 					// Update bestehende Antwort
@@ -246,7 +253,52 @@ public class SurveyServiceImpl implements SurveyService {
 		response.setCreatedAt(instance.getCreatedAt());
 		response.setUpdatedAt(instance.getUpdatedAt());
 		response.setSubmittedAt(instance.getSubmittedAt());
+		
+		// Berechne totalQuestions aus Template categoriesJson
+		// Vereinfachter Ansatz: Zähle Frage-IDs im JSON
+		int totalQuestions = countQuestionsInTemplate(instance.getTemplate().getCategoriesJson(), instance.getParticipantType());
+		response.setTotalQuestions(totalQuestions);
+		
+		// Berechne answeredQuestions aus gespeicherten Antworten
+		long answeredCount = answerRepository.findByInstanceId(instance.getId()).size();
+		response.setAnsweredQuestions((int) answeredCount);
+		
 		return response;
+	}
+	
+	/**
+	 * Zählt die Fragen in einem Template basierend auf categoriesJson und participantType
+	 * Vereinfachter Ansatz: Zählt Frage-IDs im JSON-String
+	 */
+	private int countQuestionsInTemplate(String categoriesJson, SurveyInstance.ParticipantType participantType) {
+		if (categoriesJson == null || categoriesJson.isEmpty()) {
+			return 0;
+		}
+		
+		try {
+			// Zähle Vorkommen von Frage-IDs (Pattern: "id": "..." in questions-Array)
+			// Vereinfachter Ansatz: Zähle "id" Vorkommen die auf Fragen hinweisen
+			// Pattern: Fragen haben "id": "..." innerhalb von questions-Arrays
+			int count = 0;
+			String[] questionIdParts = categoriesJson.split("\"id\"\\s*:");
+			// Jede Frage hat ein "id" Feld, also Anzahl = parts.length - 1
+			// Aber wir müssen nur die in "questions" Arrays zählen
+			// Einfacher Ansatz: Zähle alle "id" Vorkommen und subtrahiere die in anderen Kontexten
+			count = Math.max(0, questionIdParts.length - 1);
+			
+			// Filter nach participantType: Wenn != PMA, filtere Fragen mit "onlyPMA": true
+			if (participantType != SurveyInstance.ParticipantType.PMA) {
+				// Zähle Fragen mit "onlyPMA": true und subtrahiere sie
+				String[] onlyPmaParts = categoriesJson.split("\"onlyPMA\"\\s*:\\s*true");
+				int onlyPmaCount = Math.max(0, onlyPmaParts.length - 1);
+				count = Math.max(0, count - onlyPmaCount);
+			}
+			
+			return count;
+		} catch (Exception e) {
+			// Bei Parsing-Fehler: Fallback auf 0
+			return 0;
+		}
 	}
 
 	private SurveyAnswerResponse toAnswerResponse(SurveyAnswer answer) {

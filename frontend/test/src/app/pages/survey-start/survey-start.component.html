@@ -1,11 +1,14 @@
 <div class="survey-start-page">
-  <mat-card>
+  <div class="survey-start-container">
+    <mat-card class="survey-start-card">
     <mat-card-header>
       <mat-card-title>Umfrage starten</mat-card-title>
     </mat-card-header>
     <mat-card-content>
       @if (error()) {
-        <div class="error-message">{{ error() }}</div>
+        <div class="error-message" style="background-color: #ffebee; color: #c62828; padding: 16px; border-radius: 4px; margin-bottom: 16px;">
+          <strong>Fehler:</strong> {{ error() }}
+        </div>
       }
 
       <div class="department-selection">
@@ -63,6 +66,7 @@
         <button mat-raised-button class="cancel-button" routerLink="/app/surveys">Abbrechen</button>
       </div>
     </mat-card-content>
-  </mat-card>
+    </mat-card>
+  </div>
 </div>
 

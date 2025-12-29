@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './guards/auth.guard';
+import { demoGuard } from './guards/demo.guard';
 
 export const routes: Routes = [
   // Öffentliche Routen
@@ -62,18 +63,22 @@ export const routes: Routes = [
       // Wizard-Routen
       {
         path: 'wizard/mode',
+        canActivate: [demoGuard],
         loadComponent: () => import('./pages/wizard-mode/wizard-mode.component').then(m => m.WizardModeComponent)
       },
       {
         path: 'wizard/context',
+        canActivate: [demoGuard],
         loadComponent: () => import('./pages/wizard-context/wizard-context.component').then(m => m.WizardContextComponent)
       },
       {
         path: 'wizard/category/:index',
+        canActivate: [demoGuard],
         loadComponent: () => import('./pages/wizard-category/wizard-category.component').then(m => m.WizardCategoryComponent)
       },
       {
         path: 'wizard/summary',
+        canActivate: [demoGuard],
         loadComponent: () => import('./pages/wizard-summary/wizard-summary.component').then(m => m.WizardSummaryComponent)
       },
       {

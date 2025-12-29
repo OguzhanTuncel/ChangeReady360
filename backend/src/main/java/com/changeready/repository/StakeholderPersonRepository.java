@@ -15,5 +15,10 @@ public interface StakeholderPersonRepository extends JpaRepository<StakeholderPe
 	 * @return Liste von StakeholderPersons der Gruppe
 	 */
 	List<StakeholderPerson> findByGroupId(Long groupId);
+
+	/**
+	 * Löscht alle Personen einer Stakeholder-Gruppe
+	 */
+	void deleteByGroupId(Long groupId);
 }
 

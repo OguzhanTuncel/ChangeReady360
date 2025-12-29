@@ -5,10 +5,12 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { SurveyService } from '../../services/survey.service';
 import { SurveyInstance, SurveyQuestion, LikertValue, ParticipantType } from '../../models/survey.model';
 import { LikertQuestionComponent } from '../../components/likert-question/likert-question.component';
+import { ConfirmDialogComponent } from '../../components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-survey-fill',
@@ -19,6 +21,7 @@ import { LikertQuestionComponent } from '../../components/likert-question/likert
     MatButtonModule,
     MatProgressBarModule,
     MatIconModule,
+    MatDialogModule,
     LikertQuestionComponent
   ],
   templateUrl: './survey-fill.component.html',
@@ -64,6 +67,7 @@ export class SurveyFillComponent implements OnInit, OnDestroy {
   canGoNext = computed(() => {
     const question = this.currentQuestion();
     if (!question) return false;
+    // "Keine Angabe" zählt als gültige Auswahl fürs Weiterklicken (value kann null sein).
     return this.answers().has(question.id);
   });
   
@@ -72,7 +76,8 @@ export class SurveyFillComponent implements OnInit, OnDestroy {
   constructor(
     private surveyService: SurveyService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit() {
@@ -159,11 +164,9 @@ export class SurveyFillComponent implements OnInit, OnDestroy {
 
     this.answers.update(answers => {
       const newAnswers = new Map(answers);
-      if (value === null) {
-        newAnswers.delete(question.id);
-      } else {
-        newAnswers.set(question.id, value);
-      }
+      // Wir merken die Auswahl auch bei "Keine Angabe" lokal als null (damit Weiter möglich ist),
+      // speichern aber backendseitig als "Antwort entfernen".
+      newAnswers.set(question.id, value);
       return newAnswers;
     });
 
@@ -177,7 +180,12 @@ export class SurveyFillComponent implements OnInit, OnDestroy {
   }
 
   getAnsweredCount(): number {
-    return this.answers().size;
+    // Für Progress: nur echte Likert-Antworten (1–5) zählen. "Keine Angabe" (null) nicht.
+    let count = 0;
+    for (const v of this.answers().values()) {
+      if (v !== null) count++;
+    }
+    return count;
   }
   
   goToNext() {
@@ -211,6 +219,29 @@ export class SurveyFillComponent implements OnInit, OnDestroy {
       error: () => {
         this.error.set('Fehler beim Absenden der Umfrage');
         this.isSubmitting.set(false);
+      }
+    });
+  }
+
+  exitSurvey() {
+    const instance = this.instance();
+    if (!instance) return;
+
+    const ref = this.dialog.open(ConfirmDialogComponent, {
+      width: '420px',
+      disableClose: true,
+      data: {
+        title: 'Umfrage verlassen?',
+        message: 'Du kannst später fortsetzen. Deine bisherigen Antworten bleiben als Entwurf gespeichert.',
+        confirmText: 'Verlassen',
+        cancelText: 'Bleiben'
+      }
+    });
+
+    ref.afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        // Autosave ist bereits pro Antwort aktiv; wir navigieren zurück zur Übersicht ohne Submit.
+        this.router.navigate(['/app/surveys']);
       }
     });
   }

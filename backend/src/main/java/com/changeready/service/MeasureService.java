@@ -14,3 +14,4 @@ public interface MeasureService {
 	List<MeasureResponse> getActiveMeasures(UserPrincipal userPrincipal);
 }
 
+

@@ -87,6 +87,12 @@
   @if (isLoading()) {
     <div class="loading">Lade Umfragen...</div>
   } @else {
+    @if (activeTemplates().length === 0) {
+      <section class="section">
+        <h2>Umfragen</h2>
+        <p class="empty-state">Noch keine Umfragen vorhanden.</p>
+      </section>
+    }
     <!-- Offene Umfragen -->
     @if (getOpenInstances().length > 0) {
       <section class="section">
@@ -109,30 +115,6 @@
                 <button mat-raised-button color="primary" [routerLink]="['/app/survey', instance.id, 'fill']">
                   <mat-icon>edit</mat-icon>
                   Weiter bearbeiten
-                </button>
-              </mat-card-actions>
-            </mat-card>
-          }
-        </div>
-      </section>
-    }
-
-    <!-- Verfügbare Vorlagen -->
-    @if (activeTemplates().length > 0) {
-      <section class="section">
-        <h2>Verfügbare Umfragen</h2>
-        <div class="survey-grid">
-          @for (template of activeTemplates(); track template.id) {
-            <mat-card class="survey-card">
-              <mat-card-header>
-                <mat-card-title>ChangeReady360 Umfrage zur Erfassung der Change-Readiness</mat-card-title>
-              </mat-card-header>
-              <mat-card-content>
-              </mat-card-content>
-              <mat-card-actions>
-                <button mat-raised-button color="primary" [routerLink]="['/app/survey', template.id, 'start']">
-                  <mat-icon>play_arrow</mat-icon>
-                  Umfrage starten
                 </button>
               </mat-card-actions>
             </mat-card>

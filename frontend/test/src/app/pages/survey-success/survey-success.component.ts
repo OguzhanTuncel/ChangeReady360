@@ -6,7 +6,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { DatePipe } from '@angular/common';
 import { SurveyService } from '../../services/survey.service';
+import { DashboardService } from '../../services/dashboard.service';
+import { StakeholderService } from '../../services/stakeholder.service';
+import { ReportingService } from '../../services/reporting.service';
 import { SurveyInstance } from '../../models/survey.model';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-survey-success',
@@ -21,6 +26,9 @@ export class SurveySuccessComponent implements OnInit {
 
   constructor(
     private surveyService: SurveyService,
+    private dashboardService: DashboardService,
+    private stakeholderService: StakeholderService,
+    private reportingService: ReportingService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
@@ -36,6 +44,12 @@ export class SurveySuccessComponent implements OnInit {
       next: (instance) => {
         this.instance.set(instance);
         this.isLoading.set(false);
+        // Nach Submit: Daten konsistent neu laden (Dashboard + Stakeholder + Reporting)
+        forkJoin({
+          dashboard: this.dashboardService.getDashboardData().pipe(catchError(() => of(null))),
+          stakeholderKpis: this.stakeholderService.getKpis().pipe(catchError(() => of(null))),
+          reporting: this.reportingService.getReportingData().pipe(catchError(() => of(null)))
+        }).subscribe();
       },
       error: () => {
         this.isLoading.set(false);

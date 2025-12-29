@@ -235,21 +235,6 @@
                           </td>
                         </ng-container>
 
-                        <ng-container matColumnDef="reverse">
-                          <th mat-header-cell *matHeaderCellDef>Reverse-Items</th>
-                          <td mat-cell *matCellDef="let result">
-                            @if (result.reverseItems.length > 0) {
-                              <div class="reverse-items">
-                                @for (itemId of result.reverseItems; track itemId) {
-                                  <span class="reverse-chip">{{ itemId }}</span>
-                                }
-                              </div>
-                            } @else {
-                              <span class="no-reverse">-</span>
-                            }
-                          </td>
-                        </ng-container>
-
                         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
                       </table>

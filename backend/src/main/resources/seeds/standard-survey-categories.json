@@ -1,0 +1,97 @@
+[
+  {
+    "name": "A) Kommunikation",
+    "subcategories": [
+      {
+        "name": "1) Unterstützung",
+        "questions": [
+          {
+            "id": "A1.1",
+            "text": "Ich weiß, wer meine Ansprechpartner bei Fragen, Unsicherheiten und Problemen bezüglich des Change sind",
+            "category": "A) Kommunikation",
+            "subcategory": "1) Unterstützung",
+            "onlyPMA": false,
+            "reverse": false,
+            "order": 1
+          },
+          {
+            "id": "A1.2",
+            "text": "Ich erlebe die Ansprechpartner des Change (PM und/oder FKs) als verfügbar, wenn ich Probleme oder Fragen rund um den Change habe",
+            "category": "A) Kommunikation",
+            "subcategory": "1) Unterstützung",
+            "onlyPMA": false,
+            "reverse": false,
+            "order": 2
+          },
+          {
+            "id": "A1.3",
+            "text": "Ich werde ermutigt, beim Change mitzugehen",
+            "category": "A) Kommunikation",
+            "subcategory": "1) Unterstützung",
+            "onlyPMA": false,
+            "reverse": false,
+            "order": 3
+          }
+        ]
+      },
+      {
+        "name": "2) Offener Umgang",
+        "questions": [
+          {
+            "id": "A2.1",
+            "text": "Ich fühle mich wohl dabei, Unsicherheiten und Bedenken bezüglich des Change zu äußern",
+            "category": "A) Kommunikation",
+            "subcategory": "2) Offener Umgang",
+            "onlyPMA": false,
+            "reverse": false,
+            "order": 4
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "B) Persönliche Vorteile/Nachteile",
+    "subcategories": [
+      {
+        "name": "1) Allgemein",
+        "questions": [
+          {
+            "id": "B1.1",
+            "text": "Ich glaube, dass es sich für mich lohnt, wenn die Organisation diesen Change umsetzt.",
+            "category": "B) Persönliche Vorteile/Nachteile",
+            "subcategory": "1) Allgemein",
+            "onlyPMA": false,
+            "reverse": false,
+            "order": 5
+          }
+        ]
+      },
+      {
+        "name": "2) Verbesserung/Erleichterung der Arbeit",
+        "questions": [
+          {
+            "id": "B2.1",
+            "text": "Ich glaube, dass der Change meine Arbeit erleichtern wird.",
+            "category": "B) Persönliche Vorteile/Nachteile",
+            "subcategory": "2) Verbesserung/Erleichterung der Arbeit",
+            "onlyPMA": false,
+            "reverse": false,
+            "order": 6
+          },
+          {
+            "id": "B2.2",
+            "text": "Ich glaube, dass mir meine Arbeit nach dem Change mehr gefallen wird.",
+            "category": "B) Persönliche Vorteile/Nachteile",
+            "subcategory": "2) Verbesserung/Erleichterung der Arbeit",
+            "onlyPMA": false,
+            "reverse": false,
+            "order": 7
+          }
+        ]
+      }
+    ]
+  }
+]
+
+
