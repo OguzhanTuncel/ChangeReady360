@@ -19,7 +19,9 @@ RUN npm run build
 FROM nginx:alpine
 
 # Copy built app to nginx
-COPY --from=build /app/dist/test /usr/share/nginx/html
+# Angular (@angular/build:application) outputs browser files into dist/<project>/browser
+# We must copy that folder to nginx html root, otherwise nginx serves its default index.html.
+COPY --from=build /app/dist/test/browser /usr/share/nginx/html
 
 # Copy nginx configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf
