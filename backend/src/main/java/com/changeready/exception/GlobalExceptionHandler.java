@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -60,6 +61,13 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException ex) {
 		ErrorResponse errorResponse = new ErrorResponse("Access Denied", "FORBIDDEN");
 		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
+	}
+
+	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+	public ResponseEntity<ErrorResponse> handleMethodNotSupported(HttpRequestMethodNotSupportedException ex) {
+		// Ensure proper HTTP semantics (405 instead of generic 500)
+		ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), "METHOD_NOT_ALLOWED");
+		return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(errorResponse);
 	}
 
 	@ExceptionHandler(ResponseStatusException.class)
