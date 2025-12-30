@@ -124,9 +124,22 @@ import { AuthService } from '../../services/auth.service';
       color: #fff;
       border-radius: 999px;
       padding: 0.7rem 1.25rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
     }
     .btn-create:hover:not(:disabled) {
       background-color: #4a8d6f;
+    }
+    .btn-create mat-icon {
+      line-height: 1;
+      height: 20px;
+      width: 20px;
+      font-size: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
   `]
 })
