@@ -1,4 +1,4 @@
-import { Component, signal, OnInit } from '@angular/core';
+import { Component, signal, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -6,8 +6,15 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { DatePipe } from '@angular/common';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { forkJoin, of } from 'rxjs';
+import { catchError, finalize } from 'rxjs/operators';
 import { SurveyService } from '../../services/survey.service';
 import { SurveyTemplate, SurveyInstance } from '../../models/survey.model';
+import { ConfirmDialogComponent } from '../../components/confirm-dialog/confirm-dialog.component';
+import { DashboardService } from '../../services/dashboard.service';
+import { StakeholderService } from '../../services/stakeholder.service';
+import { ReportingService } from '../../services/reporting.service';
 
 @Component({
   selector: 'app-surveys',
@@ -19,6 +26,7 @@ import { SurveyTemplate, SurveyInstance } from '../../models/survey.model';
     MatButtonModule,
     MatIconModule,
     MatChipsModule,
+    MatDialogModule,
     DatePipe
   ],
   templateUrl: './surveys.component.html',
@@ -28,11 +36,17 @@ export class SurveysComponent implements OnInit {
   activeTemplates = signal<SurveyTemplate[]>([]);
   userInstances = signal<SurveyInstance[]>([]);
   isLoading = signal(true);
+  isDeleting = signal(false);
 
   constructor(
     private surveyService: SurveyService,
     private router: Router
   ) {}
+
+  private dialog = inject(MatDialog);
+  private dashboardService = inject(DashboardService);
+  private stakeholderService = inject(StakeholderService);
+  private reportingService = inject(ReportingService);
 
   ngOnInit() {
     this.loadData();
@@ -188,6 +202,49 @@ export class SurveysComponent implements OnInit {
       // Navigate to survey start page with first available template
       this.router.navigate(['/app/survey', templates[0].id, 'start']);
     }
+  }
+
+  confirmDeleteInstance(instance: SurveyInstance): void {
+    const isCompleted = !!instance.submittedAt;
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '420px',
+      data: {
+        title: 'Umfrage löschen',
+        message: isCompleted
+          ? 'Möchten Sie diese abgeschlossene Umfrage wirklich löschen? Die Ergebnisse werden dauerhaft entfernt.'
+          : 'Möchten Sie diese offene Umfrage wirklich löschen? Der Entwurf wird dauerhaft entfernt.',
+        confirmText: 'Löschen',
+        cancelText: 'Abbrechen'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (!confirmed) return;
+      this.deleteInstance(instance.id);
+    });
+  }
+
+  private deleteInstance(instanceId: string): void {
+    this.isDeleting.set(true);
+
+    this.surveyService.deleteInstance(instanceId).pipe(
+      finalize(() => this.isDeleting.set(false))
+    ).subscribe({
+      next: () => {
+        // Reload everything backend-driven to keep UI consistent across pages
+        forkJoin({
+          instances: this.surveyService.getUserInstances().pipe(catchError(() => of([]))),
+          dashboard: this.dashboardService.getDashboardData().pipe(catchError(() => of(null))),
+          stakeholderGroups: this.stakeholderService.getGroups().pipe(catchError(() => of([]))),
+          reporting: this.reportingService.getReportingData().pipe(catchError(() => of(null)))
+        }).subscribe();
+      },
+      error: (error) => {
+        console.error('Error deleting survey instance:', error);
+        alert('Fehler beim Löschen der Umfrage.');
+      }
+    });
   }
 }
 

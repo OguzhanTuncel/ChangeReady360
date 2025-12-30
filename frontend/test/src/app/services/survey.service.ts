@@ -330,6 +330,23 @@ export class SurveyService {
   }
 
   /**
+   * Delete survey instance (Hard Delete)
+   * Backend: DELETE /api/v1/surveys/instances/{instanceId}
+   */
+  deleteInstance(instanceId: string): Observable<void> {
+    return this.http.delete<void>(`${environment.apiBaseUrl}/surveys/instances/${instanceId}`).pipe(
+      tap(() => {
+        // Optimistic local update: remove from cached instances list
+        this.instances.update(instances => instances.filter(i => i.id !== instanceId));
+      }),
+      catchError(error => {
+        console.error('Error deleting survey instance:', error);
+        throw error;
+      })
+    );
+  }
+
+  /**
    * Get user's submitted responses (filtered from instances)
    */
   getUserResponses(): Observable<SurveyResponse[]> {

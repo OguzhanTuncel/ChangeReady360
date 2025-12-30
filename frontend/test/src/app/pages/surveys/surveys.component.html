@@ -116,6 +116,15 @@
                   <mat-icon>edit</mat-icon>
                   Weiter bearbeiten
                 </button>
+                <button
+                  mat-icon-button
+                  class="delete-instance-btn"
+                  color="warn"
+                  [disabled]="isDeleting()"
+                  (click)="confirmDeleteInstance(instance)"
+                  aria-label="Umfrage löschen">
+                  <mat-icon>delete</mat-icon>
+                </button>
               </mat-card-actions>
             </mat-card>
           }
@@ -145,6 +154,15 @@
                 <button mat-raised-button color="primary" [routerLink]="['/app/survey', instance.id, 'summary']">
                   <mat-icon>visibility</mat-icon>
                   Zusammenfassung anzeigen
+                </button>
+                <button
+                  mat-icon-button
+                  class="delete-instance-btn"
+                  color="warn"
+                  [disabled]="isDeleting()"
+                  (click)="confirmDeleteInstance(instance)"
+                  aria-label="Umfrage löschen">
+                  <mat-icon>delete</mat-icon>
                 </button>
               </mat-card-actions>
             </mat-card>

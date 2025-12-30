@@ -261,6 +261,9 @@
 mat-card-actions {
   margin-top: auto;
   padding-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 /* Primärbutton: Fragebogen starten */
@@ -297,5 +300,9 @@ mat-card-actions button[color="primary"]:disabled {
 /* Weiter bearbeiten Button */
 .survey-card:not(.completed) mat-card-actions button[color="primary"] {
   background-color: #31749B;
+}
+
+.delete-instance-btn {
+  margin-left: auto;
 }
 
