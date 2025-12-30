@@ -19,10 +19,13 @@ import com.changeready.repository.UserRepository;
 import com.changeready.security.UserPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.springframework.http.HttpStatus.CONFLICT;
 
 @Service
 public class SurveyServiceImpl implements SurveyService {
@@ -71,16 +74,17 @@ public class SurveyServiceImpl implements SurveyService {
 	public SurveyInstanceResponse createInstance(SurveyInstanceCreateRequest request, UserPrincipal userPrincipal) {
 		// Template validieren
 		SurveyTemplate template = templateRepository.findById(request.getTemplateId())
-			.orElseThrow(() -> new RuntimeException("Survey template not found: " + request.getTemplateId()));
+			.orElseThrow(() -> new ResourceNotFoundException("Survey template not found: " + request.getTemplateId()));
 		
 		// Prüfe ob Template aktiv ist
 		if (!template.getActive()) {
-			throw new RuntimeException("Survey template is not active: " + request.getTemplateId());
+			throw new ResponseStatusException(CONFLICT, "Survey template is not active: " + request.getTemplateId());
 		}
 		
 		// Prüfe Company-Zugehörigkeit (Template muss global sein oder zur Company gehören)
 		if (template.getCompany() != null && !template.getCompany().getId().equals(userPrincipal.getCompanyId())) {
-			throw new RuntimeException("Survey template does not belong to your company");
+			// 404 statt 403 um keine Fremd-IDs zu leaken
+			throw new ResourceNotFoundException("Survey template not found: " + request.getTemplateId());
 		}
 		
 		// User laden
@@ -116,16 +120,18 @@ public class SurveyServiceImpl implements SurveyService {
 	@Override
 	public SurveyInstanceDetailResponse getInstance(Long instanceId, UserPrincipal userPrincipal) {
 		SurveyInstance instance = instanceRepository.findById(instanceId)
-			.orElseThrow(() -> new RuntimeException("Survey instance not found: " + instanceId));
+			.orElseThrow(() -> new ResourceNotFoundException("Survey instance not found: " + instanceId));
 		
 		// Company-Isolation prüfen
 		if (!instance.getCompany().getId().equals(userPrincipal.getCompanyId())) {
-			throw new RuntimeException("Survey instance does not belong to your company");
+			// 404 statt 403 um keine Fremd-IDs zu leaken
+			throw new ResourceNotFoundException("Survey instance not found: " + instanceId);
 		}
 		
 		// User-Isolation prüfen (nur eigene Instanzen)
 		if (!instance.getUser().getId().equals(userPrincipal.getId())) {
-			throw new RuntimeException("Survey instance does not belong to you");
+			// 404 statt 403 um keine Fremd-IDs zu leaken
+			throw new ResourceNotFoundException("Survey instance not found: " + instanceId);
 		}
 		
 		// Antworten laden
@@ -156,21 +162,21 @@ public class SurveyServiceImpl implements SurveyService {
 	@Transactional
 	public void saveAnswers(Long instanceId, SurveyAnswerUpdateRequest request, UserPrincipal userPrincipal) {
 		SurveyInstance instance = instanceRepository.findById(instanceId)
-			.orElseThrow(() -> new RuntimeException("Survey instance not found: " + instanceId));
+			.orElseThrow(() -> new ResourceNotFoundException("Survey instance not found: " + instanceId));
 		
 		// Company-Isolation prüfen
 		if (!instance.getCompany().getId().equals(userPrincipal.getCompanyId())) {
-			throw new RuntimeException("Survey instance does not belong to your company");
+			throw new ResourceNotFoundException("Survey instance not found: " + instanceId);
 		}
 		
 		// User-Isolation prüfen
 		if (!instance.getUser().getId().equals(userPrincipal.getId())) {
-			throw new RuntimeException("Survey instance does not belong to you");
+			throw new ResourceNotFoundException("Survey instance not found: " + instanceId);
 		}
 		
 		// Status prüfen (nur DRAFT kann bearbeitet werden)
 		if (instance.getStatus() != SurveyInstance.SurveyInstanceStatus.DRAFT) {
-			throw new RuntimeException("Cannot update answers for submitted survey instance");
+			throw new ResponseStatusException(CONFLICT, "Cannot update answers for submitted survey instance");
 		}
 		
 		// Antworten speichern/aktualisieren
@@ -205,21 +211,21 @@ public class SurveyServiceImpl implements SurveyService {
 	@Transactional
 	public void submitInstance(Long instanceId, UserPrincipal userPrincipal) {
 		SurveyInstance instance = instanceRepository.findById(instanceId)
-			.orElseThrow(() -> new RuntimeException("Survey instance not found: " + instanceId));
+			.orElseThrow(() -> new ResourceNotFoundException("Survey instance not found: " + instanceId));
 		
 		// Company-Isolation prüfen
 		if (!instance.getCompany().getId().equals(userPrincipal.getCompanyId())) {
-			throw new RuntimeException("Survey instance does not belong to your company");
+			throw new ResourceNotFoundException("Survey instance not found: " + instanceId);
 		}
 		
 		// User-Isolation prüfen
 		if (!instance.getUser().getId().equals(userPrincipal.getId())) {
-			throw new RuntimeException("Survey instance does not belong to you");
+			throw new ResourceNotFoundException("Survey instance not found: " + instanceId);
 		}
 		
 		// Status prüfen
 		if (instance.getStatus() != SurveyInstance.SurveyInstanceStatus.DRAFT) {
-			throw new RuntimeException("Survey instance is already submitted");
+			throw new ResponseStatusException(CONFLICT, "Survey instance is already submitted");
 		}
 		
 		// Status auf SUBMITTED setzen

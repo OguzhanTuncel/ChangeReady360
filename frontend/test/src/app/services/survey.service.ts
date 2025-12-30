@@ -339,7 +339,13 @@ export class SurveyService {
         // Optimistic local update: remove from cached instances list
         this.instances.update(instances => instances.filter(i => i.id !== instanceId));
       }),
-      catchError(error => {
+      // Wenn die UI eine "stale" Instanz-ID hat (z.B. bereits gelöscht), behandeln wir 404 als "already gone".
+      // Das ist backend-driven korrekt, weil die Instanz danach definitiv nicht mehr in der DB ist.
+      catchError((error: any) => {
+        if (error?.status === 404) {
+          this.instances.update(instances => instances.filter(i => i.id !== instanceId));
+          return of(void 0);
+        }
         console.error('Error deleting survey instance:', error);
         throw error;
       })
