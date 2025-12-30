@@ -242,7 +242,21 @@ export class SurveysComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error deleting survey instance:', error);
-        alert('Fehler beim Löschen der Umfrage.');
+        if (error?.status === 403) {
+          alert('Sie haben keine Berechtigung, Umfragen zu löschen (nur Admin).');
+          return;
+        }
+        if (error?.status === 401) {
+          alert('Bitte erneut einloggen und nochmal versuchen.');
+          return;
+        }
+        if (error?.status === 404) {
+          // Already gone / stale UI state -> refresh lists anyway
+          this.loadData();
+          return;
+        }
+        const serverMsg = error?.error?.error || error?.error?.message;
+        alert(serverMsg ? `Fehler beim Löschen der Umfrage: ${serverMsg}` : 'Fehler beim Löschen der Umfrage.');
       }
     });
   }
