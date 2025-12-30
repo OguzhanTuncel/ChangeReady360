@@ -55,5 +55,13 @@ public interface SurveyService {
 	 * @param userPrincipal Aktueller Benutzer
 	 */
 	void submitInstance(Long instanceId, UserPrincipal userPrincipal);
+
+	/**
+	 * Löscht eine Survey-Instanz (Hard Delete) inkl. zugehöriger Antworten.
+	 * Nur Admins (SYSTEM_ADMIN/COMPANY_ADMIN) dürfen löschen.
+	 * @param instanceId Instanz-ID
+	 * @param userPrincipal Aktueller Benutzer (für Company-Isolation)
+	 */
+	void deleteInstance(Long instanceId, UserPrincipal userPrincipal);
 }
 

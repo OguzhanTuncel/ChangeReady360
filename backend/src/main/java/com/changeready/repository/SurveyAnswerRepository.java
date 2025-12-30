@@ -32,5 +32,11 @@ public interface SurveyAnswerRepository extends JpaRepository<SurveyAnswer, Long
 	 * @return true wenn Antwort existiert
 	 */
 	boolean existsByInstanceIdAndQuestionId(Long instanceId, String questionId);
+
+	/**
+	 * Löscht alle Antworten einer SurveyInstance (Hard Delete)
+	 * @param instanceId SurveyInstance-ID
+	 */
+	void deleteByInstanceId(Long instanceId);
 }
 

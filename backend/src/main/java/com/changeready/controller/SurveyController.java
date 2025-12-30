@@ -107,5 +107,20 @@ public class SurveyController {
 		surveyService.submitInstance(id, userPrincipal);
 		return ResponseEntity.ok().build();
 	}
+
+	/**
+	 * DELETE /api/v1/surveys/instances/{id}
+	 * Löscht eine Survey-Instanz (Hard Delete) inkl. Antworten
+	 * Nur SYSTEM_ADMIN & COMPANY_ADMIN
+	 */
+	@DeleteMapping("/instances/{id}")
+	@PreAuthorize("hasAnyRole('SYSTEM_ADMIN', 'COMPANY_ADMIN')")
+	public ResponseEntity<Void> deleteInstance(@PathVariable Long id) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+
+		surveyService.deleteInstance(id, userPrincipal);
+		return ResponseEntity.noContent().build();
+	}
 }
 

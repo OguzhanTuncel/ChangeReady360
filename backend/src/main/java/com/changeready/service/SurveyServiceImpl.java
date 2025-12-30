@@ -11,6 +11,7 @@ import com.changeready.entity.SurveyAnswer;
 import com.changeready.entity.SurveyInstance;
 import com.changeready.entity.SurveyTemplate;
 import com.changeready.entity.User;
+import com.changeready.exception.ResourceNotFoundException;
 import com.changeready.repository.SurveyAnswerRepository;
 import com.changeready.repository.SurveyInstanceRepository;
 import com.changeready.repository.SurveyTemplateRepository;
@@ -225,6 +226,25 @@ public class SurveyServiceImpl implements SurveyService {
 		instance.setStatus(SurveyInstance.SurveyInstanceStatus.SUBMITTED);
 		instance.setSubmittedAt(LocalDateTime.now());
 		instanceRepository.save(instance);
+	}
+
+	@Override
+	@Transactional
+	public void deleteInstance(Long instanceId, UserPrincipal userPrincipal) {
+		SurveyInstance instance = instanceRepository.findById(instanceId)
+			.orElseThrow(() -> new ResourceNotFoundException("Survey instance not found: " + instanceId));
+
+		// Company-Isolation prüfen: Admins dürfen nur innerhalb der eigenen Company löschen
+		if (!instance.getCompany().getId().equals(userPrincipal.getCompanyId())) {
+			// 404 statt 403 um keine Fremd-IDs zu leaken
+			throw new ResourceNotFoundException("Survey instance not found: " + instanceId);
+		}
+
+		// Datenintegrität: Antworten zuerst löschen (FK -> survey_instances)
+		answerRepository.deleteByInstanceId(instanceId);
+
+		// Hard Delete: Instance entfernen
+		instanceRepository.delete(instance);
 	}
 
 	// Helper-Methoden für Mapping
